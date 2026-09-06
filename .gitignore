@@ -10,3 +10,4 @@ playwright-report/
 .DS_Store
 .playwright-mcp/
 design/
+.next/
