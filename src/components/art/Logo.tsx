@@ -1,11 +1,17 @@
 type LogoProps = {
   className?: string
+  variant?: 'light' | 'dark'
 }
 
-export function Logo({ className = '' }: LogoProps) {
+const sources = {
+  light: '/images/hackuta-logo.png',
+  dark: '/images/hackuta-logo-white.png',
+} as const
+
+export function Logo({ className = '', variant = 'light' }: LogoProps) {
   return (
     <img
-      src="/images/hackuta-logo.png"
+      src={sources[variant]}
       alt="HackUTA"
       className={className}
       width={52}

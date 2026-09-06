@@ -14,6 +14,7 @@ export function Header() {
   const [active, setActive] = useState("");
   const header = useRef<HTMLElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
+  const mlhBadge = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     let frame = 0;
@@ -38,6 +39,18 @@ export function Header() {
           (scrollY < headerHeight ? "clay" : "dark"),
       );
       setActive(current?.id ?? "");
+      const fade = Math.max(0, Math.min(1, scrollY / 500));
+      document.documentElement.style.setProperty(
+        "--mlh-badge-fade",
+        String(fade),
+      );
+      if (mlhBadge.current) {
+        mlhBadge.current.style.pointerEvents = fade > 0.95 ? "none" : "auto";
+        mlhBadge.current.setAttribute(
+          "aria-hidden",
+          fade > 0.95 ? "true" : "false",
+        );
+      }
     };
     const requestUpdate = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -77,72 +90,84 @@ export function Header() {
   }, [open]);
 
   return (
-    <header
-      ref={header}
-      className="site-header"
-      data-theme={theme}
-      data-open={open}
-    >
-      <div className="header-inner flex items-center justify-between md:justify-center">
-        <a
-          href="#top"
-          className="header-brand"
-          aria-label="HackUTA home"
-          onClick={() => setOpen(false)}
-        >
-          <Logo className="site-logo" />
-        </a>
+    <>
+      <a
+        ref={mlhBadge}
+        id="mlh-trust-badge"
+        className="header-mlh-badge"
+        href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2026-season&utm_content=blue"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img
+          src="https://logged-assets.s3.amazonaws.com/trust-badge/2027/mlh-trust-badge-2027-blue.svg"
+          alt="Major League Hacking 2026 Hackathon Season"
+        />
+      </a>
+      <header
+        ref={header}
+        className="site-header"
+        data-theme={theme}
+        data-open={open}
+      >
+        <div className="header-inner flex items-center justify-between md:grid">
+          <a
+            href="#top"
+            className="header-brand"
+            aria-label="HackUTA home"
+            onClick={() => setOpen(false)}
+          >
+            <Logo className="site-logo" variant={theme === 'dark' ? 'dark' : 'light'} />
+          </a>
+          <nav
+            aria-label="Main navigation"
+            className="header-pill-nav items-center uppercase"
+          >
+            {links.map((link) => (
+              <a
+                key={link.id}
+                href={`#${link.id}`}
+                aria-current={active === link.id ? "location" : undefined}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+          <div className="header-actions flex items-center justify-end">
+            <button
+              ref={menuButton}
+              className="menu-toggle md:hidden"
+              aria-label={open ? "Close navigation" : "Open navigation"}
+              aria-expanded={open}
+              aria-controls="mobile-navigation"
+              onClick={() => setOpen(!open)}
+              type="button"
+            >
+              <span />
+              <span />
+            </button>
+          </div>
+        </div>
         <nav
-          aria-label="Main navigation"
-          className="header-pill-nav items-center uppercase"
+          id="mobile-navigation"
+          aria-label="Mobile navigation"
+          className="mobile-navigation"
+          hidden={!open}
         >
-          {links.map((link) => (
+          {links.map((link, index) => (
             <a
               key={link.id}
               href={`#${link.id}`}
               aria-current={active === link.id ? "location" : undefined}
+              onClick={() => setOpen(false)}
             >
+              <span>0{index + 1}</span>
               {link.label}
+              <span aria-hidden="true">↗</span>
             </a>
           ))}
         </nav>
-        <div className="header-actions flex items-center gap-3">
-          <a href="#arrival" className="header-apply font-semibold uppercase">
-            Apply now
-          </a>
-          <button
-            ref={menuButton}
-            className="menu-toggle md:hidden"
-            aria-label={open ? "Close navigation" : "Open navigation"}
-            aria-expanded={open}
-            aria-controls="mobile-navigation"
-            onClick={() => setOpen(!open)}
-            type="button"
-          >
-            <span />
-            <span />
-          </button>
-        </div>
-      </div>
-      <nav
-        id="mobile-navigation"
-        aria-label="Mobile navigation"
-        className="mobile-navigation"
-        hidden={!open}
-      >
-        {links.map((link, index) => (
-          <a
-            key={link.id}
-            href={`#${link.id}`}
-            aria-current={active === link.id ? "location" : undefined}
-            onClick={() => setOpen(false)}
-          >
-            <span>0{index + 1}</span>
-            {link.label}
-            <span aria-hidden="true">↗</span>
-          </a>
-        ))}
-      </nav>
-    </header>
+      </header>
+    </>
   );
 }
