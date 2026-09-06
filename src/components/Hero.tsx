@@ -108,7 +108,7 @@ export function Hero({ motionEnabled }: HeroProps) {
             <span>The Odyssey</span>
             <span className="od-star" aria-hidden="true">✦</span>
           </p>
-          <p className="od-hero-description">A two-day hackathon.<br className="od-mobile-break" /> A journey worth taking.</p>
+          <p className="od-hero-description">A 24-hour hackathon.<br className="od-mobile-break" /> A journey worth taking.</p>
           <a className="od-set-sail group inline-flex items-center justify-between font-semibold uppercase" href="#about">
             <span>Set sail</span>
             <svg className="transition-transform duration-300 group-hover:translate-y-1" viewBox="0 0 24 24" width="23" height="23" fill="none" aria-hidden="true">

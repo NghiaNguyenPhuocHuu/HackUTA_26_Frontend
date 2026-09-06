@@ -37,7 +37,7 @@ export function About({ motionEnabled = true }: { motionEnabled?: boolean }) {
         <div className="crew-bottom grid md:grid-cols-2">
           <div>
             <p className="crew-intro">You don’t need a finished idea.<br className="hidden sm:block" /> Just a place to start.</p>
-            <p className="crew-description">HackUTA brings college students together for two days of making, learning, and figuring things out. Come with a spark of an idea. Find people who help you take it further.</p>
+            <p className="crew-description">HackUTA brings college students together for 24 hours of making, learning, and figuring things out. Come with a spark of an idea. Find people who help you take it further.</p>
             <a className="section-text-link group inline-flex items-center justify-between" href="#voyage">Meet your next adventure <span className="transition-transform group-hover:translate-x-1 group-hover:translate-y-1" aria-hidden="true">↘</span></a>
           </div>
           <div className="crew-notes">
@@ -52,6 +52,11 @@ export function About({ motionEnabled = true }: { motionEnabled?: boolean }) {
             <div className="crew-location flex items-center gap-3"><span aria-hidden="true">↗</span> UT Arlington <span className="crew-location-divider" aria-hidden="true" /> November 14–15</div>
           </div>
         </div>
+        <dl className="crew-facts grid" aria-label="HackUTA 2026 at a glance">
+          <div><dt>24</dt><dd>hours to make<br />something real</dd></div>
+          <div><dt>18+</dt><dd>college students<br />from any school</dd></div>
+          <div><dt>Any</dt><dd>experience level<br />has a place here</dd></div>
+        </dl>
       </div>
       <svg className="crew-thread pointer-events-none" viewBox="0 0 1440 120" fill="none" preserveAspectRatio="none" aria-hidden="true"><path className="crew-thread-base" d="M0 25h310c160 0 170 65 335 65h795" /><path className="crew-thread-line" pathLength="1" d="M0 25h310c160 0 170 65 335 65h795" /><circle cx="645" cy="90" r="5" /></svg>
     </section>

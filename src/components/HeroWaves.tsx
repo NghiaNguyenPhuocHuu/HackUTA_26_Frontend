@@ -31,7 +31,7 @@ export const HeroWaves = forwardRef<HeroWavesHandle, HeroWavesProps>(function He
 
     const wave = new WaveBackground(host, {
       renderer: motionEnabled ? 'auto' : 'none',
-      colors: ['#191511', '#2d1c15', '#70402f', '#d37a54'],
+      colors: ['#102f46', '#1a3a52', '#305873', '#637d8d'],
       colorOpacities: [1, 1, .88, .62],
       waveCount: 7,
       speed: .2,

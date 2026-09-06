@@ -123,6 +123,16 @@ export function Voyage({ motionEnabled }: VoyageProps) {
 
   return (
     <section ref={sectionRef} id="voyage" className="od-voyage" data-animated={animated} aria-labelledby="voyage-title">
+      <svg className="od-voyage-art-filter" width="0" height="0" aria-hidden="true" focusable="false">
+        <defs>
+          <filter id="odyssey-indigo-art" colorInterpolationFilters="sRGB">
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 .55  0 0 0 0 .63  0 0 0 0 .67  .5315 1.788 .1805 0 -.25"
+            />
+          </filter>
+        </defs>
+      </svg>
       <div className="od-voyage-stage">
         <div className="od-voyage-top flex items-center justify-between gap-5">
           <div className="od-scene-label inline-flex items-center gap-4 font-semibold uppercase">

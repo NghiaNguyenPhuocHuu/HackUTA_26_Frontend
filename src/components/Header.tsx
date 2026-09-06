@@ -2,7 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import { Wordmark } from './art/Wordmark'
 import '../styles/header.css'
 
-const links = [{ id: 'about', label: 'About' }, { id: 'voyage', label: 'The voyage' }, { id: 'schedule', label: 'Schedule' }, { id: 'sponsors', label: 'Sponsors' }]
+const links = [
+  { id: 'about', label: 'About' },
+  { id: 'voyage', label: 'The voyage' },
+  { id: 'schedule', label: 'Schedule' },
+  { id: 'faq', label: 'FAQ' },
+  { id: 'sponsors', label: 'Sponsors' },
+]
 
 export function Header() {
   const [open, setOpen] = useState(false)

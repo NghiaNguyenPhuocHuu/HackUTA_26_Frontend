@@ -10,7 +10,7 @@ export function Schedule() {
     <section id="schedule" className="weekend-section relative" data-theme="clay" aria-labelledby="weekend-title">
       <div className="section-inner">
         <div className="weekend-heading flex flex-col lg:flex-row lg:items-end lg:justify-between">
-          <div><p className="weekend-eyebrow uppercase">Two days. Your next chapter.</p><h2 id="weekend-title" className="font-semibold uppercase">The weekend<br />at a glance.</h2></div>
+          <div><p className="weekend-eyebrow uppercase">One weekend. Your next chapter.</p><h2 id="weekend-title" className="font-semibold uppercase">The weekend<br />at a glance.</h2></div>
           <div className="weekend-date"><p>November 14–15, 2026</p><span>Provisional outline · Exact times to come</span></div>
         </div>
         <ol className="weekend-list">

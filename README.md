@@ -1,6 +1,6 @@
 # HackUTA 2026 · The Odyssey
 
-The public landing page, built with React 19, TypeScript, Tailwind CSS 4, and Vite. The approved pottery-inspired concept is implemented as a continuous illustrated journey: a coastal departure, a welcome to the crew, four Odyssey islands, the weekend outline, supporters, and a homecoming.
+The public landing page, built with React 19, TypeScript, Tailwind CSS 4, and Vite. The approved pottery-inspired concept is implemented as a continuous illustrated journey: a coastal departure, a welcome to the crew, four Odyssey islands, the weekend outline, a practical FAQ, supporters, and a homecoming.
 
 ## Run locally
 

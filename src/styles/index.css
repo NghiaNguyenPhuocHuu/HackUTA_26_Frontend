@@ -6,14 +6,14 @@
 
 @theme {
   --font-sans: "Barlow Semi Condensed", "Arial Narrow", Arial, sans-serif;
-  --color-ink: #211912;
-  --color-night: #1d1915;
-  --color-clay: #cc724f;
-  --color-sand: #efc89b;
-  --color-light: #f7deba;
+  --color-ink: #1a3a52;
+  --color-night: #102f46;
+  --color-clay: #eee3d2;
+  --color-sand: #ded0bc;
+  --color-light: #f6eddf;
 }
 
-:root{--ink:#211912;--night:#1d1915;--clay:#cc724f;--sand:#efc89b;--light:#f7deba;--margin:clamp(24px,6vw,104px);--header-height:84px;color-scheme:dark;--ease-out:cubic-bezier(.22,1,.36,1)}
+:root{--ink:#1a3a52;--night:#102f46;--clay:#eee3d2;--sand:#ded0bc;--light:#f6eddf;--ocean:#305873;--mist:#8ca1aa;--margin:clamp(24px,6vw,104px);--header-height:84px;color-scheme:dark;--ease-out:cubic-bezier(.22,1,.36,1)}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-height) + 20px);background:var(--night)}
 body{margin:0;min-width:320px;background:var(--night);color:var(--light);font-family:var(--font-sans);font-size:18px;line-height:1.5;-webkit-font-smoothing:antialiased}
 button,a{-webkit-tap-highlight-color:transparent}button{font:inherit}button:not(:disabled),a{touch-action:manipulation}button:not(:disabled){cursor:pointer}button:disabled{cursor:default}

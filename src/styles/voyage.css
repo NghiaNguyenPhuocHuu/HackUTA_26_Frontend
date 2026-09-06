@@ -1,4 +1,5 @@
 .od-voyage { --journey: 0; --scene-position: 0; --ship-travel: 0px; position: relative; background: var(--night); color: var(--light); }
+.od-voyage-art-filter { position: absolute; width: 0; height: 0; overflow: hidden; }
 .od-voyage-stage { position: relative; isolation: isolate; overflow: hidden; }
 .od-voyage-top { position: relative; z-index: 6; max-width: 1500px; margin: 0 var(--gutter, clamp(24px, 6vw, 104px)); padding-top: 70px; }
 .od-scene-label { color: var(--clay); font-size: 14px; letter-spacing: .12em; }
@@ -9,13 +10,13 @@
 .od-island-window, .od-voyage-boat, .od-foreground-sea, .od-voyage-bottom { display: none; }
 .od-voyage-scene { margin: 35px var(--gutter, clamp(24px, 6vw, 104px)) 90px; }
 .od-chapter { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: center; gap: clamp(30px, 6vw, 90px); max-width: 1440px; margin-inline: auto; padding: 70px 0; scroll-margin-top: 100px; }
-.od-chapter + .od-chapter { border-top: 1px solid #cc724f40; }
+.od-chapter + .od-chapter { border-top: 1px solid #eee3d240; }
 .od-chapter-art { position: relative; min-width: 0; order: 2; }
-.od-chapter-art img { display: block; width: 100%; height: auto; max-height: 480px; object-fit: contain; }
+.od-chapter-art img { display: block; width: 100%; height: auto; max-height: 480px; object-fit: contain; filter: url("#odyssey-indigo-art"); }
 .od-chapter-copy { min-width: 0; }
 .od-chapter-day { font-size: 13px; letter-spacing: .12em; color: var(--sand); margin-bottom: 23px; }
 .od-chapter-title { font-size: clamp(44px, 4.8vw, 78px); line-height: 1.02; letter-spacing: -.025em; }
-.od-chapter-description { max-width: 355px; margin-top: 25px; font-size: 20px; line-height: 1.55; color: #ead0af; text-wrap: pretty; }
+.od-chapter-description { max-width: 355px; margin-top: 25px; font-size: 20px; line-height: 1.55; color: #e4d7c4; text-wrap: pretty; }
 .od-chapter-label { display: flex; align-items: baseline; gap: 12px; margin-top: 28px; font-size: 12px; color: var(--clay); letter-spacing: .09em; }
 
 @media (min-width: 960px) and (min-height: 660px) {
@@ -31,19 +32,19 @@
   .od-voyage[data-animated="true"] .od-island-window { display: block; position: relative; align-self: center; width: 100%; height: 100%; max-width: 720px; max-height: 480px; overflow: hidden; }
   .od-island-strip { display: flex; width: 400%; height: 100%; transform: translate3d(calc(var(--scene-position) * -25%), 0, 0); will-change: transform; }
   .od-island-panel { display: grid; place-items: center; width: 25%; flex: 0 0 25%; height: 100%; }
-  .od-island-panel img { display: block; width: 100%; height: 100%; object-fit: contain; }
+  .od-island-panel img { display: block; width: 100%; height: 100%; object-fit: contain; filter: url("#odyssey-indigo-art"); }
   .od-voyage[data-animated="true"] .od-voyage-boat { display: block; position: absolute; bottom: 113px; left: calc(52% + var(--ship-travel)); width: 235px; transform: translateX(-50%); }
   .od-voyage-ship { width: 100%; height: auto; display: block; animation: od-voyage-bob 5.4s ease-in-out infinite; }
   .od-voyage[data-animated="true"] .od-foreground-sea { display: block; position: absolute; bottom: 89px; left: -5%; width: 110%; height: 28px; pointer-events: none; transform: translateX(calc(var(--journey) * -65px)); }
   .od-foreground-sea svg { width: 100%; height: 100%; stroke: var(--clay); stroke-width: 1px; opacity: .4; }
   .od-voyage[data-animated="true"] .od-voyage-bottom { display: block; position: absolute; z-index: 7; inset: auto var(--gutter, clamp(24px, 6vw, 104px)) 23px; }
   .od-voyage-controls { gap: 20px; }
-  .od-chapter-control { flex: 1; padding: 8px 0; min-height: 48px; border: none; background: none; color: #c2a68a; font: inherit; font-size: 16px; cursor: pointer; white-space: nowrap; transition: color .2s; }
+  .od-chapter-control { flex: 1; padding: 8px 0; min-height: 48px; border: none; background: none; color: #b9b6ad; font: inherit; font-size: 16px; cursor: pointer; white-space: nowrap; transition: color .2s; }
   .od-chapter-control:last-child { flex: 0; }
   .od-chapter-control:hover, .od-chapter-control[aria-pressed="true"] { color: var(--light); }
-  .od-control-number { width: 31px; height: 31px; flex-shrink: 0; border: 1px solid #c2a68a85; border-radius: 50%; font-size: 12px; transition: background .25s, color .25s, border-color .25s; }
+  .od-control-number { width: 31px; height: 31px; flex-shrink: 0; border: 1px solid #b9b6ad85; border-radius: 50%; font-size: 12px; transition: background .25s, color .25s, border-color .25s; }
   .od-chapter-control[aria-pressed="true"] .od-control-number { background: var(--clay); border-color: var(--clay); color: var(--ink); }
-  .od-control-line { position: relative; margin-left: 7px; height: 1px; flex: 1; background: #cc724f44; }
+  .od-control-line { position: relative; margin-left: 7px; height: 1px; flex: 1; background: #eee3d244; }
   .od-control-line > span { display: block; height: 100%; width: 0; background: var(--clay); transition: width .4s; }
   .od-chapter-control[aria-pressed="true"] .od-control-line > span { width: 100%; }
 }

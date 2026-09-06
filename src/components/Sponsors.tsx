@@ -4,7 +4,7 @@ export function Sponsors() {
   return (
     <section id="sponsors" className="supporters-section relative isolate overflow-hidden" data-theme="dark" aria-labelledby="supporters-title">
       <div className="section-inner relative">
-        <p className="section-kicker flex items-center gap-3"><span className="section-index">03</span> The supporters</p>
+        <p className="section-kicker flex items-center gap-3"><span className="section-index">04</span> The supporters</p>
         <div className="supporters-content relative">
           <h2 id="supporters-title" className="font-semibold uppercase">Every voyage<br />needs a little wind.</h2>
           <div className="supporters-copy flex flex-col md:flex-row">

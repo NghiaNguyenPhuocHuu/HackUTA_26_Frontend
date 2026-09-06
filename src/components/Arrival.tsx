@@ -5,7 +5,7 @@ export function Arrival({ motionEnabled = true }: { motionEnabled?: boolean }) {
     <section id="arrival" className={`arrival-section relative isolate overflow-hidden text-center${motionEnabled ? ' arrival-motion' : ''}`} data-theme="clay" aria-labelledby="arrival-title">
       <div className="arrival-sun pointer-events-none" aria-hidden="true"><div /></div>
       <div className="section-inner relative">
-        <p className="section-kicker flex items-center justify-center gap-3"><span className="section-index">04</span> Back to Arlington</p>
+        <p className="section-kicker flex items-center justify-center gap-3"><span className="section-index">05</span> Back to Arlington</p>
         <p className="arrival-date uppercase">November 14–15, 2026 <span aria-hidden="true">/</span> UT Arlington</p>
         <h2 id="arrival-title" className="font-semibold uppercase">Your odyssey<br />begins here.</h2>
         <p className="arrival-description">Bring an idea. Find your crew.<br className="sm:hidden" /> See what you can make.</p>
