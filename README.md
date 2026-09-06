@@ -2,6 +2,8 @@
 
 The public landing page, built with React 19, TypeScript, Tailwind CSS 4, and Vite. The approved pottery-inspired concept is implemented as a continuous illustrated journey: a coastal departure, a welcome to the crew, four Odyssey islands, the weekend outline, a practical FAQ, supporters, and a homecoming.
 
+**Event:** November 14–15, 2026 · UT Arlington · Applications open soon
+
 ## Run locally
 
 Requires Node.js 22.12+ (tested on Node 24).
@@ -22,28 +24,37 @@ The production preview runs at http://127.0.0.1:4174. Deploy the generated `dist
 
 ## Design and motion
 
-- Original incised SVG wordmark, self-hosted Barlow Semi Condensed typography, terracotta and ink palette.
-- Scroll-choreographed coastal opening: the SVG ship emerges from behind the left cliff, crosses the full viewport, enters a WebGL storm, and disappears into the right coast. A licensed Paper Dithering shader supplies the pottery-like atmospheric field, while licensed Wave.js canvases form the animated sea beneath rain and timed lightning.
-- Four scroll-driven island scenes with deliberate reading holds and keyboard-operable chapter navigation.
-- Fully illustrated stacked chapters on smaller or short screens and when the operating system requests reduced motion.
-- Motion is part of the default experience with no on-page switch. The system reduced-motion setting is still respected for accessibility; visible keyboard focus, a skip link, and a direct route past the voyage remain available.
-- Separate high-resolution artwork for every island, rendered beside—not beneath—the chapter copy, with density checks for desktop and DPR2 mobile screens.
-- Bounded shader resolutions, a capped wave frame rate, and automatic canvas/SVG fallbacks keep the cinematic opening practical across desktop and mobile hardware.
-- Optimized WebP illustrations and WOFF2 fonts; source artwork and earlier design explorations remain in `design/` and are not bundled into the site.
+- **Palette:** terracotta clay, ink, night, sand, and ocean tones defined in `src/styles/index.css`.
+- **Typography:** self-hosted Barlow Semi Condensed for UI and body copy; CS Gelios for the hero display wordmark. The year suffix (`26`) uses Barlow because the current Gelios build lacks numerals.
+- **Logos:** two PNG marks in `public/images/` — `hackuta-logo.png` (ink blue, for light backgrounds) and `hackuta-logo-white.png` (white, for dark/blue backgrounds). The `Logo` component in `src/components/art/Logo.tsx` accepts a `variant` prop (`light` | `dark`). The favicon and apple-touch icon use the white mark with a transparent background.
+- **Header:** fixed three-column layout on desktop — brand logo, centered pill navigation, mobile menu toggle. The logo swaps automatically when the header theme shifts between clay and night. The MLH trust badge is fixed to the top-right and fades out on scroll.
+- **Hero:** two-column copy block with the blue emblem logo, date, and `HackUTA 26` title. Scroll-choreographed coastal opening: the SVG ship emerges from behind the left cliff, crosses the full viewport, enters a WebGL storm, and disappears into the right coast. Scenery fades as the user scrolls away via a `--hero-exit` CSS variable. A licensed Paper Dithering shader supplies the pottery-like atmospheric field, while licensed Wave.js canvases form the animated sea beneath rain and timed lightning.
+- **Voyage:** four scroll-driven island scenes with deliberate reading holds and keyboard-operable chapter navigation.
+- **Responsive motion:** fully illustrated stacked chapters on smaller or short screens and when the operating system requests reduced motion.
+- **Accessibility:** motion is part of the default experience with no on-page switch. The system reduced-motion setting is still respected; visible keyboard focus, a skip link, and a direct route past the voyage remain available.
+- **Artwork:** separate high-resolution WebP illustrations for every island, rendered beside—not beneath—the chapter copy, with density checks for desktop and DPR2 mobile screens.
+- **Performance:** bounded shader resolutions, a capped wave frame rate, and automatic canvas/SVG fallbacks keep the cinematic opening practical across desktop and mobile hardware.
+- **Assets:** optimized WebP illustrations and WOFF2 fonts ship in `public/`. Source artwork lives in the gitignored `design/` directory and is not bundled into the site.
 
-The desktop pinned scenes require a viewport at least 960px wide and 660px high. They use native scrolling and requestAnimationFrame, not a scroll-jacking library. Decorative motion never gates event information.
+The desktop pinned voyage scenes require a viewport at least 960px wide and 660px high. They use native scrolling and `requestAnimationFrame`, not a scroll-jacking library. Decorative motion never gates event information.
 
 ## Editing
 
 `src/App.tsx` composes the page. Section content lives in `src/components/`, reusable SVG artwork in `src/components/art/`, and shared colors, typography, and layout rules in `src/styles/`. System reduced-motion detection lives in `src/hooks/useMotionPreference.ts`.
 
-`design/DESIGN_V6.md` records the approved concept, `design/DESIGN_V7.md` records the image-quality and composition refinement, and `design/DESIGN_V8.md` documents the externally sourced shader opening. `scripts/prepare-assets.mjs` rebuilds production artwork and fonts from the originals:
+`HACKUTA_DESIGN_CONTEXT.md` captures the broader creative direction. When the local `design/` directory is present, `design/DESIGN_V6.md`, `design/DESIGN_V7.md`, and `design/DESIGN_V8.md` record approved concept iterations; `scripts/prepare-assets.mjs` rebuilds production artwork and fonts from those sources:
 
 ```sh
 npm run assets
 ```
 
-The font license is included at `public/fonts/OFL.txt`. Paper Shaders and Wave.js attribution and complete license copies are included in `public/THIRD_PARTY_NOTICES.txt` and `public/licenses/`. The v7 island and cliff sources were created specifically for this layout with the built-in image-generation workflow; their complete production prompts are recorded in `design/art-prompts-v7.md`. The wordmark, ships, and water lines remain editable SVG components.
+To replace the site logos, drop updated PNGs into `public/images/` as `hackuta-logo.png` and `hackuta-logo-white.png` (transparent backgrounds). The ships, waves, and coast artwork remain editable SVG components where applicable.
+
+## Licenses and attribution
+
+- Barlow Semi Condensed: `public/fonts/OFL.txt`
+- CS Gelios: demo build included for development — replace with a licensed webfont before production launch. See `public/fonts/CSGelios-LICENSE.txt` and `public/THIRD_PARTY_NOTICES.txt`.
+- Paper Shaders and Wave.js: complete license copies in `public/licenses/` and notices in `public/THIRD_PARTY_NOTICES.txt`.
 
 ## Verify
 
@@ -58,4 +69,10 @@ The MCP audit requires the site to be running and uses an isolated Microsoft Edg
 
 ## Before launch
 
-This is a complete design-focused frontend, not an application portal. Applications are intentionally announced as opening soon; schedule times remain TBA and supporters are unannounced. Replace those states only when real information and a registration destination are available. Confirm the event details with the organizing team, and set an absolute social-image URL and canonical URL in `index.html` once the deployment domain is selected.
+This is a complete design-focused frontend, not an application portal. Applications are intentionally announced as opening soon; schedule times remain TBA and supporters are unannounced. Replace those states only when real information and a registration destination are available.
+
+Before going live:
+
+- Confirm event details with the organizing team.
+- License CS Gelios for production web use.
+- Set an absolute social-image URL and canonical URL in `index.html` once the deployment domain is selected.
