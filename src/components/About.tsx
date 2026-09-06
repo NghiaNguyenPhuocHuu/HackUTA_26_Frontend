@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from 'react'
+
 const DISCORD_URL = 'https://discord.gg/2bVsYS3SgS'
 const DEVPOST_URL = 'https://hackuta7.devpost.com/'
 
@@ -27,11 +29,28 @@ function OdysseyButton({
 }
 
 export function About() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const [revealed, setRevealed] = useState(false)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setRevealed(entry.isIntersecting)
+    }, { threshold: 0.18 })
+
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <section
+      ref={sectionRef}
       id="about"
       className="odyssey-call-section relative isolate overflow-hidden"
       data-theme="dark"
+      data-revealed={revealed}
       aria-labelledby="odyssey-call-title"
     >
       <div className="section-inner odyssey-call-inner relative flex flex-col items-center text-center">
