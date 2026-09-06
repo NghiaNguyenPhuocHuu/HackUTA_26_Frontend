@@ -178,6 +178,10 @@ export function Hero({ motionEnabled }: HeroProps) {
                 26
               </span>
             </h1>
+            <div className="od-hero-coming-soon" role="status">
+              <span className="od-hero-coming-soon-mark" aria-hidden="true" />
+              <span>Coming soon</span>
+            </div>
           </div>
         </div>
         <div className="od-hero-boat" aria-hidden="true">
