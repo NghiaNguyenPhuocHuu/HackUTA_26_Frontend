@@ -1,0 +1,12 @@
+node_modules/
+dist/
+artifacts/
+test-results/
+playwright-report/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.DS_Store
+.playwright-mcp/
+design/

@@ -1,0 +1,14 @@
+HackUTA 2026 — Third-party notices
+
+Paper Shaders / @paper-design/shaders-react 0.0.80
+Copyright 2026 Paper
+Powered by Paper Shaders: https://shaders.paper.design
+Licensed under the Apache License 2.0.
+The complete license is included at /licenses/paper-shaders-APACHE-2.0.txt.
+Source: https://github.com/paper-design/shaders
+
+Wave.js / @redesigner/wave.js 1.3.0
+Copyright (c) 2026 Filip Dvoran
+Licensed under the MIT License.
+The complete license is included at /licenses/wave-js-MIT.txt.
+Source: https://github.com/iOSDevSK/wave.js
