@@ -9,3 +9,4 @@ playwright-report/
 !.env.example
 .DS_Store
 .playwright-mcp/
+design/
