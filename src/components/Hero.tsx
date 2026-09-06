@@ -1,4 +1,4 @@
-import { type CSSProperties, useEffect, useRef } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { Ship } from "./art/Ship";
 import { Logo } from "./art/Logo";
 import { HERO_AMBIENT_STORM } from "../constants/heroWeather";
@@ -14,31 +14,92 @@ const rain = Array.from({ length: 52 }, (_, index) => ({
   opacity: 0.16 + (index % 5) * 0.07,
 }));
 
+const HERO_WORDMARK = "HackUTA";
+const TYPEWRITER_START_DELAY_MS = 420;
+const TYPEWRITER_CHAR_DELAY_MS = 92;
+
+function HeroWordmark({
+  motionEnabled,
+  onComplete,
+}: {
+  motionEnabled: boolean;
+  onComplete: () => void;
+}) {
+  const [length, setLength] = useState(
+    motionEnabled ? 0 : HERO_WORDMARK.length,
+  );
+  const [typing, setTyping] = useState(motionEnabled);
+  const completedRef = useRef(false);
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+
+  useEffect(() => {
+    if (!motionEnabled) {
+      setLength(HERO_WORDMARK.length);
+      setTyping(false);
+      if (!completedRef.current) {
+        completedRef.current = true;
+        onCompleteRef.current();
+      }
+      return;
+    }
+
+    if (length >= HERO_WORDMARK.length) {
+      setTyping(false);
+      if (!completedRef.current) {
+        completedRef.current = true;
+        onCompleteRef.current();
+      }
+      return;
+    }
+
+    const delay =
+      length === 0 ? TYPEWRITER_START_DELAY_MS : TYPEWRITER_CHAR_DELAY_MS;
+    const timer = window.setTimeout(() => setLength(length + 1), delay);
+    return () => window.clearTimeout(timer);
+  }, [length, motionEnabled]);
+
+  return (
+    <span className="od-hero-wordmark">
+      {HERO_WORDMARK.slice(0, length)}
+      {typing ? (
+        <span className="od-hero-wordmark-cursor" aria-hidden="true">
+          |
+        </span>
+      ) : null}
+    </span>
+  );
+}
+
 export function Hero({ motionEnabled }: HeroProps) {
   const storm = motionEnabled ? HERO_AMBIENT_STORM : 0;
   const heroRef = useRef<HTMLElement>(null);
+  const [showYear, setShowYear] = useState(!motionEnabled);
 
   useEffect(() => {
     const hero = heroRef.current;
     if (!hero) return;
 
     let frame = 0;
+    const apply = () => {
+      const rect = hero.getBoundingClientRect();
+      const exit = Math.max(0, Math.min(1, -rect.top / (rect.height * 0.55)));
+      hero.style.setProperty("--hero-exit", String(exit));
+    };
     const update = () => {
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const rect = hero.getBoundingClientRect();
-        const exit = Math.max(0, Math.min(1, -rect.top / (rect.height * 0.55)));
-        hero.style.setProperty("--hero-exit", String(exit));
-      });
+      frame = requestAnimationFrame(apply);
     };
 
-    update();
+    apply();
     addEventListener("scroll", update, { passive: true });
     addEventListener("resize", update);
+    addEventListener("scrollend", apply);
     return () => {
       cancelAnimationFrame(frame);
       removeEventListener("scroll", update);
       removeEventListener("resize", update);
+      removeEventListener("scrollend", apply);
     };
   }, []);
 
@@ -106,8 +167,16 @@ export function Hero({ motionEnabled }: HeroProps) {
               <span>November 14–15, 2026</span>
             </p>
             <h1 id="hero-title" className="od-hero-title flex items-end gap-2">
-              <span className="od-hero-wordmark">HackUTA</span>
-              <span className="od-hero-year font-semibold">26</span>
+              <HeroWordmark
+                motionEnabled={motionEnabled}
+                onComplete={() => setShowYear(true)}
+              />
+              <span
+                className="od-hero-year font-semibold"
+                data-visible={showYear}
+              >
+                26
+              </span>
             </h1>
           </div>
         </div>
@@ -146,17 +215,10 @@ export function Hero({ motionEnabled }: HeroProps) {
             </g>
           </svg>
         </div>
-        <div className="od-hero-foot absolute inset-x-0 bottom-0 z-20 flex items-center justify-between">
+        <div className="od-hero-foot absolute inset-x-0 bottom-0 z-20 flex items-center">
           <span>
             Arlington, Texas <span aria-hidden="true">/</span> 2026
           </span>
-          <a
-            href="#about"
-            className="od-scroll-invitation inline-flex items-center gap-4"
-          >
-            Scroll into the story{" "}
-            <span className="od-scroll-line" aria-hidden="true" />
-          </a>
         </div>
       </div>
     </section>

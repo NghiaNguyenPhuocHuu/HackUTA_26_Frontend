@@ -5,9 +5,14 @@ test('event content and navigation are honest and complete', async ({ page }) =>
   await expect(page).toHaveTitle(/HackUTA 2026/)
   await expect(page.getByRole('heading', { level: 1 })).toContainText('HackUTA')
   await expect(page.getByText('November 14–15, 2026')).toBeVisible()
-  await expect(page.locator('.weekend-row')).toHaveCount(4)
-  await expect(page.locator('.weekend-time')).toHaveText(['Time TBA', 'Time TBA', 'Time TBA', 'Time TBA'])
-  await expect(page.locator('.crew-facts > div')).toHaveCount(3)
+  await expect(page.getByRole('heading', { name: /Schedule coming soon/i })).toBeVisible()
+  await expect(page.getByText('Full timeline on the way')).toBeVisible()
+  await expect(page.locator('.odyssey-call-perks > li')).toHaveCount(3)
+  await expect(page.getByRole('link', { name: 'Join Discord', exact: true })).toHaveAttribute('href', /discord\.gg/)
+  await expect(page.getByRole('link', { name: 'Devpost', exact: true })).toHaveAttribute('href', /devpost\.com/)
+  await expect(page.locator('#footer').getByRole('link', { name: 'Instagram' })).toHaveAttribute('href', /instagram\.com\/hackuta/)
+  await expect(page.locator('#footer').getByRole('link', { name: 'Code of Conduct' })).toHaveAttribute('href', /mlh\.io\/code-of-conduct/)
+  await expect(page.getByText('Your odyssey begins here', { exact: false })).toHaveCount(0)
   await expect(page.locator('.oracle-item')).toHaveCount(6)
   const beginnerQuestion = page.getByText('Is HackUTA beginner-friendly?', { exact: true })
   await beginnerQuestion.click()
@@ -25,7 +30,7 @@ test('animation follows the system preference and ignores the retired stored tog
   await expect(page.getByRole('button', { name: /motion|animation/i })).toHaveCount(0)
   await expect(page.locator('#top')).toHaveAttribute('data-animated', 'true')
   await expect(page.locator('#voyage')).toHaveAttribute('data-animated', 'true')
-  await page.locator('.od-chapter-control').nth(2).click()
+  await page.locator('#voyage-chapter-3').scrollIntoViewIfNeeded()
   await expect(page.locator('#voyage-chapter-3')).toHaveAttribute('data-active', 'true')
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await expect(page.locator('#top')).toHaveAttribute('data-animated', 'false')
@@ -91,8 +96,8 @@ for (const viewport of [{ width: 320, height: 740 }, { width: 844, height: 390 }
     for (const chapter of await page.locator('.od-chapter').all()) {
       await chapter.scrollIntoViewIfNeeded()
       await expect(chapter).not.toHaveAttribute('aria-hidden', 'true')
-      const heading = chapter.locator('h3')
-      expect(await heading.evaluate(el => el.getBoundingClientRect().right <= innerWidth)).toBe(true)
+      const copy = chapter.locator('.od-chapter-description')
+      expect(await copy.evaluate(el => el.getBoundingClientRect().right <= innerWidth)).toBe(true)
     }
   })
 }
@@ -103,8 +108,9 @@ for (const width of [1440, 1920]) {
     await page.goto('/')
     await expect(page.locator('#voyage')).toHaveAttribute('data-animated', 'true')
     for (let index = 0; index < 4; index++) {
-      await page.locator('.od-chapter-control').nth(index).click()
-      await expect(page.locator(`#voyage-chapter-${index + 1}`)).toHaveAttribute('data-active', 'true')
+      const chapter = page.locator(`#voyage-chapter-${index + 1}`)
+      await chapter.scrollIntoViewIfNeeded()
+      await expect(chapter).toHaveAttribute('data-active', 'true')
       await page.waitForTimeout(900)
       const artwork = await page.locator('#voyage').evaluate(section => {
         const visible = (element: Element) => {
@@ -117,7 +123,7 @@ for (const width of [1440, 1920]) {
           return true
         }
         const copy = section.querySelector('.od-chapter[data-active="true"] .od-chapter-copy')!.getBoundingClientRect()
-        return [...section.querySelectorAll<HTMLImageElement>('.od-island-panel[data-active="true"] img')].filter(visible).map(image => {
+        return [...section.querySelectorAll<HTMLImageElement>('.od-chapter[data-active="true"] .od-chapter-art img')].filter(visible).map(image => {
           const bounds = image.getBoundingClientRect()
           const fit = getComputedStyle(image).objectFit
           const scales = [bounds.width / image.naturalWidth, bounds.height / image.naturalHeight]

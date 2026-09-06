@@ -1,91 +1,119 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Ship } from './art/Ship'
 
 type VoyageProps = { motionEnabled: boolean }
 
 const chapters = [
   {
-    title: ['Gather', 'your crew.'],
-    day: 'Saturday · November 14',
-    description: 'Meet other builders. Find your people. Give a promising idea a place to begin.',
-    name: 'The departure',
-    navigation: 'Depart',
-    landmark: 'An ancient harbor with olive trees and a gathering place for the crew.',
+    description:
+      'HackUTA is a 24-hour hackathon at UT Arlington where college students design, build, and pitch a project from scratch. Beginners and veterans alike: if you can bring curiosity, there is a place for you on this voyage.',
+    landmark: 'An ancient harbor with olive trees, where every odyssey sets sail.',
     image: 'departure',
+    side: 'right',
   },
   {
-    title: ['Outthink', 'the impossible.'],
-    day: 'Saturday · November 14',
-    description: 'Every odyssey meets a Cyclops. Experiment, ask for help, and find another way through.',
-    name: 'The encounter · Polyphemus',
-    navigation: 'Encounter',
-    landmark: 'Polyphemus, a great Cyclops whose single eye watches from an island mountain.',
+    description:
+      'Compete for cash prizes, sponsor awards, and swag across multiple tracks. Prize pools and categories will be announced as the event approaches. Build something bold and make the judges take notice.',
+    landmark: 'Polyphemus watches from his island, a trial worth conquering for the reward.',
     image: 'encounter',
+    side: 'left',
   },
   {
-    title: ['Make your', 'idea real.'],
-    day: 'Sunday · November 15',
-    description: 'Bring the pieces together. Turn what you have learned into something you can show the world.',
-    name: 'The discovery',
-    navigation: 'Discover',
-    landmark: 'An owl beside an olive tree and illustrated tablets on a rocky island.',
+    description:
+      'HackUTA is organized by ACM at UTA, students who have run hackathons before and care about helping others ship their first project. They handle logistics, mentors, food, and keeping the voyage on course from check-in to awards.',
+    landmark: 'An owl beside an olive tree, wisdom passed down by those who have sailed before.',
     image: 'discovery',
+    side: 'right',
   },
   {
-    title: ['Bring home', 'something new.'],
-    day: 'Sunday · November 15',
-    description: 'Share your project. Celebrate your crew. Take home new friendships and a story of your own.',
-    name: 'The return',
-    navigation: 'Return',
-    landmark: 'A homecoming arch framed by olive branches and a rising terracotta sun.',
+    description:
+      'Free food, workshops, a team-formation mixer, late-night debugging with new friends, and plenty of inside jokes along the way. Come to build, and leave with a story worth retelling.',
+    landmark: 'A homecoming arch framed by olive branches, the celebration at journey\'s end.',
     image: 'return',
+    side: 'left',
   },
 ]
+
+// Serpentine route drawn in a 100 × 400 box that stretches to the journey.
+// Each waypoint sits at the vertical centre of a chapter and leans toward its island.
+const ROUTE = 'M50 0C50 25 62 25 62 50C62 100 38 100 38 150C38 200 62 200 62 250C62 300 38 300 38 350C38 375 50 375 50 400'
 
 const clamp = (value: number) => Math.max(0, Math.min(1, value))
 
 export function Voyage({ motionEnabled }: VoyageProps) {
   const sectionRef = useRef<HTMLElement>(null)
-  const controlRefs = useRef<Array<HTMLButtonElement | null>>([])
+  const journeyRef = useRef<HTMLDivElement>(null)
+  const routeRef = useRef<SVGPathElement>(null)
+  const shipRef = useRef<HTMLDivElement>(null)
+  const stopRefs = useRef<Array<HTMLElement | null>>([])
   const [desktop, setDesktop] = useState(() => window.matchMedia('(min-width: 960px) and (min-height: 660px)').matches)
+  const [wide, setWide] = useState(() => window.matchMedia('(min-width: 960px)').matches)
   const [activeChapter, setActiveChapter] = useState(0)
   const activeRef = useRef(0)
   const animated = motionEnabled && desktop
 
   useEffect(() => {
-    const media = window.matchMedia('(min-width: 960px) and (min-height: 660px)')
-    const update = () => setDesktop(media.matches)
+    const tall = window.matchMedia('(min-width: 960px) and (min-height: 660px)')
+    const broad = window.matchMedia('(min-width: 960px)')
+    const update = () => {
+      setDesktop(tall.matches)
+      setWide(broad.matches)
+    }
     update()
-    media.addEventListener('change', update)
-    return () => media.removeEventListener('change', update)
+    tall.addEventListener('change', update)
+    broad.addEventListener('change', update)
+    return () => {
+      tall.removeEventListener('change', update)
+      broad.removeEventListener('change', update)
+    }
   }, [])
 
   useEffect(() => {
-    const section = sectionRef.current
-    if (!section || !animated) return
     let frame = 0
 
     const update = () => {
       frame = 0
-      const bounds = section.getBoundingClientRect()
-      const progress = clamp(-bounds.top / Math.max(1, bounds.height - window.innerHeight))
-      const chapter = Math.min(3, Math.floor(progress * 4))
-      const local = progress * 4 - chapter
-      // More than half of each chapter is a quiet hold at its landmark.
-      const travel = chapter === 3 ? 0 : clamp((local - 0.53) / 0.45)
-      const eased = travel * travel * (3 - 2 * travel)
-      const current = travel > 0.5 ? Math.min(3, chapter + 1) : chapter
+      const readingLine = window.innerHeight / 2
 
-      section.style.setProperty('--scene-position', (chapter + eased).toFixed(4))
-      section.style.setProperty('--journey', progress.toFixed(4))
-      section.style.setProperty('--ship-travel', `${(Math.sin(progress * Math.PI) * 44).toFixed(2)}px`)
-      section.style.setProperty('--chapter-opacity', String(travel === 0 || travel === 1 ? 1 : Math.min(1, 0.12 + Math.abs(travel - 0.5) * 3)))
-      section.style.setProperty('--chapter-lift', `${((travel < 0.5 ? -travel : 1 - travel) * 12).toFixed(2)}px`)
-      if (activeRef.current !== current) {
-        activeRef.current = current
-        setActiveChapter(current)
+      let nearest = 0
+      let shortest = Infinity
+      stopRefs.current.forEach((stop, index) => {
+        if (!stop) return
+        const bounds = stop.getBoundingClientRect()
+        const distance = Math.abs(bounds.top + bounds.height / 2 - readingLine)
+        if (distance < shortest) {
+          shortest = distance
+          nearest = index
+        }
+      })
+      if (activeRef.current !== nearest) {
+        activeRef.current = nearest
+        setActiveChapter(nearest)
       }
+
+      const journey = journeyRef.current
+      const route = routeRef.current
+      const ship = shipRef.current
+      if (!journey || !route || !ship) return
+
+      const bounds = journey.getBoundingClientRect()
+      const progress = clamp((readingLine - bounds.top) / Math.max(1, bounds.height))
+      const total = route.getTotalLength()
+      const travelled = progress * total
+      const point = route.getPointAtLength(travelled)
+      const ahead = route.getPointAtLength(Math.min(total, travelled + 4))
+      const behind = route.getPointAtLength(Math.max(0, travelled - 4))
+      const dx = ((ahead.x - behind.x) / 100) * bounds.width
+      const dy = ((ahead.y - behind.y) / 400) * bounds.height
+      // Keep the hull upright and only let the bow dip toward the direction of travel.
+      const tilt = Math.max(-11, Math.min(11, (dx / (Math.abs(dy) + 1)) * 9))
+
+      ship.style.setProperty('--ship-x', `${((point.x / 100) * bounds.width).toFixed(2)}px`)
+      ship.style.setProperty('--ship-y', `${((point.y / 400) * bounds.height).toFixed(2)}px`)
+      ship.style.setProperty('--ship-tilt', `${tilt.toFixed(2)}deg`)
+      ship.dataset.ready = 'true'
     }
+
     const requestUpdate = () => {
       if (!frame) frame = window.requestAnimationFrame(update)
     }
@@ -97,32 +125,10 @@ export function Voyage({ motionEnabled }: VoyageProps) {
       window.removeEventListener('scroll', requestUpdate)
       window.removeEventListener('resize', requestUpdate)
     }
-  }, [animated])
-
-  const goToChapter = (index: number) => {
-    const section = sectionRef.current
-    if (!section) return
-    if (!animated) {
-      document.getElementById(`voyage-chapter-${index + 1}`)?.scrollIntoView({ behavior: 'auto', block: 'start' })
-      return
-    }
-    const start = window.scrollY + section.getBoundingClientRect().top
-    const distance = section.offsetHeight - window.innerHeight
-    window.scrollTo({ top: start + distance * ((index + 0.25) / 4), behavior: 'smooth' })
-  }
-
-  const handleChapterKey = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
-    const destination = event.key === 'ArrowRight' ? (index + 1) % 4
-      : event.key === 'ArrowLeft' ? (index + 3) % 4
-        : event.key === 'Home' ? 0 : event.key === 'End' ? 3 : null
-    if (destination === null) return
-    event.preventDefault()
-    controlRefs.current[destination]?.focus({ preventScroll: true })
-    goToChapter(destination)
-  }
+  }, [animated, wide])
 
   return (
-    <section ref={sectionRef} id="voyage" className="od-voyage" data-animated={animated} aria-labelledby="voyage-title">
+    <section ref={sectionRef} id="voyage" className="od-voyage" data-animated={animated} aria-label="About HackUTA">
       <svg className="od-voyage-art-filter" width="0" height="0" aria-hidden="true" focusable="false">
         <defs>
           <filter id="odyssey-indigo-art" colorInterpolationFilters="sRGB">
@@ -134,79 +140,50 @@ export function Voyage({ motionEnabled }: VoyageProps) {
         </defs>
       </svg>
       <div className="od-voyage-stage">
-        <div className="od-voyage-top flex items-center justify-between gap-5">
-          <div className="od-scene-label inline-flex items-center gap-4 font-semibold uppercase">
-            <span className="od-scene-number inline-flex items-center justify-center">02</span>
-            <h2 id="voyage-title">The voyage</h2>
-          </div>
+        <div className="od-voyage-top flex items-center justify-end gap-5">
           <a href="#schedule" className="od-schedule-skip inline-flex items-center gap-3">Skip to schedule <span aria-hidden="true">↓</span></a>
         </div>
 
-        <div className="od-voyage-scene">
-          <div className="od-chapters">
-          {chapters.map((chapter, index) => (
-            <article
-              key={chapter.name}
-              id={`voyage-chapter-${index + 1}`}
-              className="od-chapter"
-              data-active={activeChapter === index}
-              aria-hidden={animated && activeChapter !== index ? true : undefined}
-              aria-labelledby={`voyage-heading-${index + 1}`}
+        <div ref={journeyRef} className="od-journey">
+          {wide && (
+            <svg
+              className="od-journey-route"
+              viewBox="0 0 100 400"
+              preserveAspectRatio="none"
+              fill="none"
+              aria-hidden="true"
+              focusable="false"
             >
-              <div className="od-chapter-art">
-                <img src={`/images/island-${chapter.image}-v7.webp`} width="1536" height="1024" alt={chapter.landmark} loading="lazy" decoding="async" />
-              </div>
-              <div className="od-chapter-copy">
-                <p className="od-chapter-day font-semibold uppercase">{chapter.day}</p>
-                <h3 id={`voyage-heading-${index + 1}`} className="od-chapter-title font-semibold uppercase">
-                  {chapter.title[0]}<br />{chapter.title[1]}
-                </h3>
-                <p className="od-chapter-description">{chapter.description}</p>
-                <p className="od-chapter-label uppercase"><span>0{index + 1}</span><span aria-hidden="true">/</span>{chapter.name}</p>
-              </div>
-            </article>
-          ))}
-          </div>
-          <div className="od-island-window" aria-hidden="true">
-            <div className="od-island-strip">
-              {chapters.map((chapter, index) => (
-                <div className="od-island-panel" key={chapter.image} data-active={activeChapter === index}>
-                  <img src={`/images/island-${chapter.image}-v7.webp`} width="1536" height="1024" alt="" loading="lazy" decoding="async" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+              <path ref={routeRef} className="od-journey-track" d={ROUTE} />
+            </svg>
+          )}
 
-        <div className="od-voyage-boat" aria-hidden="true">
-          <Ship className="od-voyage-ship" rowing={animated} tone="clay" style={{ color: 'var(--sand)' }} />
-        </div>
-
-        <div className="od-foreground-sea" aria-hidden="true">
-          <svg viewBox="0 0 1800 34" preserveAspectRatio="none" fill="none">
-            <path d="M-60 14Q50 0 160 14T380 14T600 14T820 14T1040 14T1260 14T1480 14T1700 14T1920 14" />
-          </svg>
-        </div>
-
-        <div className="od-voyage-bottom">
-          <nav className="od-voyage-controls flex items-center" aria-label="Voyage chapters">
+          <div className="od-journey-stops">
             {chapters.map((chapter, index) => (
-              <button
-                key={chapter.name}
-                ref={(element) => { controlRefs.current[index] = element }}
-                type="button"
-                aria-pressed={activeChapter === index}
-                aria-controls={`voyage-chapter-${index + 1}`}
-                onClick={() => goToChapter(index)}
-                onKeyDown={(event) => handleChapterKey(event, index)}
-                className="od-chapter-control group inline-flex items-center gap-3"
+              <article
+                key={chapter.image}
+                ref={(element) => { stopRefs.current[index] = element }}
+                id={`voyage-chapter-${index + 1}`}
+                className="od-chapter"
+                data-side={chapter.side}
+                data-active={activeChapter === index}
+                aria-labelledby={`voyage-copy-${index + 1}`}
               >
-                <span className="od-control-number inline-flex items-center justify-center">0{index + 1}</span>
-                <span>{chapter.navigation}</span>
-                {index < 3 && <span className="od-control-line" aria-hidden="true"><span /></span>}
-              </button>
+                <div className="od-chapter-art">
+                  <img src={`/images/island-${chapter.image}-v7.webp`} width="1536" height="1024" alt={chapter.landmark} loading="lazy" decoding="async" />
+                </div>
+                <div className="od-chapter-copy">
+                  <p id={`voyage-copy-${index + 1}`} className="od-chapter-description">{chapter.description}</p>
+                </div>
+              </article>
             ))}
-          </nav>
+          </div>
+
+          {animated && (
+            <div ref={shipRef} className="od-journey-ship" aria-hidden="true">
+              <Ship className="od-voyage-ship" rowing tone="clay" style={{ color: 'var(--light)' }} />
+            </div>
+          )}
         </div>
       </div>
     </section>

@@ -32,9 +32,36 @@ export const HeroAtmosphere = forwardRef<HeroAtmosphereHandle, HeroAtmospherePro
     const element = shaderRef.current
     if (!element) return
     const hero = element.closest<HTMLElement>('.od-hero')
+    let canvas: HTMLCanvasElement | null = null
+
+    const hide = () => {
+      element.dataset.renderer = 'pending'
+      hero?.removeAttribute('data-weather-renderer')
+    }
+
+    const onLost = (event: Event) => {
+      event.preventDefault()
+      hide()
+    }
+
+    const onRestored = () => {
+      markReady()
+    }
+
+    const bindCanvas = (next: HTMLCanvasElement) => {
+      if (canvas === next) return
+      canvas?.removeEventListener('webglcontextlost', onLost)
+      canvas?.removeEventListener('webglcontextrestored', onRestored)
+      canvas = next
+      canvas.addEventListener('webglcontextlost', onLost)
+      canvas.addEventListener('webglcontextrestored', onRestored)
+    }
+
     const markReady = () => {
-      const ready = Boolean(element.paperShaderMount && element.querySelector('canvas'))
-      if (ready) {
+      const nextCanvas = element.querySelector('canvas')
+      const ready = Boolean(element.paperShaderMount && nextCanvas)
+      if (ready && nextCanvas) {
+        bindCanvas(nextCanvas)
         element.dataset.renderer = 'webgl'
         hero?.setAttribute('data-weather-renderer', 'paper-webgl')
         update(stateRef.current.progress, stateRef.current.storm)
@@ -49,7 +76,9 @@ export const HeroAtmosphere = forwardRef<HeroAtmosphereHandle, HeroAtmospherePro
     waitForMount()
     return () => {
       cancelAnimationFrame(frame)
-      hero?.removeAttribute('data-weather-renderer')
+      canvas?.removeEventListener('webglcontextlost', onLost)
+      canvas?.removeEventListener('webglcontextrestored', onRestored)
+      hide()
     }
   }, [update])
 

@@ -22,7 +22,7 @@ for (const viewport of viewports) {
     })
     page.on('pageerror', error => errors.push(error.message))
     await page.goto('/')
-    await page.locator('footer').scrollIntoViewIfNeeded()
+    await page.locator('#footer').scrollIntoViewIfNeeded()
 
     const geometry = await page.evaluate(() => ({
       overflow: document.documentElement.scrollWidth - innerWidth,

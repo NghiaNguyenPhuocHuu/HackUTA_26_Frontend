@@ -117,7 +117,7 @@ export function Header() {
             aria-label="HackUTA home"
             onClick={() => setOpen(false)}
           >
-            <Logo className="site-logo" variant={theme === 'dark' ? 'dark' : 'light'} />
+            <Logo className="site-logo" variant="adaptive" />
           </a>
           <nav
             aria-label="Main navigation"

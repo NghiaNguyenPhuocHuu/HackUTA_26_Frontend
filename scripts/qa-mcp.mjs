@@ -232,25 +232,18 @@ try {
     }
 
     for (let index = 0; index < 4; index++) {
-      await call('browser_click', { target: `.od-chapter-control[aria-controls="voyage-chapter-${index + 1}"]`, element: `Voyage chapter ${index + 1}` });
-      await run(`async (page) => { await page.waitForTimeout(1200); return true; }`);
+      await run(`async (page) => {
+        await page.locator('#voyage-chapter-${index + 1}').scrollIntoViewIfNeeded();
+        await page.waitForTimeout(1200);
+        return true;
+      }`);
       const chapter = await evaluate(() => ({
         active: document.querySelector('.od-chapter[data-active="true"]')?.id,
-        accessible: [...document.querySelectorAll('.od-chapter')].filter(element => element.getAttribute('aria-hidden') !== 'true').map(element => element.id),
-        pressed: document.querySelector('.od-chapter-control[aria-pressed="true"]')?.getAttribute('aria-controls'),
       }));
-      check(`Chapter ${index + 1} control reaches matching scene`, chapter.active === `voyage-chapter-${index + 1}` && chapter.pressed === chapter.active && chapter.accessible.length === 1, chapter);
+      check(`Chapter ${index + 1} scroll reaches matching scene`, chapter.active === `voyage-chapter-${index + 1}`, chapter);
       await capture(`desktop-voyage-chapter-${index + 1}.png`);
       await checkArt(`1440px chapter ${index + 1}`);
     }
-    await call('browser_press_key', { key: 'Home' });
-    await run(`async (page) => { await page.waitForTimeout(1200); return true; }`);
-    const chapterKeyboard = await evaluate(() => ({ focused: document.activeElement?.getAttribute('aria-controls'), active: document.querySelector('.od-chapter[data-active="true"]')?.id }));
-    check('Voyage Home key selects and focuses first chapter', chapterKeyboard.focused === 'voyage-chapter-1' && chapterKeyboard.active === 'voyage-chapter-1', chapterKeyboard);
-    await call('browser_press_key', { key: 'ArrowRight' });
-    await run(`async (page) => { await page.waitForTimeout(1200); return true; }`);
-    const arrowKeyboard = await evaluate(() => ({ focused: document.activeElement?.getAttribute('aria-controls'), active: document.querySelector('.od-chapter[data-active="true"]')?.id }));
-    check('Voyage arrow key selects and focuses adjacent chapter', arrowKeyboard.focused === 'voyage-chapter-2' && arrowKeyboard.active === 'voyage-chapter-2', arrowKeyboard);
     await call('browser_click', { target: '.od-schedule-skip', element: 'Skip animated voyage to schedule' });
     await run(`async (page) => { await page.waitForTimeout(1000); return true; }`);
     const scheduleSkip = await evaluate(() => ({ hash: location.hash, top: document.querySelector('#schedule')?.getBoundingClientRect().top }));
@@ -269,8 +262,11 @@ try {
         await capture('desktop-1920-hero.png');
         await checkArt('1920px hero');
         for (let index = 0; index < 4; index++) {
-          await call('browser_click', { target: `.od-chapter-control[aria-controls="voyage-chapter-${index + 1}"]` });
-          await run(`async (page) => { await page.waitForTimeout(1200); return true; }`);
+          await run(`async (page) => {
+            await page.locator('#voyage-chapter-${index + 1}').scrollIntoViewIfNeeded();
+            await page.waitForTimeout(1200);
+            return true;
+          }`);
           await checkArt(`1920px chapter ${index + 1}`);
           await capture(`desktop-1920-chapter-${index + 1}.png`);
         }

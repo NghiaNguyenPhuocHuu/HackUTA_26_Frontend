@@ -53,12 +53,32 @@ export const HeroWaves = forwardRef<HeroWavesHandle, HeroWavesProps>(function He
     })
     waveRef.current = wave
     host.dataset.renderer = wave.renderMode
-    host.closest<HTMLElement>('.od-hero')?.setAttribute('data-water-renderer', wave.renderMode)
+    const hero = host.closest<HTMLElement>('.od-hero')
+    hero?.setAttribute('data-water-renderer', wave.renderMode)
     update(stormRef.current)
+
+    const canvas = host.querySelector('canvas')
+    const hide = () => {
+      host.dataset.renderer = 'pending'
+      hero?.removeAttribute('data-water-renderer')
+    }
+    const onLost = (event: Event) => {
+      event.preventDefault()
+      hide()
+    }
+    const onRestored = () => {
+      host.dataset.renderer = wave.renderMode
+      hero?.setAttribute('data-water-renderer', wave.renderMode)
+      update(stormRef.current)
+    }
+    canvas?.addEventListener('webglcontextlost', onLost)
+    canvas?.addEventListener('webglcontextrestored', onRestored)
 
     return () => {
       waveRef.current = null
-      host.closest<HTMLElement>('.od-hero')?.removeAttribute('data-water-renderer')
+      canvas?.removeEventListener('webglcontextlost', onLost)
+      canvas?.removeEventListener('webglcontextrestored', onRestored)
+      hide()
       wave.destroy()
     }
   }, [motionEnabled])
