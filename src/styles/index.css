@@ -111,7 +111,7 @@
 
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: calc(var(--header-height) + 20px);
+    scroll-padding-top: 0;
     background: var(--night);
     overscroll-behavior-y: none;
   }
@@ -144,7 +144,7 @@
   img { max-width: 100%; }
   h1, h2, h3 { line-height: 1; letter-spacing: -.025em; }
   h2, h3 { font-weight: 600; }
-  section[id] { scroll-margin-top: 24px; }
+  section[id], footer[id] { scroll-margin-top: 0; }
   main { overflow: clip; overflow-clip-margin: 0px; }
   p { text-wrap: pretty; }
 

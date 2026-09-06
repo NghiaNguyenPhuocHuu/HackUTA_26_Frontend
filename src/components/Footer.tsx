@@ -1,13 +1,14 @@
-import type { ReactNode } from "react";
+import type { ReactNode, MouseEvent } from "react";
 import { Logo } from "./art/Logo";
 import { Ship } from "./art/Ship";
+import { scrollToSection } from "../utils/scrollToSection";
 
 const exploreLinks = [
-  { href: "#about", label: "About" },
-  { href: "#schedule", label: "Schedule" },
-  { href: "#faq", label: "FAQ" },
-  { href: "#sponsors", label: "Sponsors" },
-  { href: "#about", label: "Apply" },
+  { id: "about", label: "About" },
+  { id: "schedule", label: "Schedule" },
+  { id: "faq", label: "FAQ" },
+  { id: "sponsors", label: "Sponsors" },
+  { id: "about", label: "Apply" },
 ];
 
 const otherHackathons = [
@@ -112,6 +113,11 @@ function InfoColumn({
 }
 
 export function Footer({ motionEnabled = true }: { motionEnabled?: boolean }) {
+  const navigate =
+    (id: string) => (event: MouseEvent<HTMLAnchorElement>) => {
+      if (scrollToSection(id)) event.preventDefault();
+    };
+
   return (
     <footer
       id="footer"
@@ -126,6 +132,7 @@ export function Footer({ motionEnabled = true }: { motionEnabled?: boolean }) {
               className="footer-brand-lockup inline-flex items-center gap-3"
               href="#top"
               aria-label="HackUTA home"
+              onClick={navigate("top")}
             >
               <Logo className="site-logo site-logo--footer" variant="light" />
               <span className="footer-brand-name font-semibold">HackUTA</span>
@@ -154,7 +161,9 @@ export function Footer({ motionEnabled = true }: { motionEnabled?: boolean }) {
             <ul className="footer-link-list">
               {exploreLinks.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href}>{link.label}</a>
+                  <a href={`#${link.id}`} onClick={navigate(link.id)}>
+                    {link.label}
+                  </a>
                 </li>
               ))}
             </ul>

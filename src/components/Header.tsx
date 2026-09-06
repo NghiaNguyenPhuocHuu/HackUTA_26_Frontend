@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { Logo } from "./art/Logo";
+import { scrollToSection } from "../utils/scrollToSection";
 
 const links = [
   { id: "about", label: "About" },
@@ -89,6 +90,14 @@ export function Header() {
     };
   }, [open]);
 
+  const navigate =
+    (id: string) => (event: MouseEvent<HTMLAnchorElement>) => {
+      if (scrollToSection(id)) {
+        event.preventDefault();
+        setOpen(false);
+      }
+    };
+
   return (
     <>
       <a
@@ -115,7 +124,7 @@ export function Header() {
             href="#top"
             className="header-brand"
             aria-label="HackUTA home"
-            onClick={() => setOpen(false)}
+            onClick={navigate("top")}
           >
             <Logo className="site-logo" variant="adaptive" />
           </a>
@@ -128,6 +137,7 @@ export function Header() {
                 key={link.id}
                 href={`#${link.id}`}
                 aria-current={active === link.id ? "location" : undefined}
+                onClick={navigate(link.id)}
               >
                 {link.label}
               </a>
@@ -159,7 +169,7 @@ export function Header() {
               key={link.id}
               href={`#${link.id}`}
               aria-current={active === link.id ? "location" : undefined}
-              onClick={() => setOpen(false)}
+              onClick={navigate(link.id)}
             >
               <span>0{index + 1}</span>
               {link.label}
