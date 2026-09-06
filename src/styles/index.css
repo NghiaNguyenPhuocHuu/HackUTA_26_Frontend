@@ -54,7 +54,6 @@
   --animate-hero-lightning-wash: hero-lightning-wash 5s steps(1, end) infinite;
   --animate-footer-rock: footer-rock 7s ease-in-out infinite;
   --animate-footer-tide: footer-tide 16s ease-in-out infinite alternate;
-  --animate-od-voyage-bob: od-voyage-bob 5.4s ease-in-out infinite;
 }
 
 @keyframes oar-stroke {
@@ -88,11 +87,6 @@
 @keyframes footer-rock{0%,100%{transform:translateY(0) rotate(-.7deg)}50%{transform:translateY(-4px) rotate(.7deg)}}
 
 @keyframes footer-tide{from{transform:translateX(-12px)}to{transform:translateX(12px)}}
-
-@keyframes od-voyage-bob {
-  0%, 100% { transform: translateY(0) rotate(-.35deg); }
-  50% { transform: translateY(-3px) rotate(.4deg); }
-}
 
 @layer base {
   :root {
@@ -731,49 +725,6 @@
   }
 }
 
-@utility od-chapter {
-  position: relative;
-  display: grid;
-  gap: clamp(26px, 4vw, 46px);
-  padding-block: clamp(34px, 5vw, 62px);
-  scroll-margin-top: 100px;
-}
-
-@utility od-chapter-art {
-  position: relative;
-  min-width: 0;
-  & img {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-height: 440px;
-    object-fit: contain;
-    filter: url("#odyssey-indigo-art");
-  }
-}
-
-@utility od-chapter-copy {
-  min-width: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-@utility od-chapter-description {
-  max-width: min(100%, 440px);
-  margin: 0;
-  padding: clamp(28px, 3.6vw, 40px) clamp(26px, 3.2vw, 36px);
-  background: transparent;
-  border: 1.5px solid var(--clay);
-  color: var(--clay);
-  font-family: var(--font-sans);
-  font-size: clamp(22px, 2.5vw, 30px);
-  line-height: 1.45;
-  text-align: center;
-  text-wrap: pretty;
-}
-
 @utility od-departure-water {
   position:absolute;
   z-index:2;
@@ -989,53 +940,6 @@
   }
 }
 
-@utility od-journey {
-  position: relative;
-  width: min(100% - var(--gutter) * 2, 1500px);
-  margin: clamp(30px, 5vw, 58px) auto clamp(44px, 6vw, 84px);
-}
-
-@utility od-journey-route {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-@utility od-journey-ship {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  left: 0;
-  width: clamp(96px, 9.5vw, 148px);
-  opacity: 0;
-  pointer-events: none;
-  transform:
-    translate3d(calc(var(--ship-x, 0px) - 50%), calc(var(--ship-y, 0px) - 50%), 0)
-    rotate(var(--ship-tilt, 0deg));
-  will-change: transform;
-  &[data-ready="true"] {
-    opacity: 1;
-  }
-}
-
-@utility od-journey-stops {
-  position: relative;
-  z-index: 1;
-  display: grid;
-}
-
-@utility od-journey-track {
-  fill: none;
-  stroke: color-mix(in srgb, var(--clay) 60%, transparent);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-dasharray: 0.1 13;
-  vector-effect: non-scaling-stroke;
-}
-
 @utility od-lightning {
   position:absolute;
   z-index:1;
@@ -1099,72 +1003,6 @@
     height:48px;
     opacity:.2!important;
   }
-}
-
-@utility od-scene-label {
-  color: var(--clay);
-  font-size: 14px;
-  letter-spacing: .12em;
-  & h2 {
-    font: inherit;
-    letter-spacing: inherit;
-    margin: 0;
-  }
-}
-
-@utility od-scene-number {
-  width: 32px;
-  height: 32px;
-  border: 1px solid currentColor;
-  border-radius: 50%;
-  font-size: 12px;
-  letter-spacing: 0;
-}
-
-@utility od-schedule-skip {
-  font-size: 15px;
-  min-height: 44px;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 6px;
-  &:hover {
-    color: var(--sand);
-  }
-}
-
-@utility od-voyage {
-  --gutter: clamp(24px, 6vw, 104px);
-  position: relative;
-  background: var(--night);
-  color: var(--light);
-}
-
-@utility od-voyage-art-filter {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
-
-@utility od-voyage-ship {
-  display: block;
-  width: 100%;
-  height: auto;
-  animation: od-voyage-bob 5.4s ease-in-out infinite;
-}
-
-@utility od-voyage-stage {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-}
-
-@utility od-voyage-top {
-  position: relative;
-  z-index: 6;
-  width: min(100% - var(--gutter) * 2, 1500px);
-  margin-inline: auto;
-  padding-top: clamp(28px, 4vw, 48px);
 }
 
 @utility od-wave-surface {
@@ -1530,58 +1368,232 @@
 }
 
 @utility weekend-eyebrow {
-  font-size:13px;
-  letter-spacing:.12em;
+  font-size:clamp(11px,1.05vw,13px);
+  letter-spacing:.14em;
   font-weight:600;
-  margin-bottom:23px;
+  margin-bottom:clamp(12px,1.6vh,18px);
+  color:var(--ocean);
 }
 
 @utility weekend-intro {
   & h2 {
-    font-size:clamp(48px,5.2vw,76px);
-    line-height:.97;
+    font-size:clamp(36px,4.2vw,58px);
+    line-height:.95;
     letter-spacing:-.03em;
   }
 }
 
-@utility weekend-layout {
-  gap:clamp(36px,5vw,72px);
-}
-
 @utility weekend-section {
-  padding:105px 0 95px;
+  min-height:100svh;
+  display:grid;
+  align-content:center;
+  padding-block:calc(var(--header-height) + clamp(14px,3vh,36px)) clamp(28px,5vh,58px);
   background:var(--clay);
   color:var(--ink);
 }
 
-@utility weekend-soon {
-  padding:clamp(32px,4vw,44px) clamp(28px,3.6vw,40px);
-  border:1.5px solid var(--ink);
+@utility weekend-inner {
+  display:grid;
+  gap:clamp(18px,2.6vh,32px);
+}
+
+/* Running meander band: the journey motif framing the schedule tablet. */
+@utility weekend-meander {
+  position:absolute;
+  left:0;
+  right:0;
+  height:20px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20'%3E%3Cpath d='M0 18h40M4 18V2h30v12H16V8h10v3' fill='none' stroke='%231a3a52' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat:repeat-x;
+  background-position:center;
+  opacity:.4;
+  pointer-events:none;
+  &[data-edge=top] {
+    top:calc(var(--header-height) - 4px);
+  }
+  &[data-edge=bottom] {
+    bottom:clamp(14px,2.4vh,26px);
+    transform:scaleY(-1);
+  }
+}
+
+@utility weekend-olive {
+  position:absolute;
+  right:clamp(-110px,-5vw,-50px);
+  bottom:-56px;
+  width:clamp(230px,26vw,390px);
+  height:auto;
+  color:var(--ocean);
+  opacity:.11;
+  pointer-events:none;
+}
+
+@utility weekend-olive-top {
+  right:auto;
+  bottom:auto;
+  left:clamp(-110px,-5vw,-50px);
+  top:-56px;
+  transform:scale(-1,-1);
+}
+
+@utility weekend-tablist {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:clamp(12px,1.8vw,22px);
+}
+
+@utility weekend-tab {
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:clamp(10px,1.1vw,14px);
+  padding:clamp(10px,1.4vh,14px) clamp(18px,2.2vw,32px);
+  border:1.5px solid color-mix(in srgb,var(--ink) 34%,transparent);
   background:transparent;
-  text-align:center;
-}
-
-@utility weekend-soon-copy {
-  margin-top:18px;
-  font-size:clamp(18px,2vw,22px);
-  line-height:1.55;
-  color:#315873;
-  text-wrap:pretty;
-}
-
-@utility weekend-soon-label {
-  font-size:13px;
-  letter-spacing:.12em;
   color:var(--ink);
+  text-align:left;
+  transition:background .35s var(--ease-out),color .35s var(--ease-out),border-color .35s var(--ease-out);
+  & .weekend-tab-numeral {
+    display:grid;
+    place-items:center;
+    width:clamp(28px,2.4vw,34px);
+    height:clamp(28px,2.4vw,34px);
+    border:1px solid currentColor;
+    border-radius:50%;
+    font-family:var(--font-display);
+    font-size:clamp(13px,1.2vw,16px);
+    line-height:1;
+  }
+  & .weekend-tab-label {
+    display:grid;
+    gap:3px;
+    font-size:clamp(13px,1.25vw,16px);
+    font-weight:600;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    line-height:1.1;
+  }
+  & .weekend-tab-date {
+    font-size:clamp(10px,.95vw,12px);
+    font-weight:400;
+    letter-spacing:.08em;
+    opacity:.75;
+  }
+  &[aria-selected=true] {
+    background:var(--ink);
+    border-color:var(--ink);
+    color:var(--clay);
+  }
+  /* Pediment notch tying the active tab to the tablet below it. */
+  &[aria-selected=true]::after {
+    content:'';
+    position:absolute;
+    top:100%;
+    left:50%;
+    width:13px;
+    height:13px;
+    background:var(--ink);
+    transform:translate(-50%,-50%) rotate(45deg);
+  }
+}
+
+@utility weekend-panel {
+  position:relative;
+  padding:clamp(18px,2.5vw,32px) clamp(20px,3.2vw,44px);
+  border:1.5px solid color-mix(in srgb,var(--ink) 30%,transparent);
+  background:color-mix(in srgb,var(--sand) 45%,transparent);
+  &[hidden] {
+    display:none;
+  }
+  &::before {
+    content:'';
+    position:absolute;
+    inset:7px;
+    border:1px solid color-mix(in srgb,var(--ink) 14%,transparent);
+    pointer-events:none;
+  }
+  &:focus-visible {
+    outline:2px solid var(--ink);
+    outline-offset:4px;
+  }
+}
+
+@utility weekend-day-head {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:8px 18px;
+  padding-bottom:clamp(11px,1.5vh,17px);
+  margin-bottom:clamp(12px,2vh,22px);
+  border-bottom:1px solid color-mix(in srgb,var(--ink) 26%,transparent);
+  & h3 {
+    font-family:var(--font-display);
+    font-size:clamp(20px,2.3vw,29px);
+    font-weight:400;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+  }
+  & p {
+    font-size:clamp(11px,1.05vw,13px);
+    font-weight:600;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ocean);
+  }
+}
+
+/* Columns rather than a grid so the times still read top-to-bottom in order. */
+@utility weekend-timeline {
+  list-style:none;
+  margin:0;
+  padding:0;
+  column-gap:clamp(30px,4.5vw,72px);
+}
+
+@utility weekend-slot {
+  display:grid;
+  grid-template-columns:6em minmax(0,1fr);
+  gap:clamp(10px,1.2vw,16px);
+  align-items:baseline;
+  padding:clamp(5px,.95vh,10px) 0;
+  break-inside:avoid;
+  border-bottom:1px dashed color-mix(in srgb,var(--ink) 20%,transparent);
+  &:last-child {
+    border-bottom:0;
+  }
+  & time {
+    font-size:clamp(12px,1.15vw,15px);
+    font-weight:600;
+    letter-spacing:.04em;
+    font-variant-numeric:tabular-nums;
+    color:var(--ocean);
+  }
+  & span {
+    font-size:clamp(14px,1.35vw,18px);
+    line-height:1.3;
+  }
+}
+
+@utility weekend-note {
+  text-align:center;
+  font-size:clamp(11px,1vw,13px);
+  font-weight:600;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:color-mix(in srgb,var(--ink) 62%,transparent);
 }
 
 @utility weekend-when {
-  margin-top:24px;
-  font-size:clamp(17px,1.8vw,20px);
+  margin-top:clamp(14px,2vh,22px);
+  font-size:clamp(16px,1.7vw,20px);
   font-weight:600;
   letter-spacing:.04em;
   color:#315873;
 }
+
+@media(min-width:900px){.weekend-timeline{columns:2}}
 
 @media(min-width:960px) and (max-height:850px){.od-hero-stage{min-height:800px}.od-hero-copy{padding-top:100px}.od-hero-logo{height:360px}.od-hero-boat{width:230px;bottom:107px}.od-hero-coast{width:400px;bottom:-100px}.od-hero-coast-right{width:360px}}
 
@@ -1597,9 +1609,9 @@
 
 @media(max-width:1100px){.oracle-layout{gap:60px}.supporters-olive{right:-80px;opacity:.2}.supporters-content{max-width:850px}.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:40px 36px}.footer-brand-block{grid-column:1/-1;max-width:420px}}
 
-@media(max-width:767px){.odyssey-call-inner{min-height:auto;padding-block:96px 88px}.odyssey-call-title{font-size:clamp(34px,9vw,52px)}.odyssey-call-lede{font-size:18px;margin-top:22px}.odyssey-call-actions{margin-top:34px}.odyssey-call-perks{gap:16px 24px;margin-top:52px;font-size:12px}.odyssey-btn{min-width:100%}.weekend-section{padding:68px 0 72px}.weekend-eyebrow{font-size:12px;margin-bottom:19px}.weekend-intro h2{font-size:54px}.weekend-when{font-size:17px;margin-top:20px}.weekend-soon-copy{font-size:18px}.oracle-section{padding:73px 0 82px}.oracle-layout{grid-template-columns:1fr;gap:52px}.oracle-intro{position:relative;top:auto}.oracle-intro h2{margin-top:29px;font-size:clamp(47px,12vw,66px)}.oracle-description{font-size:18px;margin-top:23px}.oracle-eye{width:132px;margin-top:32px}.oracle-status{margin-top:20px;font-size:12px}.oracle-item .oracle-summary{grid-template-columns:27px minmax(0,1fr) 25px;gap:11px;min-height:82px;padding:20px 0;font-size:22px}.oracle-number{padding-top:4px;font-size:11px}.oracle-toggle{width:25px;height:25px}.oracle-answer-inner>p{padding-inline:38px 24px;font-size:16px;line-height:1.55}.oracle-orbit{left:-230px;bottom:-370px}.supporters-section{padding:73px 0 77px;min-height:0}.supporters-content{margin-top:31px}.supporters-content h2{font-size:clamp(39px,8.5vw,62px)}.supporters-copy{gap:26px;margin-top:26px}.supporters-copy>p{font-size:18px;max-width:360px}.supporters-announcement{padding-left:20px}.supporters-announcement>p{font-size:16px}.supporters-olive{width:230px;height:310px;right:-80px;bottom:-45px;opacity:.2}.supporters-branch{width:165px!important;height:300px!important}.supporters-orbit{width:200px;height:200px;right:3px;bottom:59px}.footer-content{padding-bottom:140px}.footer-sea{height:160px;bottom:32px}.footer-vessel{width:224px;left:calc(50% - 112px);bottom:8px}.footer-water{height:58px;bottom:-8px}.footer-water{height:72px}.footer-grid{grid-template-columns:1fr;gap:36px}.footer-brand-block{max-width:none}.footer-bottom{margin-top:28px;padding-top:18px}}
+@media(max-width:767px){.odyssey-call-inner{min-height:auto;padding-block:96px 88px}.odyssey-call-title{font-size:clamp(34px,9vw,52px)}.odyssey-call-lede{font-size:18px;margin-top:22px}.odyssey-call-actions{margin-top:34px}.odyssey-call-perks{gap:16px 24px;margin-top:52px;font-size:12px}.odyssey-btn{min-width:100%}.weekend-section{padding-block:calc(var(--header-height) + 34px) 60px}.weekend-eyebrow{font-size:12px;margin-bottom:14px}.weekend-intro h2{font-size:clamp(36px,10vw,46px)}.weekend-when{font-size:16px;margin-top:16px}.weekend-tab{flex:1 1 100%;justify-content:center}.weekend-slot{grid-template-columns:5.4em minmax(0,1fr)}.oracle-section{padding:73px 0 82px}.oracle-layout{grid-template-columns:1fr;gap:52px}.oracle-intro{position:relative;top:auto}.oracle-intro h2{margin-top:29px;font-size:clamp(47px,12vw,66px)}.oracle-description{font-size:18px;margin-top:23px}.oracle-eye{width:132px;margin-top:32px}.oracle-status{margin-top:20px;font-size:12px}.oracle-item .oracle-summary{grid-template-columns:27px minmax(0,1fr) 25px;gap:11px;min-height:82px;padding:20px 0;font-size:22px}.oracle-number{padding-top:4px;font-size:11px}.oracle-toggle{width:25px;height:25px}.oracle-answer-inner>p{padding-inline:38px 24px;font-size:16px;line-height:1.55}.oracle-orbit{left:-230px;bottom:-370px}.supporters-section{padding:73px 0 77px;min-height:0}.supporters-content{margin-top:31px}.supporters-content h2{font-size:clamp(39px,8.5vw,62px)}.supporters-copy{gap:26px;margin-top:26px}.supporters-copy>p{font-size:18px;max-width:360px}.supporters-announcement{padding-left:20px}.supporters-announcement>p{font-size:16px}.supporters-olive{width:230px;height:310px;right:-80px;bottom:-45px;opacity:.2}.supporters-branch{width:165px!important;height:300px!important}.supporters-orbit{width:200px;height:200px;right:3px;bottom:59px}.footer-content{padding-bottom:140px}.footer-sea{height:160px;bottom:32px}.footer-vessel{width:224px;left:calc(50% - 112px);bottom:8px}.footer-water{height:58px;bottom:-8px}.footer-water{height:72px}.footer-grid{grid-template-columns:1fr;gap:36px}.footer-brand-block{max-width:none}.footer-bottom{margin-top:28px;padding-top:18px}}
 
-@media(max-width:374px){.odyssey-call-perks{flex-direction:column;align-items:center}.weekend-intro h2{font-size:48px}.supporters-content h2{font-size:36px}}
+@media(max-width:374px){.odyssey-call-perks{flex-direction:column;align-items:center}.weekend-intro h2{font-size:34px}.weekend-slot{grid-template-columns:1fr;gap:2px}.supporters-content h2{font-size:36px}}
 
 @media(prefers-reduced-motion:reduce){.footer-motion .footer-vessel,.footer-motion .footer-water{animation:none}.odyssey-btn{transition:none}.oracle-toggle::before,.oracle-toggle::after,.oracle-answer,.oracle-answer-inner>p{transition:none}.oracle-answer-inner>p{opacity:1;transform:none}}
 
@@ -1608,42 +1620,3 @@
 @media(max-width:767px){:root{--header-height:70px;--spacing-header:70px}.header-inner{gap:12px;padding-block:16px}.site-logo{height:38px}.mobile-navigation{background:var(--clay);border-top:1px solid #1a3a5228}.site-header[data-theme=dark] .mobile-navigation{background:var(--night)}}
 
 @media(prefers-reduced-motion:reduce){.site-header{transition:none}}
-
-@media (min-width: 960px) {
-  /* Equal rows put every chapter centre on a quarter of the journey, which is
-     where the route's waypoints sit, so the ship arrives beside each island. */
-  .od-journey-stops { grid-auto-rows: 1fr; }
-  .od-chapter {
-    grid-template-columns: minmax(0, 1fr) clamp(150px, 20vw, 300px) minmax(0, 1fr);
-    align-items: center;
-    gap: clamp(20px, 3vw, 48px);
-  }
-  .od-chapter-art, .od-chapter-copy { grid-row: 1; transition: opacity .5s var(--ease-out); }
-  .od-chapter[data-side="right"] .od-chapter-art { grid-column: 3; }
-  .od-chapter[data-side="right"] .od-chapter-copy { grid-column: 1; justify-self: stretch; }
-  .od-chapter[data-side="left"] .od-chapter-art { grid-column: 1; }
-  .od-chapter[data-side="left"] .od-chapter-copy { grid-column: 3; justify-self: stretch; }
-  .od-chapter:not([data-active="true"]) .od-chapter-art { opacity: .5; }
-  .od-chapter:not([data-active="true"]) .od-chapter-copy { opacity: .62; }
-}
-
-@media (max-width: 959px) {
-  .od-voyage-top { padding-top: 50px; }
-  .od-chapter { gap: 30px; padding-block: 42px; }
-  .od-chapter-description { font-size: clamp(21px, 4.2vw, 26px); padding: 26px 24px; }
-}
-
-@media (max-width: 599px) {
-  .od-voyage-top { padding-top: 40px; gap: 12px; }
-  .od-scene-label { font-size: 12px; gap: 10px; letter-spacing: .1em; }
-  .od-scene-number { width: 28px; height: 28px; font-size: 11px; }
-  .od-schedule-skip { font-size: 13px; gap: 8px; white-space: nowrap; }
-  .od-chapter { gap: 26px; padding-block: 34px; }
-  .od-chapter-art { margin-inline: -8px; }
-  .od-chapter-art img { max-height: none; }
-  .od-chapter-description { max-width: min(100%, 430px); font-size: clamp(20px, 5.2vw, 24px); padding: 24px 22px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .od-voyage * { animation: none !important; transition: none !important; }
-}

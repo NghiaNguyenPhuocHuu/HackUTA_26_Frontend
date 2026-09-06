@@ -76,7 +76,7 @@ const artGeometry = () => evaluate(() => {
     return { x: box.x, y: box.y, width: box.width, height: box.height, right: box.right, bottom: box.bottom };
   };
   const overlap = (a, b) => Math.max(0, Math.min(a.right, b.right) - Math.max(a.x, b.x)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.y, b.y));
-  const images = [...document.querySelectorAll('#top img, #voyage img')].filter(visible).map(image => {
+  const images = [...document.querySelectorAll('#top img')].filter(visible).map(image => {
     const bounds = rect(image);
     const fit = getComputedStyle(image).objectFit;
     const widthScale = bounds.width / image.naturalWidth;
@@ -85,13 +85,7 @@ const artGeometry = () => evaluate(() => {
     return { src: image.currentSrc, loaded: image.complete && image.naturalWidth > 0, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight, bounds, paintedBounds: paintedRect(image), fit, density: 1 / (scale * devicePixelRatio), stretched: fit === 'fill' && Math.abs(widthScale / heightScale - 1) > .02 };
   });
   const collisions = [];
-  for (const image of [...document.querySelectorAll('#voyage img')].filter(visible)) {
-    for (const copy of [...document.querySelectorAll('.od-chapter-copy h3,.od-chapter-copy p')].filter(visible)) {
-      const area = overlap(paintedRect(image), rect(copy));
-      if (area > 4) collisions.push({ art: image.currentSrc, text: copy.textContent.trim(), overlapArea: Math.round(area), artBounds: paintedRect(image), textBounds: rect(copy) });
-    }
-  }
-  for (const [boatSelector, textSelector] of [['.od-hero-boat', '.od-hero-copy h1,.od-hero-copy p,.od-hero-copy a'], ['.od-voyage-boat', '.od-chapter-copy h3,.od-chapter-copy p']]) {
+  for (const [boatSelector, textSelector] of [['.od-hero-boat', '.od-hero-copy h1,.od-hero-copy p,.od-hero-copy a']]) {
     const boat = document.querySelector(boatSelector);
     if (boat && visible(boat)) {
       for (const copy of [...document.querySelectorAll(textSelector)].filter(visible)) {
@@ -165,10 +159,9 @@ try {
     await settle();
     const defaultMotion = await evaluate(() => ({
       hero: document.querySelector('#top')?.getAttribute('data-animated'),
-      voyage: document.querySelector('#voyage')?.getAttribute('data-animated'),
       motionButtons: [...document.querySelectorAll('button')].filter(button => /motion|animation/i.test(`${button.textContent} ${button.getAttribute('aria-label')}`)).map(button => button.outerHTML),
     }));
-    check('Animations are enabled by default with no motion toggle', defaultMotion.hero === 'true' && defaultMotion.voyage === 'true' && defaultMotion.motionButtons.length === 0, defaultMotion);
+    check('Animations are enabled by default with no motion toggle', defaultMotion.hero === 'true' && defaultMotion.motionButtons.length === 0, defaultMotion);
     const fonts = await evaluate(() => [...document.fonts].map(font => ({ family: font.family, weight: font.weight, status: font.status })));
     check('Custom regular and semibold fonts successfully decode', ['400', '600'].every(weight => fonts.some(font => font.family === 'Barlow Semi Condensed' && font.weight === weight && font.status === 'loaded')), fonts);
     let state = await geometry();
@@ -231,23 +224,10 @@ try {
       await capture(`desktop-${section.id}.png`);
     }
 
-    for (let index = 0; index < 4; index++) {
-      await run(`async (page) => {
-        await page.locator('#voyage-chapter-${index + 1}').scrollIntoViewIfNeeded();
-        await page.waitForTimeout(1200);
-        return true;
-      }`);
-      const chapter = await evaluate(() => ({
-        active: document.querySelector('.od-chapter[data-active="true"]')?.id,
-      }));
-      check(`Chapter ${index + 1} scroll reaches matching scene`, chapter.active === `voyage-chapter-${index + 1}`, chapter);
-      await capture(`desktop-voyage-chapter-${index + 1}.png`);
-      await checkArt(`1440px chapter ${index + 1}`);
-    }
-    await call('browser_click', { target: '.od-schedule-skip', element: 'Skip animated voyage to schedule' });
+    await call('browser_click', { target: 'nav[aria-label="Main navigation"] a[href="#schedule"]', element: 'Schedule navigation link' });
     await run(`async (page) => { await page.waitForTimeout(1000); return true; }`);
-    const scheduleSkip = await evaluate(() => ({ hash: location.hash, top: document.querySelector('#schedule')?.getBoundingClientRect().top }));
-    check('Voyage bypass reaches visible schedule', scheduleSkip.hash === '#schedule' && scheduleSkip.top >= 0 && scheduleSkip.top < 180, scheduleSkip);
+    const scheduleNav = await evaluate(() => ({ hash: location.hash, top: Math.round(document.querySelector('#schedule')?.getBoundingClientRect().top ?? -1) }));
+    check('Header schedule link reaches the schedule section', scheduleNav.hash === '#schedule' && scheduleNav.top === 0, scheduleNav);
 
     // Responsive checks include the accepted concept's narrowest sizes and
     // short laptop screens, where sticky-stage typography is most vulnerable.
@@ -261,15 +241,6 @@ try {
       if (width === 1920) {
         await capture('desktop-1920-hero.png');
         await checkArt('1920px hero');
-        for (let index = 0; index < 4; index++) {
-          await run(`async (page) => {
-            await page.locator('#voyage-chapter-${index + 1}').scrollIntoViewIfNeeded();
-            await page.waitForTimeout(1200);
-            return true;
-          }`);
-          await checkArt(`1920px chapter ${index + 1}`);
-          await capture(`desktop-1920-chapter-${index + 1}.png`);
-        }
       }
       if (width === 375) {
         const mobileMenu = await run(`async (page) => {
@@ -283,8 +254,6 @@ try {
           return { opened, escaped, closedAfterLink: !(await page.locator('#mobile-navigation').isVisible()), hash: await page.evaluate(() => location.hash) };
         }`);
         check('Mobile menu opens, Escape restores focus, and navigation closes it', mobileMenu.opened && mobileMenu.escaped && mobileMenu.closedAfterLink && mobileMenu.hash === '#schedule', mobileMenu);
-        const mobileChapters = await evaluate(() => ({ animated: document.querySelector('#voyage')?.getAttribute('data-animated'), accessible: [...document.querySelectorAll('.od-chapter')].filter(element => element.getAttribute('aria-hidden') !== 'true').length }));
-        check('Mobile exposes all four voyage chapters', mobileChapters.animated === 'false' && mobileChapters.accessible === 4, mobileChapters);
         await accessibility('375px WCAG 2.1 AA');
         for (const section of state.sections.filter(section => section.id && section.top > 100)) {
           await run(`async (page) => {
@@ -306,15 +275,6 @@ try {
     }`);
     await checkArt('375px DPR2 hero');
     await capture('mobile-dpr2-hero.png', 'device');
-    for (let index = 0; index < 4; index++) {
-      await run(`async (page) => {
-        await page.locator('#voyage-chapter-${index + 1}').evaluate(element => window.scrollTo({ top: element.getBoundingClientRect().top + scrollY - 80, behavior: 'instant' }));
-        await page.waitForTimeout(700);
-        return true;
-      }`);
-      await checkArt(`375px DPR2 chapter ${index + 1}`);
-      await capture(`mobile-dpr2-chapter-${index + 1}.png`, 'device');
-    }
     await run(`async (page) => {
       await page.__qaDensitySession.send('Emulation.clearDeviceMetricsOverride');
       await page.__qaDensitySession.detach();
@@ -325,8 +285,8 @@ try {
       return true;
     }`);
     await settle();
-    const legacyMotion = await evaluate(() => ({ legacy: localStorage.getItem('hackuta-motion'), hero: document.querySelector('#top')?.getAttribute('data-animated'), voyage: document.querySelector('#voyage')?.getAttribute('data-animated') }));
-    check('Legacy stored motion-off does not disable default animation', legacyMotion.hero === 'true' && legacyMotion.voyage === 'true', legacyMotion);
+    const legacyMotion = await evaluate(() => ({ legacy: localStorage.getItem('hackuta-motion'), hero: document.querySelector('#top')?.getAttribute('data-animated') }));
+    check('Legacy stored motion-off does not disable default animation', legacyMotion.hero === 'true', legacyMotion);
     await run(`async (page) => { await page.emulateMedia({ reducedMotion: 'reduce' }); await page.reload({ waitUntil: 'networkidle' }); return true; }`);
     await settle();
     await capture('reduced-motion-hero.png');
@@ -335,12 +295,11 @@ try {
       mode: document.documentElement.dataset.motion,
       longSections: [...document.querySelectorAll('main section')].filter(el => el.getBoundingClientRect().height > innerHeight * 3).map(el => ({ id: el.id, height: el.getBoundingClientRect().height })),
       activeAnimations: document.getAnimations().filter(animation => animation.playState === 'running').length,
-      voyageAnimated: document.querySelector('#voyage')?.getAttribute('data-animated'),
-      accessibleChapters: [...document.querySelectorAll('.od-chapter')].filter(element => element.getAttribute('aria-hidden') !== 'true').length,
+      heroAnimated: document.querySelector('#top')?.getAttribute('data-animated'),
     }));
     check('Reduced-motion media preference is emulated', reduced.mediaMatches, reduced);
     check('Reduced-motion has no running CSS animations', reduced.activeAnimations === 0, reduced.activeAnimations);
-    check('Reduced-motion exposes the complete voyage without pinning', reduced.voyageAnimated === 'false' && reduced.accessibleChapters === 4, reduced);
+    check('Reduced-motion disables hero animation', reduced.heroAnimated === 'false', reduced);
     await run(`async (page) => { await page.emulateMedia({ reducedMotion: 'no-preference' }); await page.reload({ waitUntil: 'networkidle' }); await page.keyboard.press('Tab'); return true; }`);
     const firstFocus = await evaluate(() => ({ text: document.activeElement?.textContent?.trim(), href: document.activeElement?.getAttribute('href'), top: document.activeElement?.getBoundingClientRect().top }));
     check('Keyboard begins with a visible skip link', Boolean(firstFocus.href?.startsWith('#')) && /skip/i.test(firstFocus.text) && firstFocus.top >= 0, firstFocus);

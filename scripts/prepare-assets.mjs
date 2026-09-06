@@ -4,24 +4,8 @@ import wawoff2 from 'wawoff2'
 
 await Promise.all(['public/images', 'public/fonts'].map(path => mkdir(path, { recursive: true })))
 const source = 'design/assets/'
-const normalizeBackdrop = async (name) => {
-  const { data, info } = await sharp(`${source}island-${name}-v7.png`).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
-  // Image generation adds a faint warm vignette even when asked for a flat
-  // canvas. Normalize only near-black pixels so each illustration disappears
-  // cleanly into the site's night field while preserving all colored linework.
-  for (let offset = 0; offset < data.length; offset += 4) {
-    if (data[offset] < 58 && data[offset + 1] < 48 && data[offset + 2] < 42) {
-      data[offset] = 29
-      data[offset + 1] = 25
-      data[offset + 2] = 21
-      data[offset + 3] = 255
-    }
-  }
-  return sharp(data, { raw: info }).webp({ quality: 95 }).toFile(`public/images/island-${name}-v7.webp`)
-}
 await Promise.all([
   sharp(source + 'coast-cliff-v7.png').webp({ quality: 95, alphaQuality: 100 }).toFile('public/images/coast-cliff-v7.webp'),
-  ...['departure', 'encounter', 'discovery', 'return'].map(normalizeBackdrop),
   copyFile(source + 'fonts/BarlowSemiCondensed-OFL.txt', 'public/fonts/OFL.txt'),
 ])
 // The encoder shares WASM memory: parallel compression can corrupt its output.

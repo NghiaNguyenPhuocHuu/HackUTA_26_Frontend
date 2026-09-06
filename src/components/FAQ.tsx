@@ -62,7 +62,7 @@ export function FAQ() {
           </h2>
           <p className="oracle-description">
             Or you can always email us at{" "}
-            <a href="mailto:info@hackuta.com">info@hackuta.com</a>
+            <a href="mailto:info@hackuta.org">info@hackuta.org</a>
           </p>
           <svg
             className="oracle-eye"
