@@ -1,6 +1,6 @@
-import { type CSSProperties } from "react";
+import { type CSSProperties, useEffect, useRef } from "react";
 import { Ship } from "./art/Ship";
-import { Wordmark } from "./art/Wordmark";
+import { Logo } from "./art/Logo";
 import { HERO_AMBIENT_STORM } from "../constants/heroWeather";
 import { HeroAtmosphere } from "./HeroAtmosphere";
 import { HeroWaves } from "./HeroWaves";
@@ -16,9 +16,35 @@ const rain = Array.from({ length: 52 }, (_, index) => ({
 
 export function Hero({ motionEnabled }: HeroProps) {
   const storm = motionEnabled ? HERO_AMBIENT_STORM : 0;
+  const heroRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const rect = hero.getBoundingClientRect();
+        const exit = Math.max(0, Math.min(1, -rect.top / (rect.height * 0.55)));
+        hero.style.setProperty("--hero-exit", String(exit));
+      });
+    };
+
+    update();
+    addEventListener("scroll", update, { passive: true });
+    addEventListener("resize", update);
+    return () => {
+      cancelAnimationFrame(frame);
+      removeEventListener("scroll", update);
+      removeEventListener("resize", update);
+    };
+  }, []);
 
   return (
     <section
+      ref={heroRef}
       id="top"
       className="od-hero"
       data-animated={motionEnabled}
@@ -71,59 +97,19 @@ export function Hero({ motionEnabled }: HeroProps) {
             />
           ))}
         </div>
-        <div className="od-hero-copy relative z-10 mx-auto text-center">
-          <p className="od-hero-date flex items-center justify-center font-semibold uppercase">
-            <span>November 14–15, 2026</span>
-            <span className="od-hero-date-divider" aria-hidden="true" />
-            <span>UT Arlington</span>
-          </p>
-          <h1 id="hero-title" className="od-hero-title mx-auto">
-            <span className="sr-only">HackUTA 2026: The Odyssey</span>
-            <span aria-hidden="true">
-              <Wordmark className="od-hero-wordmark" />
-            </span>
-          </h1>
-          <p className="od-hero-edition flex items-center justify-center font-semibold uppercase">
-            <span className="od-star" aria-hidden="true">
-              ✦
-            </span>
-            <span>The Odyssey</span>
-            <span className="od-star" aria-hidden="true">
-              ✦
-            </span>
-          </p>
-          <p className="od-hero-description">
-            A 24-hour hackathon.
-            <br className="od-mobile-break" /> A journey worth taking.
-          </p>
-          <a
-            className="od-set-sail group inline-flex items-center justify-between font-semibold uppercase"
-            href="#about"
-          >
-            <span>Set sail</span>
-            <svg
-              className="transition-transform duration-300 group-hover:translate-y-1"
-              viewBox="0 0 24 24"
-              width="23"
-              height="23"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M12 3v17m-6-6 6 6 6-6"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              />
-            </svg>
-          </a>
-          <p className="od-hero-eligibility">
-            College students 18+ <span aria-hidden="true">·</span> All
-            experience levels
-          </p>
-          <p className="od-hero-availability">
-            <span aria-hidden="true" />
-            Applications open soon
-          </p>
+        <div className="od-hero-copy relative z-10 mx-auto">
+          <div className="od-hero-copy-logo">
+            <Logo className="od-hero-logo" />
+          </div>
+          <div className="od-hero-copy-text">
+            <p className="od-hero-date uppercase">
+              <span>November 14–15, 2026</span>
+            </p>
+            <h1 id="hero-title" className="od-hero-title flex items-end gap-2">
+              <span className="od-hero-wordmark">HackUTA</span>
+              <span className="od-hero-year font-semibold">26</span>
+            </h1>
+          </div>
         </div>
         <div className="od-hero-boat" aria-hidden="true">
           <Ship className="od-hero-ship" rowing={motionEnabled} tone="ink" />

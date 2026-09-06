@@ -30,6 +30,11 @@ for (const weight of ['Regular', 'SemiBold', 'Bold']) {
   const compressed = Buffer.from(await wawoff2.compress(font))
   await writeFile(`public/fonts/BarlowSemiCondensed-${weight}.woff2`, compressed)
 }
+for (const name of ['CSGelios-Regular']) {
+  const font = await readFile(`${source}fonts/${name}.otf`)
+  const compressed = Buffer.from(await wawoff2.compress(font))
+  await writeFile(`public/fonts/${name}.woff2`, compressed)
+}
 const wordmark = (await readFile(source + 'hackuta-wordmark-v6.svg', 'utf8'))
   .replace('<svg ', '<svg x="90" y="170" width="1020" height="148" ')
   .replace('#211912', '#1a3a52')

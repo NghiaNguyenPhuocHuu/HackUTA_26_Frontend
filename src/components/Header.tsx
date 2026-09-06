@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Wordmark } from "./art/Wordmark";
+import { Logo } from "./art/Logo";
 
 const links = [
   { id: "about", label: "About" },
-  { id: "voyage", label: "The voyage" },
   { id: "schedule", label: "Schedule" },
   { id: "faq", label: "FAQ" },
   { id: "sponsors", label: "Sponsors" },
@@ -39,11 +38,6 @@ export function Header() {
           (scrollY < headerHeight ? "clay" : "dark"),
       );
       setActive(current?.id ?? "");
-      const range = document.documentElement.scrollHeight - innerHeight;
-      header.current?.style.setProperty(
-        "--page-progress",
-        String(range > 0 ? scrollY / range : 0),
-      );
     };
     const requestUpdate = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -89,19 +83,18 @@ export function Header() {
       data-theme={theme}
       data-open={open}
     >
-      <div className="header-inner flex items-center justify-between">
+      <div className="header-inner flex items-center justify-between md:justify-center">
         <a
           href="#top"
           className="header-brand"
           aria-label="HackUTA home"
           onClick={() => setOpen(false)}
         >
-          <Wordmark />
-          <span>2026</span>
+          <Logo className="site-logo" />
         </a>
         <nav
           aria-label="Main navigation"
-          className="header-desktop-nav items-center"
+          className="header-pill-nav items-center uppercase"
         >
           {links.map((link) => (
             <a
@@ -113,14 +106,13 @@ export function Header() {
             </a>
           ))}
         </nav>
-        <div className="header-tools flex items-center">
-          <span className="header-application status-dot">
-            Applications open soon
-          </span>
-          <span className="header-mobile-date">Nov 14–15</span>
+        <div className="header-actions flex items-center gap-3">
+          <a href="#arrival" className="header-apply font-semibold uppercase">
+            Apply now
+          </a>
           <button
             ref={menuButton}
-            className="menu-toggle"
+            className="menu-toggle md:hidden"
             aria-label={open ? "Close navigation" : "Open navigation"}
             aria-expanded={open}
             aria-controls="mobile-navigation"
@@ -150,9 +142,7 @@ export function Header() {
             <span aria-hidden="true">↗</span>
           </a>
         ))}
-        <p className="status-dot">Applications open soon</p>
       </nav>
-      <div className="header-progress" aria-hidden="true" />
     </header>
   );
 }

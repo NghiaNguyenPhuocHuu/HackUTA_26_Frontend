@@ -3,7 +3,8 @@ import { test, expect } from '@playwright/test'
 test('event content and navigation are honest and complete', async ({ page }) => {
   await page.goto('/')
   await expect(page).toHaveTitle(/HackUTA 2026/)
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('HackUTA 2026: The Odyssey')
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('HackUTA')
+  await expect(page.getByText('November 14–15, 2026')).toBeVisible()
   await expect(page.locator('.weekend-row')).toHaveCount(4)
   await expect(page.locator('.weekend-time')).toHaveText(['Time TBA', 'Time TBA', 'Time TBA', 'Time TBA'])
   await expect(page.locator('.crew-facts > div')).toHaveCount(3)
@@ -12,7 +13,7 @@ test('event content and navigation are honest and complete', async ({ page }) =>
   await beginnerQuestion.click()
   await expect(page.getByText('You do not need hackathon experience or a polished idea.')).toBeVisible()
   expect(await page.locator('a[href="#"]').count()).toBe(0)
-  await page.getByRole('link', { name: 'Set sail', exact: true }).click()
+  await page.getByRole('link', { name: 'About', exact: true }).click()
   await expect(page).toHaveURL(/#about$/)
 })
 

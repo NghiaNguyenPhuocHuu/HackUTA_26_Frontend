@@ -1,5 +1,10 @@
 HackUTA 2026 — Third-party notices
 
+CS Gelios (hero display typography)
+Copyright (c) 2025 Craft Supply Co. All rights reserved.
+Demo build included for development; replace with a licensed webfont build before production launch.
+Commercial license: https://craftsupply.co/product/cs-gelios-greek-font/
+
 Paper Shaders / @paper-design/shaders-react 0.0.80
 Copyright 2026 Paper
 Powered by Paper Shaders: https://shaders.paper.design
