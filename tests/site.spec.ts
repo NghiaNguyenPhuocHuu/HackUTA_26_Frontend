@@ -35,7 +35,7 @@ test('animation follows the system preference and ignores the retired stored tog
   await expect(page.locator('#voyage')).toHaveAttribute('data-animated', 'true')
 })
 
-test('the opening ship crosses the viewport through the animated storm', async ({ page }) => {
+test('the opening ship drifts across the center of the viewport', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 960 })
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.goto('/')
@@ -45,22 +45,25 @@ test('the opening ship crosses the viewport through the animated storm', async (
   await expect(hero).toHaveAttribute('data-water-renderer', 'webgl2')
   await expect(hero.locator('.od-weather-shader canvas')).toHaveCount(1)
   await expect(hero.locator('.od-webgl-water canvas')).toHaveCount(1)
-  const start = await ship.boundingBox()
-  expect(start).not.toBeNull()
-  expect(start!.x).toBeLessThan(0)
   await expect(hero.locator('.od-rain i')).toHaveCount(52)
   await expect(hero.locator('.od-lightning')).toHaveCount(2)
   await expect(hero.locator('.od-wave-surface')).toHaveCount(1)
-  await hero.evaluate(element => {
-    const section = element as HTMLElement
-    const distance = section.offsetHeight - innerHeight
-    scrollTo({ top: section.offsetTop + distance * .98, behavior: 'instant' })
+
+  const centerAtStart = await ship.evaluate(element => {
+    const box = element.getBoundingClientRect()
+    return box.left + box.width / 2
   })
-  await page.waitForTimeout(250)
-  const end = await ship.boundingBox()
-  expect(end).not.toBeNull()
-  expect(end!.x).toBeGreaterThan(1440 - end!.width)
-  expect(end!.x - start!.x).toBeGreaterThan(1200)
+  expect(centerAtStart).toBeGreaterThan(1440 * 0.36)
+  expect(centerAtStart).toBeLessThan(1440 * 0.44)
+
+  await page.waitForTimeout(14500)
+
+  const centerAfterDrift = await ship.evaluate(element => {
+    const box = element.getBoundingClientRect()
+    return box.left + box.width / 2
+  })
+  expect(centerAfterDrift).toBeGreaterThan(1440 * 0.56)
+  expect(centerAfterDrift).toBeLessThan(1440 * 0.64)
 })
 
 test('mobile menu remains in the viewport and navigates', async ({ page }) => {

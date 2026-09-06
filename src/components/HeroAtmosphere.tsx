@@ -5,11 +5,14 @@ export type HeroAtmosphereHandle = {
   update: (progress: number, storm: number) => void
 }
 
-type HeroAtmosphereProps = { motionEnabled: boolean }
+type HeroAtmosphereProps = {
+  motionEnabled: boolean
+  storm: number
+}
 
-export const HeroAtmosphere = forwardRef<HeroAtmosphereHandle, HeroAtmosphereProps>(function HeroAtmosphere({ motionEnabled }, ref) {
+export const HeroAtmosphere = forwardRef<HeroAtmosphereHandle, HeroAtmosphereProps>(function HeroAtmosphere({ motionEnabled, storm }, ref) {
   const shaderRef = useRef<PaperShaderElement>(null)
-  const stateRef = useRef({ progress: 0, storm: 0 })
+  const stateRef = useRef({ progress: 0, storm })
 
   const update = useCallback((progress: number, storm: number) => {
     stateRef.current = { progress, storm }
@@ -49,6 +52,11 @@ export const HeroAtmosphere = forwardRef<HeroAtmosphereHandle, HeroAtmospherePro
       hero?.removeAttribute('data-weather-renderer')
     }
   }, [update])
+
+  useEffect(() => {
+    stateRef.current.storm = storm
+    update(stateRef.current.progress, storm)
+  }, [storm, update])
 
   return (
     <Dithering
