@@ -1979,14 +1979,21 @@
     padding: clamp(24px, 3.5vw, 52px) clamp(18px, 3vw, 48px);
   }
 
+  .sponsors-section[data-roster="empty"] .sponsors-temple-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .sponsors-temple-message {
-    max-width: 14ch;
+    max-width: min(100%, 16ch);
     margin: 0;
     font-family: var(--font-display);
     font-size: clamp(24px, 4.3vw, 58px);
     font-weight: 400;
     letter-spacing: .025em;
     line-height: 1.08;
+    text-align: center;
     text-transform: uppercase;
     text-wrap: balance;
   }
