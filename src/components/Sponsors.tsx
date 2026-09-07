@@ -91,7 +91,7 @@ function SponsorTemple({ empty }: { empty: boolean }) {
 
       <p className="sponsors-temple-frieze">
         <span aria-hidden="true" />
-        {empty ? "Seeking patrons" : "Our honorable sponsors"}
+        {empty ? "Our honorable sponsors" : "Our honorable sponsors"}
         <span aria-hidden="true" />
       </p>
 
@@ -181,7 +181,7 @@ export function Sponsors() {
             className="odyssey-btn inline-flex items-center justify-center"
             href={SPONSOR_MAILTO}
           >
-            Become a patron
+            Become a sponsor
           </a>
           <p className="sponsors-footnote">
             Sponsor inquiries

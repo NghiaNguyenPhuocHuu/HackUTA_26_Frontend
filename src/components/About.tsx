@@ -1,22 +1,36 @@
-import { type RefObject, useEffect, useRef, useState } from 'react'
-import { clamp01 } from '../utils/clamp'
+import { type RefObject, useEffect, useRef, useState } from "react";
+import { clamp01 } from "../utils/clamp";
 
-const DISCORD_URL = 'https://discord.gg/2bVsYS3SgS'
-const DEVPOST_URL = 'https://hackuta7.devpost.com/'
+const DISCORD_URL = "https://discord.gg/2bVsYS3SgS";
 
 const perks = [
-  { label: '24 Hours of Building', tone: 'terracotta' as const },
-  { label: 'Free Food & Swag', tone: 'ocean' as const },
-  { label: 'Legendary Prizes', tone: 'terracotta' as const },
-]
+  { label: "24 Hours of Building", tone: "terracotta" as const },
+  { label: "Free Food & Swag", tone: "ocean" as const },
+  { label: "Legendary Prizes", tone: "terracotta" as const },
+];
 
 function OdysseyButton({
   href,
   children,
+  inactive = false,
 }: {
-  href: string
-  children: string
+  href?: string;
+  children: string;
+  inactive?: boolean;
 }) {
+  if (inactive) {
+    return (
+      <button
+        type="button"
+        className="odyssey-btn inline-flex items-center justify-center"
+        disabled
+        aria-disabled="true"
+      >
+        {children}
+      </button>
+    );
+  }
+
   return (
     <a
       className="odyssey-btn inline-flex items-center justify-center"
@@ -26,10 +40,14 @@ function OdysseyButton({
     >
       {children}
     </a>
-  )
+  );
 }
 
-function OdysseyBoat({ boatRef }: { boatRef: RefObject<HTMLDivElement | null> }) {
+function OdysseyBoat({
+  boatRef,
+}: {
+  boatRef: RefObject<HTMLDivElement | null>;
+}) {
   return (
     <div ref={boatRef} className="odyssey-boat-track" aria-hidden="true">
       <svg className="odyssey-boat" viewBox="0 0 150 230" role="presentation">
@@ -39,32 +57,76 @@ function OdysseyBoat({ boatRef }: { boatRef: RefObject<HTMLDivElement | null> })
           <path d="M62 17C47 5 30 2 10 6" />
           <path d="M88 17C103 5 120 2 140 6" />
         </g>
-        <path className="odyssey-boat-hull" d="M75 5C52 28 32 77 32 130c0 47 18 78 43 95 25-17 43-48 43-95C118 77 98 28 75 5Z" />
-        <path className="odyssey-boat-hull-edge" d="M75 12C57 37 41 79 41 128c0 40 14 68 34 84 20-16 34-44 34-84 0-49-16-91-34-116Z" />
-        <path className="odyssey-boat-deck" d="M75 21C61 44 50 82 50 127s10 69 25 82c15-13 25-37 25-82S89 44 75 21Z" />
-        <path className="odyssey-boat-planks" d="M53 67h44M49 82h52M47 98h56M46 114h58M46 130h58M48 146h54M51 162h48" />
+        <path
+          className="odyssey-boat-hull"
+          d="M75 5C52 28 32 77 32 130c0 47 18 78 43 95 25-17 43-48 43-95C118 77 98 28 75 5Z"
+        />
+        <path
+          className="odyssey-boat-hull-edge"
+          d="M75 12C57 37 41 79 41 128c0 40 14 68 34 84 20-16 34-44 34-84 0-49-16-91-34-116Z"
+        />
+        <path
+          className="odyssey-boat-deck"
+          d="M75 21C61 44 50 82 50 127s10 69 25 82c15-13 25-37 25-82S89 44 75 21Z"
+        />
+        <path
+          className="odyssey-boat-planks"
+          d="M53 67h44M49 82h52M47 98h56M46 114h58M46 130h58M48 146h54M51 162h48"
+        />
         <path className="odyssey-boat-keel" d="M75 34v151" />
         <path className="odyssey-boat-mast" d="M75 15v174" />
-        <path className="odyssey-boat-rigging" d="M75 17 42 73M75 17l33 56M75 17 47 107M75 17l28 90" />
-        <path className="odyssey-boat-sail" d="M75 26C57 46 45 70 42 101c14-9 25-14 33-18Z" />
-        <path className="odyssey-boat-sail odyssey-boat-sail-alt" d="M75 26c18 20 30 44 33 75-14-9-25-14-33-18Z" />
+        <path
+          className="odyssey-boat-rigging"
+          d="M75 17 42 73M75 17l33 56M75 17 47 107M75 17l28 90"
+        />
+        <path
+          className="odyssey-boat-sail"
+          d="M75 26C57 46 45 70 42 101c14-9 25-14 33-18Z"
+        />
+        <path
+          className="odyssey-boat-sail odyssey-boat-sail-alt"
+          d="M75 26c18 20 30 44 33 75-14-9-25-14-33-18Z"
+        />
         <path className="odyssey-boat-cabin" d="M59 132h32v30H59Z" />
-        <path className="odyssey-boat-cabin-window" d="M65 139h20v8H65ZM65 151h20v6H65Z" />
-        {([
-          [57, 92],
-          [75, 116],
-          [93, 140],
-        ] as const).map(([x, y], index) => (
-          <g className={`odyssey-boat-rower odyssey-boat-rower-${index + 1}`} key={x}>
+        <path
+          className="odyssey-boat-cabin-window"
+          d="M65 139h20v8H65ZM65 151h20v6H65Z"
+        />
+        {(
+          [
+            [57, 92],
+            [75, 116],
+            [93, 140],
+          ] as const
+        ).map(([x, y], index) => (
+          <g
+            className={`odyssey-boat-rower odyssey-boat-rower-${index + 1}`}
+            key={x}
+          >
             <circle className="odyssey-boat-rower-head" cx={x} cy={y} r="3.5" />
-            <path className="odyssey-boat-rower-body" d={`M${x - 4} ${y + 6}c2-4 6-4 8 0l-1 7h-6Z`} />
+            <path
+              className="odyssey-boat-rower-body"
+              d={`M${x - 4} ${y + 6}c2-4 6-4 8 0l-1 7h-6Z`}
+            />
             <g className="odyssey-boat-paddle-set odyssey-boat-paddle-set-left">
-              <path className="odyssey-boat-paddle-shaft" d={`M${x - 2} ${y + 2} ${x - 43} ${y + 14}`} />
-              <path className="odyssey-boat-paddle-blade" d={`M${x - 43} ${y + 14}l-9 3 3 6 9-4Z`} />
+              <path
+                className="odyssey-boat-paddle-shaft"
+                d={`M${x - 2} ${y + 2} ${x - 43} ${y + 14}`}
+              />
+              <path
+                className="odyssey-boat-paddle-blade"
+                d={`M${x - 43} ${y + 14}l-9 3 3 6 9-4Z`}
+              />
             </g>
             <g className="odyssey-boat-paddle-set odyssey-boat-paddle-set-right">
-              <path className="odyssey-boat-paddle-shaft" d={`M${x + 2} ${y + 2} ${x + 43} ${y + 14}`} />
-              <path className="odyssey-boat-paddle-blade" d={`M${x + 43} ${y + 14}l9 3-3 6-9-4Z`} />
+              <path
+                className="odyssey-boat-paddle-shaft"
+                d={`M${x + 2} ${y + 2} ${x + 43} ${y + 14}`}
+              />
+              <path
+                className="odyssey-boat-paddle-blade"
+                d={`M${x + 43} ${y + 14}l9 3-3 6-9-4Z`}
+              />
             </g>
           </g>
         ))}
@@ -73,57 +135,65 @@ function OdysseyBoat({ boatRef }: { boatRef: RefObject<HTMLDivElement | null> })
         <circle className="odyssey-boat-compass" cx="75" cy="116" r="7" />
       </svg>
     </div>
-  )
+  );
 }
 
 export function About() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const boatRef = useRef<HTMLDivElement>(null)
-  const [revealed, setRevealed] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null);
+  const boatRef = useRef<HTMLDivElement>(null);
+  const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
-    const section = sectionRef.current
-    if (!section) return
+    const section = sectionRef.current;
+    if (!section) return;
 
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry) return
-      setRevealed(entry.isIntersecting)
-    }, { threshold: 0.18 })
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry) return;
+        setRevealed(entry.isIntersecting);
+      },
+      { threshold: 0.18 },
+    );
 
-    observer.observe(section)
-    return () => observer.disconnect()
-  }, [])
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
-    const section = sectionRef.current
-    const boat = boatRef.current
-    if (!section || !boat) return
-    let frame = 0
+    const section = sectionRef.current;
+    const boat = boatRef.current;
+    if (!section || !boat) return;
+    let frame = 0;
     const update = () => {
-      const bounds = section.getBoundingClientRect()
-      const progress = clamp01((innerHeight - bounds.top) / (bounds.height + innerHeight))
-      const curve = Math.sin(progress * Math.PI)
-      boat.style.setProperty('--boat-left', `${-2 + progress * 14 + curve * 1.5}%`)
-      boat.style.setProperty('--boat-top', `${6 + progress * 84}%`)
-      const curveAngle = Math.atan2(
-        14 + 1.5 * Math.PI * Math.cos(progress * Math.PI),
-        84,
-      ) * -180 / Math.PI
-      boat.style.setProperty('--boat-angle', `${curveAngle}deg`)
-    }
+      const bounds = section.getBoundingClientRect();
+      const progress = clamp01(
+        (innerHeight - bounds.top) / (bounds.height + innerHeight),
+      );
+      const curve = Math.sin(progress * Math.PI);
+      boat.style.setProperty(
+        "--boat-left",
+        `${-2 + progress * 14 + curve * 1.5}%`,
+      );
+      boat.style.setProperty("--boat-top", `${6 + progress * 84}%`);
+      const curveAngle =
+        (Math.atan2(14 + 1.5 * Math.PI * Math.cos(progress * Math.PI), 84) *
+          -180) /
+        Math.PI;
+      boat.style.setProperty("--boat-angle", `${curveAngle}deg`);
+    };
     const requestUpdate = () => {
-      cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(update)
-    }
-    update()
-    addEventListener('scroll', requestUpdate, { passive: true })
-    addEventListener('resize', requestUpdate)
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(update);
+    };
+    update();
+    addEventListener("scroll", requestUpdate, { passive: true });
+    addEventListener("resize", requestUpdate);
     return () => {
-      cancelAnimationFrame(frame)
-      removeEventListener('scroll', requestUpdate)
-      removeEventListener('resize', requestUpdate)
-    }
-  }, [])
+      cancelAnimationFrame(frame);
+      removeEventListener("scroll", requestUpdate);
+      removeEventListener("resize", requestUpdate);
+    };
+  }, []);
 
   return (
     <section
@@ -147,20 +217,22 @@ export function About() {
         </svg>
       </div>
       <div className="section-inner odyssey-call-inner relative flex flex-col items-center text-center">
-        <h2 id="odyssey-call-title" className="odyssey-call-title font-semibold uppercase">
+        <h2
+          id="odyssey-call-title"
+          className="odyssey-call-title font-semibold uppercase"
+        >
           Are you ready to begin your odyssey?
         </h2>
-        <p className="odyssey-call-lede">
-          Join hundreds of builders, creators, and dreamers for 24 hours at sea.
-          Register now and chart a course worth remembering.
-        </p>
 
         <div className="odyssey-call-actions flex flex-col sm:flex-row items-stretch sm:items-center justify-center">
           <OdysseyButton href={DISCORD_URL}>Join Discord</OdysseyButton>
-          <OdysseyButton href={DEVPOST_URL}>Devpost</OdysseyButton>
+          <OdysseyButton inactive>Devpost</OdysseyButton>
         </div>
 
-        <ul className="odyssey-call-perks flex flex-wrap items-center justify-center" aria-label="Event highlights">
+        <ul
+          className="odyssey-call-perks flex flex-wrap items-center justify-center"
+          aria-label="Event highlights"
+        >
           {perks.map((perk) => (
             <li key={perk.label} data-tone={perk.tone}>
               <span aria-hidden="true" />
@@ -170,5 +242,5 @@ export function About() {
         </ul>
       </div>
     </section>
-  )
+  );
 }
