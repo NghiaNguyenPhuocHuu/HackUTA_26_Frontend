@@ -66,7 +66,6 @@ export function FAQ() {
             <a href="mailto:info@hackuta.org">info@hackuta.org</a>
           </p>
           <OracleEye />
-          <p className="oracle-status status-dot">Applications open soon</p>
         </div>
         <div className="oracle-questions">
           {questions.map((item, index) => {
