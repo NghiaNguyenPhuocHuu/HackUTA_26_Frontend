@@ -2,6 +2,7 @@ import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { Ship } from "./art/Ship";
 import { Logo } from "./art/Logo";
 import { HERO_AMBIENT_STORM } from "../constants/heroWeather";
+import { HeroCountdown } from "./Countdown";
 import { HeroAtmosphere } from "./HeroAtmosphere";
 import { HeroWaves } from "./HeroWaves";
 import { clamp01 } from "../utils/clamp";
@@ -179,6 +180,7 @@ export function Hero({ motionEnabled }: HeroProps) {
               <span className="od-hero-coming-soon-mark" aria-hidden="true" />
               <span>Coming soon</span>
             </div>
+            <HeroCountdown/>
           </div>
         </div>
         <div className="od-hero-boat" aria-hidden="true">
