@@ -33,10 +33,10 @@ function OdysseyBoat({ boatRef }: { boatRef: RefObject<HTMLDivElement | null> })
     <div ref={boatRef} className="odyssey-boat-track" aria-hidden="true">
       <svg className="odyssey-boat" viewBox="0 0 150 230" role="presentation">
         <g className="odyssey-boat-wake">
-          <path d="M61 188C45 207 28 216 10 218" />
-          <path d="M89 188C105 207 122 216 140 218" />
-          <path d="M58 198C40 222 22 230 4 231" />
-          <path d="M92 198C110 222 128 230 146 231" />
+          <path d="M68 27C54 15 38 10 20 12" />
+          <path d="M82 27C96 15 112 10 130 12" />
+          <path d="M62 17C47 5 30 2 10 6" />
+          <path d="M88 17C103 5 120 2 140 6" />
         </g>
         <path className="odyssey-boat-hull" d="M75 5C52 28 32 77 32 130c0 47 18 78 43 95 25-17 43-48 43-95C118 77 98 28 75 5Z" />
         <path className="odyssey-boat-hull-edge" d="M75 12C57 37 41 79 41 128c0 40 14 68 34 84 20-16 34-44 34-84 0-49-16-91-34-116Z" />
@@ -47,15 +47,26 @@ function OdysseyBoat({ boatRef }: { boatRef: RefObject<HTMLDivElement | null> })
         <path className="odyssey-boat-rigging" d="M75 17 42 73M75 17l33 56M75 17 47 107M75 17l28 90" />
         <path className="odyssey-boat-sail" d="M75 26C57 46 45 70 42 101c14-9 25-14 33-18Z" />
         <path className="odyssey-boat-sail odyssey-boat-sail-alt" d="M75 26c18 20 30 44 33 75-14-9-25-14-33-18Z" />
-        {([59, 91] as const).map((x) => (
-          <g className="odyssey-boat-rower" key={x}>
-            <circle className="odyssey-boat-rower-head" cx={x} cy="112" r="3.5" />
-            <path className="odyssey-boat-rower-body" d={`M${x - 4} 118c2-4 6-4 8 0l-1 7h-6Z`} />
-            <path className="odyssey-boat-oar" d={`M${x - 2} 120 ${x - 19} 130M${x + 2} 120 ${x + 19} 130`} />
-          </g>
-        ))}
         <path className="odyssey-boat-cabin" d="M59 132h32v30H59Z" />
         <path className="odyssey-boat-cabin-window" d="M65 139h20v8H65ZM65 151h20v6H65Z" />
+        {([
+          [57, 92],
+          [75, 116],
+          [93, 140],
+        ] as const).map(([x, y], index) => (
+          <g className={`odyssey-boat-rower odyssey-boat-rower-${index + 1}`} key={x}>
+            <circle className="odyssey-boat-rower-head" cx={x} cy={y} r="3.5" />
+            <path className="odyssey-boat-rower-body" d={`M${x - 4} ${y + 6}c2-4 6-4 8 0l-1 7h-6Z`} />
+            <g className="odyssey-boat-paddle-set odyssey-boat-paddle-set-left">
+              <path className="odyssey-boat-paddle-shaft" d={`M${x - 2} ${y + 2} ${x - 43} ${y + 14}`} />
+              <path className="odyssey-boat-paddle-blade" d={`M${x - 43} ${y + 14}l-9 3 3 6 9-4Z`} />
+            </g>
+            <g className="odyssey-boat-paddle-set odyssey-boat-paddle-set-right">
+              <path className="odyssey-boat-paddle-shaft" d={`M${x + 2} ${y + 2} ${x + 43} ${y + 14}`} />
+              <path className="odyssey-boat-paddle-blade" d={`M${x + 43} ${y + 14}l9 3-3 6-9-4Z`} />
+            </g>
+          </g>
+        ))}
         <circle className="odyssey-boat-porthole" cx="48" cy="137" r="3" />
         <circle className="odyssey-boat-porthole" cx="102" cy="137" r="3" />
         <circle className="odyssey-boat-compass" cx="75" cy="116" r="7" />
@@ -89,9 +100,14 @@ export function About() {
     const update = () => {
       const bounds = section.getBoundingClientRect()
       const progress = Math.max(0, Math.min(1, (innerHeight - bounds.top) / (bounds.height + innerHeight)))
-      boat.style.setProperty('--boat-left', `${6 + progress * 5}%`)
-      boat.style.setProperty('--boat-top', `${8 + progress * 78}%`)
-      boat.style.setProperty('--boat-angle', `${-18 + progress * 36}deg`)
+      const curve = Math.sin(progress * Math.PI)
+      boat.style.setProperty('--boat-left', `${-2 + progress * 14 + curve * 1.5}%`)
+      boat.style.setProperty('--boat-top', `${6 + progress * 84}%`)
+      const curveAngle = Math.atan2(
+        14 + 1.5 * Math.PI * Math.cos(progress * Math.PI),
+        84,
+      ) * -180 / Math.PI
+      boat.style.setProperty('--boat-angle', `${curveAngle}deg`)
     }
     const requestUpdate = () => {
       cancelAnimationFrame(frame)
@@ -117,6 +133,17 @@ export function About() {
       aria-labelledby="odyssey-call-title"
     >
       <OdysseyBoat boatRef={boatRef} />
+      <div className="odyssey-ocean-lines" aria-hidden="true">
+        <svg viewBox="0 0 1600 360" preserveAspectRatio="none">
+          <path d="M-80 28C80 -30 190 86 350 28S620 -30 780 28s270 58 430 0 270-58 430 0" />
+          <path d="M-80 76C80 18 190 134 350 76S620 18 780 76s270 58 430 0 270-58 430 0" />
+          <path d="M-80 124C80 66 190 182 350 124s270-58 430 0 270 58 430 0 270-58 430 0" />
+          <path d="M-80 174C80 116 190 232 350 174s270-58 430 0 270 58 430 0 270-58 430 0" />
+          <path d="M-80 226C80 168 190 284 350 226s270-58 430 0 270 58 430 0 270-58 430 0" />
+          <path d="M-80 278C80 220 190 336 350 278s270-58 430 0 270 58 430 0 270-58 430 0" />
+          <path d="M-80 334C80 276 190 392 350 334s270-58 430 0 270 58 430 0 270-58 430 0" />
+        </svg>
+      </div>
       <div className="section-inner odyssey-call-inner relative flex flex-col items-center text-center">
         <h2 id="odyssey-call-title" className="odyssey-call-title font-semibold uppercase">
           Are you ready to begin your odyssey?

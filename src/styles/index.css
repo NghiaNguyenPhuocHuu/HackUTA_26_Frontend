@@ -79,8 +79,10 @@
 
 @keyframes hero-status-pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 3px #1a3a5221}50%{transform:scale(1.45);box-shadow:0 0 0 5px #1a3a5200}}
 
-@keyframes odyssey-paddle-stroke{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(11deg)}}
+@keyframes odyssey-paddle-stroke-left{0%,100%{transform:rotate(4deg)}50%{transform:rotate(-8deg)}}
+@keyframes odyssey-paddle-stroke-right{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(8deg)}}
 @keyframes odyssey-wake-flow{to{stroke-dashoffset:-28}}
+@keyframes odyssey-ocean-drift{to{transform:translateX(-50%)}}
 
 @keyframes hero-rain{from{transform:translate3d(0,-100px,0) rotate(13deg)}to{transform:translate3d(-125px,110vh,0) rotate(13deg)}}
 
@@ -258,7 +260,7 @@
     animation:footer-rock 7s ease-in-out infinite;
   }
   & .footer-water {
-    animation:footer-tide 16s ease-in-out infinite alternate;
+    animation:none;
   }
 }
 
@@ -267,6 +269,13 @@
   bottom:56px;
   left:0;
   width:100%;
+  & path:nth-child(1) { animation:odyssey-ocean-drift 19s linear infinite; }
+  & path:nth-child(2) { animation:odyssey-ocean-drift 25s -7s linear infinite reverse; }
+  & path:nth-child(3) { animation:odyssey-ocean-drift 22s -11s linear infinite; }
+  & path:nth-child(4) { animation:odyssey-ocean-drift 31s -3s linear infinite reverse; }
+  & path:nth-child(5) { animation:odyssey-ocean-drift 17s -9s linear infinite; }
+  & path:nth-child(6) { animation:odyssey-ocean-drift 28s -15s linear infinite reverse; }
+  & path:nth-child(7) { animation:odyssey-ocean-drift 21s -5s linear infinite; }
   height:170px;
   z-index:2;
 }
@@ -450,9 +459,19 @@
 @utility odyssey-call-section {
   position:relative;
   isolation:isolate;
-  background:var(--night);
+  background:linear-gradient(180deg,#102f46 0%,#0b2945 46%,#041321 100%);
   color:var(--light);
   min-height:min(100svh,960px);
+  &::before {
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    opacity:.3;
+    background:none;
+  }
+  & .section-inner { position:relative; z-index:2; }
   & .odyssey-boat-track { opacity:0; transition:opacity .8s var(--ease-out); }
   &[data-revealed=true] .odyssey-boat-track { opacity:1; }
   & .odyssey-call-lede,
@@ -473,15 +492,41 @@
   &[data-revealed=true] .odyssey-call-perks { transition-delay:.24s; }
 }
 
+@utility odyssey-ocean-lines {
+  position:absolute;
+  z-index:0;
+  inset:auto 0 0;
+  height:100%;
+  overflow:hidden;
+  opacity:.3;
+  pointer-events:none;
+  & svg {
+    width:200%;
+    height:100%;
+    max-width:none;
+    animation:odyssey-ocean-drift 22s linear infinite;
+  }
+  & path {
+    fill:none;
+    stroke:#8ca1aa55;
+    stroke-linecap:round;
+    stroke-width:2;
+  }
+  & path:nth-child(2n) { stroke:#30587399; stroke-width:3; }
+  & path:nth-child(3n) { stroke:#ded0bc38; stroke-width:1.5; }
+  & path:nth-child(5n) { stroke:#4f86a866; stroke-width:2.5; }
+}
+
 @utility odyssey-boat-track {
   position:absolute;
   z-index:1;
   left:var(--boat-left,6%);
   top:var(--boat-top,8%);
-  width:clamp(58px,7vw,100px);
+  width:clamp(76px,9vw,132px);
   aspect-ratio:150 / 230;
   pointer-events:none;
   transform:rotate(var(--boat-angle,-18deg));
+  transform-origin:50% 0%;
   will-change:left,top,transform;
 }
 
@@ -492,7 +537,7 @@
   height:100%;
   overflow:visible;
   color:var(--clay);
-  filter:drop-shadow(0 7px 8px #00000045);
+  filter:drop-shadow(0 10px 7px #00000070) drop-shadow(0 2px 2px #00000055);
   & .odyssey-boat-hull { fill:currentColor; }
   & .odyssey-boat-hull-edge { fill:none; stroke:color-mix(in srgb,currentColor 65%,var(--night)); stroke-width:2; }
   & .odyssey-boat-deck,
@@ -508,8 +553,13 @@
   & .odyssey-boat-rower-head,
   & .odyssey-boat-compass { fill:var(--clay); stroke:var(--night); stroke-width:1.5; }
   & .odyssey-boat-rower-body { fill:color-mix(in srgb,currentColor 62%,var(--night)); stroke:var(--night); stroke-width:1.2; }
-  & .odyssey-boat-oar { fill:none; stroke:var(--clay); stroke-width:1.8; transform-box:fill-box; transform-origin:center; animation:odyssey-paddle-stroke 1.35s ease-in-out infinite; }
-  & .odyssey-boat-rower:nth-of-type(2n) .odyssey-boat-oar { animation-delay:-.675s; }
+  & .odyssey-boat-paddle-set { transform-box:fill-box; transform-origin:center; }
+  & .odyssey-boat-paddle-set-left { animation:odyssey-paddle-stroke-left 1.35s ease-in-out infinite; }
+  & .odyssey-boat-paddle-set-right { animation:odyssey-paddle-stroke-right 1.35s ease-in-out infinite; }
+  & .odyssey-boat-rower-2 .odyssey-boat-paddle-set { animation-delay:-.45s; }
+  & .odyssey-boat-rower-3 .odyssey-boat-paddle-set { animation-delay:-.9s; }
+  & .odyssey-boat-paddle-shaft { fill:none; stroke:#ffd166; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 2px #ffd16699); }
+  & .odyssey-boat-paddle-blade { fill:#ffd166; stroke:#fff0b3; stroke-width:1.2; stroke-linejoin:round; filter:drop-shadow(0 0 2px #ffd16699); }
 }
 
 @utility odyssey-boat-wake {
