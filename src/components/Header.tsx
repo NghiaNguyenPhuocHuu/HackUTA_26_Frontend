@@ -90,13 +90,12 @@ export function Header() {
     };
   }, [open]);
 
-  const navigate =
-    (id: string) => (event: MouseEvent<HTMLAnchorElement>) => {
-      if (scrollToSection(id)) {
-        event.preventDefault();
-        setOpen(false);
-      }
-    };
+  const navigate = (id: string) => (event: MouseEvent<HTMLAnchorElement>) => {
+    if (scrollToSection(id)) {
+      event.preventDefault();
+      setOpen(false);
+    }
+  };
 
   return (
     <>
@@ -104,12 +103,12 @@ export function Header() {
         ref={mlhBadge}
         id="mlh-trust-badge"
         className="header-mlh-badge"
-        href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2026-season&utm_content=blue"
+        href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2026-season&utm_content=gray"
         target="_blank"
         rel="noopener noreferrer"
       >
         <img
-          src="https://logged-assets.s3.amazonaws.com/trust-badge/2027/mlh-trust-badge-2027-blue.svg"
+          src="https://logged-assets.s3.amazonaws.com/trust-badge/2027/mlh-trust-badge-2027-gray.svg"
           alt="Major League Hacking 2026 Hackathon Season"
         />
       </a>
