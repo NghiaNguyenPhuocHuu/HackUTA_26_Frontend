@@ -191,7 +191,7 @@ export function Footer({ motionEnabled = true }: { motionEnabled?: boolean }) {
         </div>
       </div>
 
-      <div className="footer-sea pointer-events-none" aria-hidden="true">
+      <div className="footer-sea" aria-hidden="true">
         <svg
           className="footer-water"
           viewBox="0 0 1440 90"
@@ -209,7 +209,7 @@ export function Footer({ motionEnabled = true }: { motionEnabled?: boolean }) {
         </div>
       </div>
 
-      <div className="section-inner footer-bottom flex flex-col sm:flex-row sm:items-center sm:justify-between">
+      <div className="section-inner footer-bottom">
         <p>© 2026 HackUTA. All rights reserved.</p>
         <a
           href="https://mlh.io/code-of-conduct"

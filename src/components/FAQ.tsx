@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { OracleEye } from "./OracleEye";
 
 const questions = [
   {
@@ -62,19 +63,9 @@ export function FAQ() {
           </h2>
           <p className="oracle-description">
             Or you can always email us at{" "}
-            <a href="mailto:info@hackuta.com">info@hackuta.com</a>
+            <a href="mailto:info@hackuta.org">info@hackuta.org</a>
           </p>
-          <svg
-            className="oracle-eye"
-            viewBox="0 0 220 116"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path d="M8 58c27-31 61-47 102-47s75 16 102 47c-27 31-61 47-102 47S35 89 8 58Z" />
-            <circle cx="110" cy="58" r="25" />
-            <circle cx="110" cy="58" r="7" className="oracle-eye-pupil" />
-            <path d="M110 0v15M110 101v15M35 13l12 18M185 13l-12 18M35 103l12-18M185 103l-12-18" />
-          </svg>
+          <OracleEye />
           <p className="oracle-status status-dot">Applications open soon</p>
         </div>
         <div className="oracle-questions">
