@@ -1,4 +1,5 @@
 import { Header } from "./components/Header";
+import CustomCursor from "./components/cursor/CustomCursor";
 import { Hero } from "./components/Hero";
 import { About } from "./components/About";
 import { Schedule } from "./components/Schedule";
@@ -65,6 +66,7 @@ export default function App() {
 
   return (
     <>
+      <CustomCursor />
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>

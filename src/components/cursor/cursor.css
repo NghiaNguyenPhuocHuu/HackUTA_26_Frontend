@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Raleway:wght@300;400;500;600&display=swap');
+@import 'tailwindcss';
+
+html,
+body,
+#root {
+  height: 100%;
+  cursor: none;
+}
+
+* {
+  cursor: none !important;
+}
+
+/* ── Spear Cursor wrapper ─────────────────────────────────────────────────── */
+.cursor-spear {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  /* hotspot = tip of spear = top-left corner of SVG */
+  transform: translate(0, 0);
+  will-change: transform;
+  filter: drop-shadow(0 0 4px rgba(205, 165, 60, 0.55));
+  transition: filter 0.2s;
+}
+
+/* Hover: brighter glow */
+.cursor-spear.is-hovering {
+  filter:
+    drop-shadow(0 0 6px rgba(100, 210, 255, 0.85))
+    drop-shadow(0 0 12px rgba(100, 210, 255, 0.4));
+  animation: bow-hover-sway 0.16s ease-in-out infinite alternate;
+}
+
+@keyframes bow-hover-sway {
+  from { transform: rotate(-1.1deg) translate(0, 0); }
+  to   { transform: rotate(0.8deg) translate(0.6px, 0.6px); }
+}
+
+/* Arrow initial state and release animation */
+.cursor-spear .bow-arrow {
+  transform-origin: 0 0;
+}
+.cursor-spear .bow-arrow {
+  transform-origin: 0 0;
+  transition: transform 220ms cubic-bezier(.22,1,.36,1), opacity 220ms;
+}
+
+/* Draw-back when hovering (light pull). On interactive hover the arrow is pulled back toward the string. */
+.cursor-spear.is-hovering .bow-arrow {
+  transform: translate(8px, 8px) scale(0.995) rotate(1.5deg);
+}
+
+/* Stronger pull while click happens and then release animation */
+.cursor-spear.is-clicking .bow-arrow {
+  animation: arrow-release 0.46s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes arrow-release {
+  0%   { transform: translate(8px, 8px) scale(1); opacity: 1; }
+  18%  { transform: translate(2px, 2px) scale(0.99); opacity: 1; }
+  40%  { transform: translate(-18px, -18px) scale(0.97); opacity: 1; }
+  70%  { transform: translate(-56px, -56px) scale(0.95); opacity: 0.7; }
+  100% { transform: translate(-120px, -120px) scale(0.9); opacity: 0; }
+}
+
+/* Bow string snap */
+.cursor-spear .bow-string-left { transition: transform 160ms ease-out, opacity 120ms; }
+.cursor-spear.is-clicking .bow-string-left {
+  animation: string-release-left 0.18s ease-out forwards;
+}
+.cursor-spear .bow-string-right { transition: transform 160ms ease-out, opacity 120ms; }
+.cursor-spear.is-clicking .bow-string-right {
+  animation: string-release-right 0.18s ease-out forwards;
+}
+.cursor-spear.is-hovering .bow-string-left { transform: translate(12px, 8px) scaleX(1.2) rotate(35deg); opacity: 0.95; }
+.cursor-spear.is-hovering .bow-string-right { transform: translate(4px, 11px) scaleY(1.2) rotate(-35deg); opacity: 0.95; }
+
+@keyframes string-release-left {
+  0% { transform: translate(12px, 8px) scaleX(1.2) rotate(35deg); opacity: 0.95; }
+  40% { transform: translate(-.8px, -.8px) scale(0.88); opacity: 0.9; }
+  100% { transform: translate(0, 0) scaleY(1); opacity: 0.85; }
+}
+
+@keyframes string-release-right {
+  0% { transform: translate(4px, 11px) scaleY(1.2) rotate(-35deg); opacity: 0.95; }
+  40% { transform: translate(-.8px, -.8px) scale(0.88); opacity: 0.9; }
+  100% { transform: translate(0, 0) scaleY(1); opacity: 0.85; }
+}
+
+/* Subtle limb shimmer while idle */
+.bow-limb { transition: stroke 220ms; }
+.cursor-spear.is-hovering .bow-limb { animation: limb-breathe 3.4s ease-in-out infinite; }
+@keyframes limb-breathe { 0%,100%{opacity:1}50%{opacity:0.86} }
+
+/* ── Impact shockwave on click ────────────────────────────────────────────── */
+.cursor-impact {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99998;
+  transform: translate(-50%, -50%);
+}
+
+.impact-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(205, 165, 60, 0.9);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+}
+
+.impact-ring.fire {
+  animation: impact-expand 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.impact-ring.r2.fire {
+  animation: impact-expand 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.07s forwards;
+  border-color: rgba(100, 210, 255, 0.6);
+}
+.impact-ring.r3.fire {
+  animation: impact-expand 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.14s forwards;
+  border-color: rgba(255,255,255,0.25);
+}
+
+@keyframes impact-expand {
+  0%   { width: 4px;  height: 4px;  opacity: 1;   transform: translate(-50%, -50%) scale(1); }
+  100% { width: 90px; height: 90px; opacity: 0;   transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Dirt/spark particles on click */
+.impact-spark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 2px;
+  background: #e8c97a;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.impact-spark.fire {
+  animation: spark-fly var(--dur, 0.45s) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes spark-fly {
+  0%   { transform: translate(-50%, -50%) translate(0, 0); opacity: 1; }
+  100% { transform: translate(-50%, -50%) translate(var(--tx), var(--ty)); opacity: 0; }
+}
+
+/* ── Hover-glow on interactive elements ──────────────────────────────────── */
+.hover-glow {
+  transition: color 0.25s, border-color 0.25s, box-shadow 0.25s, background 0.25s;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 20px 4px rgba(205, 165, 60, 0.2);
+}
+
+/* ── Shimmer on the spear shaft (idle) ───────────────────────────────────── */
+@keyframes shaft-shimmer {
+  0%   { opacity: 0.55; }
+  50%  { opacity: 0.9; }
+  100% { opacity: 0.55; }
+}
