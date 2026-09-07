@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Raleway:wght@300;400;500;600&display=swap');
+@import 'tailwindcss';
+
+html,
+body,
+#root {
+  height: 100%;
+  cursor: none;
+}
+
+* {
+  cursor: none !important;
+}
+
+/* ── Spear Cursor wrapper ─────────────────────────────────────────────────── */
+.cursor-spear {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  /* hotspot = tip of spear = top-left corner of SVG */
+  transform: translate(0, 0);
+  will-change: transform;
+  filter: drop-shadow(0 0 4px rgba(205, 165, 60, 0.55));
+  transition: filter 0.2s;
+}
+
+/* Hover: brighter glow */
+.cursor-spear.is-hovering {
+  filter:
+    drop-shadow(0 0 6px rgba(100, 210, 255, 0.85))
+    drop-shadow(0 0 12px rgba(100, 210, 255, 0.4));
+  animation: spear-hover-vibrate 0.12s ease-in-out infinite alternate;
+}
+
+@keyframes spear-hover-vibrate {
+  from { transform: rotate(-1.2deg) translate(0, 0); }
+  to   { transform: rotate(0.6deg) translate(0.5px, 0.5px); }
+}
+
+/* Click thrust: spear lunges forward (top-left) and snaps back */
+.cursor-spear.is-clicking {
+  animation: spear-thrust 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes spear-thrust {
+  0%   { transform: translate(0, 0) scale(1); }
+  30%  { transform: translate(-8px, -8px) scale(1.04); }
+  60%  { transform: translate(-6px, -6px) scale(1.02); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+/* ── Impact shockwave on click ────────────────────────────────────────────── */
+.cursor-impact {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99998;
+  transform: translate(-50%, -50%);
+}
+
+.impact-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(205, 165, 60, 0.9);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+}
+
+.impact-ring.fire {
+  animation: impact-expand 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.impact-ring.r2.fire {
+  animation: impact-expand 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.07s forwards;
+  border-color: rgba(100, 210, 255, 0.6);
+}
+.impact-ring.r3.fire {
+  animation: impact-expand 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.14s forwards;
+  border-color: rgba(255,255,255,0.25);
+}
+
+@keyframes impact-expand {
+  0%   { width: 4px;  height: 4px;  opacity: 1;   transform: translate(-50%, -50%) scale(1); }
+  100% { width: 90px; height: 90px; opacity: 0;   transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Dirt/spark particles on click */
+.impact-spark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 2px;
+  background: #e8c97a;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.impact-spark.fire {
+  animation: spark-fly var(--dur, 0.45s) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes spark-fly {
+  0%   { transform: translate(-50%, -50%) translate(0, 0); opacity: 1; }
+  100% { transform: translate(-50%, -50%) translate(var(--tx), var(--ty)); opacity: 0; }
+}
+
+/* ── Stars ────────────────────────────────────────────────────────────────── */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; }
+  50%       { opacity: 1; }
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  animation: twinkle var(--dur, 3s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+/* ── Orbiting planet ──────────────────────────────────────────────────────── */
+@keyframes orbit-planet {
+  from { transform: rotate(0deg) translateX(var(--r)) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(var(--r)) rotate(-360deg); }
+}
+
+.orbiting-dot {
+  position: absolute;
+  border-radius: 50%;
+  animation: orbit-planet var(--speed, 6s) linear infinite;
+}
+
+/* ── Hover-glow on interactive elements ──────────────────────────────────── */
+.hover-glow {
+  transition: color 0.25s, border-color 0.25s, box-shadow 0.25s, background 0.25s;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 20px 4px rgba(205, 165, 60, 0.2);
+}
+
+/* ── Shimmer on the spear shaft (idle) ───────────────────────────────────── */
+@keyframes shaft-shimmer {
+  0%   { opacity: 0.55; }
+  50%  { opacity: 0.9; }
+  100% { opacity: 0.55; }
+}
