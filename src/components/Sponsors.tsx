@@ -54,12 +54,14 @@ function SponsorCard({
   index,
   emptyLabel,
   emptyDetail,
+  showEmptyCopy,
 }: {
   sponsor?: Sponsor;
   tier: SponsorTier;
   index: number;
   emptyLabel: string;
   emptyDetail: string;
+  showEmptyCopy: boolean;
 }) {
   const isEmpty = !sponsor;
   const accessibleName = sponsor?.name ?? `${tier} sponsor slot ${index + 1}`;
@@ -72,11 +74,13 @@ function SponsorCard({
     />
   ) : sponsor ? (
     <span className="sponsor-card-name">{sponsor.name}</span>
-  ) : (
+  ) : showEmptyCopy ? (
     <span className="sponsor-card-placeholder">
       <span className="sponsor-card-placeholder-title">{emptyLabel}</span>
       <span className="sponsor-card-placeholder-detail">{emptyDetail}</span>
     </span>
+  ) : (
+    <span className="sr-only">{emptyLabel}</span>
   );
 
   const inner = (
@@ -146,6 +150,10 @@ function SponsorTier({
             index={index}
             emptyLabel={emptyLabel}
             emptyDetail={emptyDetail}
+            showEmptyCopy={
+              !sponsors[index] &&
+              sponsors.slice(0, index).every((entry) => Boolean(entry))
+            }
           />
         ))}
       </div>
