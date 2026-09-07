@@ -4,17 +4,13 @@ import { Ship } from "./art/Ship";
 import { PRIMARY_NAV_LINKS } from "../constants/navigation";
 import { scrollToSection } from "../utils/scrollToSection";
 
-const exploreLinks = [
-  ...PRIMARY_NAV_LINKS,
-  { id: "about", label: "Apply" },
-];
+const exploreLinks = [...PRIMARY_NAV_LINKS, { id: "about", label: "Apply" }];
 
 const otherHackathons = [
   { href: "https://hackutd.co/", label: "HackUTD" },
   { href: "https://tamuhack.org/", label: "TAMUHack" },
   { href: "https://rowdyhacks.org/", label: "RowdyHacks" },
   { href: "https://hacktx.com/", label: "HackTX" },
-  { href: "https://hackunt.com/", label: "HackUNT" },
 ];
 
 const socialLinks = [
@@ -111,10 +107,9 @@ function InfoColumn({
 }
 
 export function Footer({ motionEnabled = true }: { motionEnabled?: boolean }) {
-  const navigate =
-    (id: string) => (event: MouseEvent<HTMLAnchorElement>) => {
-      if (scrollToSection(id)) event.preventDefault();
-    };
+  const navigate = (id: string) => (event: MouseEvent<HTMLAnchorElement>) => {
+    if (scrollToSection(id)) event.preventDefault();
+  };
 
   return (
     <footer

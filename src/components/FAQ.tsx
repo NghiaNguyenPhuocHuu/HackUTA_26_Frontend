@@ -63,7 +63,9 @@ export function FAQ({ motionEnabled }: { motionEnabled: boolean }) {
           </h2>
           <p className="oracle-description">
             Or you can always email us at{" "}
-            <a href="mailto:info@hackuta.org">info@hackuta.org</a>
+            <a href="mailto:info@hackuta.org" className="underline">
+              info@hackuta.org
+            </a>
           </p>
           <OracleEye motionEnabled={motionEnabled} />
         </div>
