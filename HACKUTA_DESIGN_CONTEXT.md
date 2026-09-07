@@ -77,7 +77,7 @@ The date, location, and registration CTA must be visible in the initial viewport
    - Keep the accordion conventional and readable.
    - Only use subtle eye, tile, or incised-line motion.
 
-9. **Patrons of the Journey — Sponsors**
+9. **Sponsors of the Journey**
    - Treat logos like makers' stamps while retaining their official colors and legibility when required.
    - Avoid a large pinned animation here.
 
