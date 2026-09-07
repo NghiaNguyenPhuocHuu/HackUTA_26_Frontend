@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./cursor.css";
 
-// Impact sparks — 10 random directions
+// Impact sparks
 const SPARKS = Array.from({ length: 10 }, (_, i) => {
   const angle = (i / 10) * Math.PI * 2 + (Math.random() - 0.5) * 0.6;
   const dist = 18 + Math.random() * 20;
@@ -13,118 +13,75 @@ const SPARKS = Array.from({ length: 10 }, (_, i) => {
   };
 });
 
-// ── Spear SVG cursor ─────────────────────────────────────────────────────────
-// Oriented so the tip is at (0,0) top-left, shaft trails to bottom-right.
-// Total canvas: 44×44 (fits tip + shaft at ~45°)
-function SpearSVG({ hovering }: { hovering: boolean }) {
-  // Shaft color shifts on hover
-  const shaftColor = hovering ? "#64d2ff" : "#c8a84b";
-  const tipColor = hovering ? "#e0f4ff" : "#f5e6b0";
-  const glowId = "spear-glow";
+function BowSVG({ hovering }: { hovering: boolean }) {
+  const bowColor = hovering ? "#64d2ff" : "#c8a84b";
+  const trim = hovering ? "#a0e8ff" : "#e8c97a";
 
   return (
     <svg
-      width="44"
-      height="44"
-      viewBox="0 0 44 44"
+      width="54"
+      height="54"
+      viewBox="-6 -6 60 60"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{ display: "block" }}
     >
       <defs>
-        <linearGradient id="shaftGrad" x1="10" y1="10" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor={shaftColor} />
-          <stop offset="50%" stopColor={hovering ? "#a0e8ff" : "#e8c97a"} stopOpacity="0.7" />
-          <stop offset="100%" stopColor={hovering ? "#3a8fa8" : "#7a5e22"} stopOpacity="0.5" />
+        <linearGradient id="bowGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor={bowColor} />
+          <stop offset="100%" stopColor={trim} />
         </linearGradient>
-        <linearGradient id="tipGrad" x1="0" y1="0" x2="14" y2="14" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor={tipColor} />
-          <stop offset="60%" stopColor={shaftColor} />
-          <stop offset="100%" stopColor={hovering ? "#2a7090" : "#9a7030"} />
-        </linearGradient>
-        <filter id={glowId} x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation={hovering ? "2.5" : "1.2"} result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
       </defs>
 
-      {/* ── Shaft (the pole, runs diagonal) ── */}
-      {/* Main pole */}
-      <line
-        x1="11" y1="11"
-        x2="40" y2="40"
-        stroke="url(#shaftGrad)"
-        strokeWidth="2.8"
+      {/* Curved bow limb (arc) */}
+      <path
+        d="M 50 0 C 20 0 0 20 0 50"
+        stroke="url(#bowGrad)"
+        strokeWidth="3"
         strokeLinecap="round"
-        filter={`url(#${glowId})`}
-        style={{ animation: "shaft-shimmer 2.5s ease-in-out infinite" }}
-      />
-      {/* Highlight streak along shaft */}
-      <line
-        x1="12" y1="10"
-        x2="39" y2="37"
-        stroke="white"
-        strokeWidth="0.6"
-        strokeLinecap="round"
-        opacity="0.35"
+        fill="none"
+        className="bow-limb"
       />
 
-      {/* ── Crossguard (small perpendicular bar) ── */}
-      <line
-        x1="15" y1="19"
-        x2="20" y2="14"
-        stroke={shaftColor}
-        strokeWidth="2.2"
+      {/* Back limb mirror for thickness */}
+      <path
+        d="M 48 2 C 22 2 0 18 0 48"
+        stroke="rgba(255,255,255,0.06)"
+        strokeWidth="1.6"
         strokeLinecap="round"
+        fill="none"
         opacity="0.9"
-      />
-      <line
-        x1="14" y1="20"
-        x2="20" y2="14"
-        stroke="white"
-        strokeWidth="0.5"
-        strokeLinecap="round"
-        opacity="0.45"
+        className="bow-limb-back"
       />
 
-      {/* ── Spearhead (tip) — triangular, points at 0,0 ── */}
-      {/* Main blade */}
-      <polygon
-        points="0,0  14,6  6,14"
-        fill="url(#tipGrad)"
-        filter={`url(#${glowId})`}
-      />
-      {/* Blade left edge bevel */}
-      <polygon
-        points="0,0  14,6  7,7"
-        fill="white"
-        opacity="0.22"
-      />
-      {/* Blade center ridge */}
+      {/* String */}
       <line
-        x1="0" y1="0"
-        x2="10" y2="10"
-        stroke="white"
-        strokeWidth="0.7"
+        x1="0" y1="50"
+        x2="25" y2="25"
+        stroke="#fff"
+        strokeWidth="0.9"
         strokeLinecap="round"
-        opacity="0.5"
+        opacity="0.85"
+        className={`bow-string-left ${hovering ? "is-hover" : ""}`}
+        style={{ transformBox: 'fill-box', transformOrigin: '10px 6px' }}
       />
-      {/* Tip highlight dot */}
-      <circle
-        cx="1.2" cy="1.2" r="1"
-        fill="white"
-        opacity="0.75"
+      <line
+        x1="25" y1="25"
+        x2="50" y2="0"
+        stroke="#fff"
+        strokeWidth="0.9"
+        strokeLinecap="round"
+        opacity="0.85"
+        className={`bow-string-right ${hovering ? "is-hover" : ""}`}
+        style={{ transformBox: 'fill-box', transformOrigin: '10px 6px' }}
       />
 
-      {/* ── Butt cap (end of shaft) ── */}
-      <circle
-        cx="40" cy="40" r="1.5"
-        fill={hovering ? "#3a8fa8" : "#7a5e22"}
-        opacity="0.8"
-      />
+      {/* Arrow group — positioned so tip is near top-left (hotspot) */}
+      <g className="bow-arrow">
+        <line x1="0" y1="0" x2="34" y2="34" stroke="#f5e6b0" strokeWidth="2.6" strokeLinecap="round" />
+        <polygon points="-6,-6 4,0 0,4" fill="#c8a84b" opacity="0.95" />
+        <line x1="28" y1="28" x2="34" y2="34" stroke="#ffffff33" strokeWidth="0.6" strokeLinecap="round" />
+      </g>
     </svg>
   );
 }
@@ -200,12 +157,12 @@ function CustomCursor() {
 
   return (
     <>
-      {/* Spear cursor — top-left is the hotspot (tip) */}
+      {/* Bow cursor — top-left is the hotspot (tip) */}
       <div
         ref={spearRef}
         className={`cursor-spear${hovering ? " is-hovering" : ""}`}
       >
-        <SpearSVG hovering={hovering} />
+        <BowSVG hovering={hovering} />
       </div>
 
       {/* Impact effect at cursor position */}
