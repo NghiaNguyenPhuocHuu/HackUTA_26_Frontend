@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { OliveBranch } from "./art/OliveBranch";
 
-type SponsorTier = "presenting" | "olympians" | "argonauts";
+type SponsorTier = "platinum" | "gold" | "silver" | "bronze";
 
 type Sponsor = {
   name: string;
@@ -9,44 +9,68 @@ type Sponsor = {
   logo?: string;
   href?: string;
   description?: string;
+  /** Presenting is a Platinum-only designation from the sponsor packet. */
+  presenting?: boolean;
 };
+
+const SPONSOR_EMAIL = "sponsor@hackuta.org";
+const SPONSOR_MAILTO = `mailto:${SPONSOR_EMAIL}?subject=${encodeURIComponent("HackUTA 2026 sponsorship")}`;
 
 const sponsorTiers: Record<SponsorTier, Sponsor[]> = {
   // Keep the roster empty until partnerships are confirmed.
-  presenting: [],
-  olympians: [],
-  argonauts: [],
+  platinum: [],
+  gold: [],
+  silver: [],
+  bronze: [],
 };
 
 const tierDetails: Array<{
   tier: SponsorTier;
+  numeral: string;
   label: string;
   emptyLabel: string;
   emptyDetail: string;
   slots: number;
 }> = [
   {
-    tier: "presenting",
-    label: "Presenting Partner",
-    emptyLabel: "Title Sponsor",
-    emptyDetail: "The name above the voyage",
-    slots: 1,
+    tier: "platinum",
+    numeral: "I",
+    label: "Platinum",
+    emptyLabel: "Platinum berth",
+    emptyDetail: "Keynote · presenting available",
+    slots: 2,
   },
   {
-    tier: "olympians",
-    label: "Olympians",
-    emptyLabel: "Open berth",
-    emptyDetail: "Champion the builders",
+    tier: "gold",
+    numeral: "II",
+    label: "Gold",
+    emptyLabel: "Gold berth",
+    emptyDetail: "API · mentors · shirt mark",
     slots: 3,
   },
   {
-    tier: "argonauts",
-    label: "Argonauts",
-    emptyLabel: "Join the crew",
-    emptyDetail: "Fuel the first miles",
-    slots: 5,
+    tier: "silver",
+    numeral: "III",
+    label: "Silver",
+    emptyLabel: "Silver berth",
+    emptyDetail: "Track · judges · stage time",
+    slots: 3,
+  },
+  {
+    tier: "bronze",
+    numeral: "IV",
+    label: "Bronze",
+    emptyLabel: "Bronze berth",
+    emptyDetail: "Logo · mentors · floor table",
+    slots: 4,
   },
 ];
+
+const sponsorPerks = [
+  { label: "Recruit earlier", detail: "Meet builders before the job board" },
+  { label: "Be known on campus", detail: "Site, shirts, itinerary, social" },
+  { label: "Watch them ship", detail: "Your API in a 24-hour room" },
+] as const;
 
 function SponsorCard({
   sponsor,
@@ -64,6 +88,7 @@ function SponsorCard({
   showEmptyCopy: boolean;
 }) {
   const isEmpty = !sponsor;
+  const isPresenting = Boolean(sponsor?.presenting && tier === "platinum");
   const accessibleName = sponsor?.name ?? `${tier} sponsor slot ${index + 1}`;
 
   const cardContent = sponsor?.logo ? (
@@ -85,6 +110,9 @@ function SponsorCard({
 
   const inner = (
     <span className="sponsor-card-content">
+      {isPresenting ? (
+        <span className="sponsor-card-badge">Presenting</span>
+      ) : null}
       {cardContent}
       {sponsor?.description && !sponsor.logo ? (
         <span className="sr-only">{sponsor.description}</span>
@@ -96,6 +124,7 @@ function SponsorCard({
     "sponsor-card",
     `sponsor-card--${tier}`,
     isEmpty ? "sponsor-card--empty" : null,
+    isPresenting ? "sponsor-card--presenting" : null,
   ]
     .filter(Boolean)
     .join(" ");
@@ -126,6 +155,7 @@ function SponsorCard({
 
 function SponsorTier({
   tier,
+  numeral,
   label,
   emptyLabel,
   emptyDetail,
@@ -138,7 +168,12 @@ function SponsorTier({
     <div className={`sponsor-tier sponsor-tier--${tier}`}>
       <div className="sponsor-tier-heading">
         <span className="sponsor-tier-line" aria-hidden="true" />
-        <h3>{label}</h3>
+        <h3>
+          <span className="sponsor-tier-numeral" aria-hidden="true">
+            {numeral}
+          </span>
+          <span>{label}</span>
+        </h3>
         <span className="sponsor-tier-line" aria-hidden="true" />
       </div>
       <div className="sponsor-card-grid">
@@ -234,19 +269,24 @@ export function Sponsors() {
             the next quest.
           </h3>
           <p className="sponsors-cta-copy">
-            Put your name beside the builders who will remember who believed
-            first.
+            Start with the goal — recruiting, brand, or product — and we will
+            price a package around it.
           </p>
-          <a
-            className="sponsors-cta-link"
-            href="mailto:info@hackuta.org?subject=HackUTA%202026%20sponsorship"
-          >
+          <ul className="sponsors-cta-perks" aria-label="Why sponsor">
+            {sponsorPerks.map((perk) => (
+              <li key={perk.label}>
+                <span className="sponsors-cta-perk-label">{perk.label}</span>
+                <span className="sponsors-cta-perk-detail">{perk.detail}</span>
+              </li>
+            ))}
+          </ul>
+          <a className="sponsors-cta-link" href={SPONSOR_MAILTO}>
             Become a patron <span aria-hidden="true">→</span>
           </a>
           <p className="sponsors-cta-contact">
             Sponsor inquiries
             <br />
-            info@hackuta.org
+            {SPONSOR_EMAIL}
           </p>
         </div>
       </div>
