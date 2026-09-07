@@ -86,21 +86,30 @@ export function OracleEye({ motionEnabled }: { motionEnabled: boolean }) {
           fill="none"
           aria-hidden="true"
         >
-          <g
-            className="oracle-eye-iris"
-            transform={`translate(${irisOffset.x} ${irisOffset.y})`}
-          >
-            <circle cx="110" cy="58" r="25" />
-            <circle cx="110" cy="58" r="7" className="oracle-eye-pupil" />
+          <g className="oracle-eye-iris">
+            <g
+              className="oracle-eye-iris-track"
+              transform={`translate(${irisOffset.x} ${irisOffset.y})`}
+            >
+              <circle cx="110" cy="58" r="25" />
+              <circle cx="110" cy="58" r="7" className="oracle-eye-pupil" />
+            </g>
           </g>
-          <path d="M110 0v15M110 101v15M35 13l12 18M185 13l-12 18M35 103l12-18M185 103l-12-18" />
-          <g className="oracle-eye-lid oracle-eye-lid--top">
-            <path d="M0 0h220V52Q110 58 0 52Z" />
+          <path
+            className="oracle-eye-lashes--top"
+            d="M110 0v15M35 13l12 18M185 13l-12 18"
+          />
+          <path d="M110 101v15M35 103l12-18M185 103l-12-18" />
+          <path
+            className="oracle-eye-outline"
+            d="M8 58c27-31 61-47 102-47s75 16 102 47c-27 31-61 47-102 47S35 89 8 58Z"
+          />
+          <g className="oracle-eye-lid">
+            <path
+              d="M8 58c27-31 61-47 102-47s75 16 102 47"
+              vectorEffect="non-scaling-stroke"
+            />
           </g>
-          <g className="oracle-eye-lid oracle-eye-lid--bottom">
-            <path d="M0 64Q110 58 220 64V116H0Z" />
-          </g>
-          <path d="M8 58c27-31 61-47 102-47s75 16 102 47c-27 31-61 47-102 47S35 89 8 58Z" />
         </svg>
       </button>
       <p
