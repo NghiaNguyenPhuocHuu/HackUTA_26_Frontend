@@ -36,7 +36,11 @@ export default function App() {
       document.querySelectorAll<HTMLElement>(
         'main > section:not(.odyssey-call-section):not(#top) :is(h2, h3, p, a, li, article, img), footer :is(h2, h3, p, a, li, address, img)',
       ),
-    ).filter((item) => !item.closest('[aria-hidden="true"]'));
+    ).filter(
+      (item) =>
+        !item.closest('[aria-hidden="true"]') &&
+        !item.closest(".footer-bottom"),
+    );
 
     items.forEach((item, index) => {
       item.classList.add("site-reveal-item");
