@@ -1971,6 +1971,9 @@
   }
 
   .sponsor-tier-heading h3 {
+    display: inline-flex;
+    align-items: baseline;
+    gap: .55em;
     flex: none;
     color: var(--ink);
     font-size: clamp(13px, 1.2vw, 16px);
@@ -1979,6 +1982,14 @@
     line-height: 1;
     text-align: center;
     text-transform: uppercase;
+  }
+
+  .sponsor-tier-numeral {
+    color: var(--ocean);
+    font-family: var(--font-display);
+    font-size: 1.15em;
+    font-weight: 400;
+    letter-spacing: .04em;
   }
 
   .sponsor-tier-line {
@@ -1992,18 +2003,22 @@
     gap: clamp(10px, 1.5vw, 20px);
   }
 
-  .sponsor-tier--presenting .sponsor-card-grid {
-    grid-template-columns: minmax(0, 1fr);
-    max-width: min(100%, 720px);
+  .sponsor-tier--platinum .sponsor-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: min(100%, 820px);
     margin-inline: auto;
   }
 
-  .sponsor-tier--olympians .sponsor-card-grid {
+  .sponsor-tier--gold .sponsor-card-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .sponsor-tier--argonauts .sponsor-card-grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+  .sponsor-tier--silver .sponsor-card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .sponsor-tier--bronze .sponsor-card-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .sponsor-card {
@@ -2022,17 +2037,27 @@
       transform .25s var(--ease-out);
   }
 
-  .sponsor-card--presenting {
-    aspect-ratio: 4.6 / 1;
-    min-height: 148px;
-    padding: clamp(28px, 3.5vw, 44px) clamp(32px, 6vw, 80px);
+  .sponsor-card--platinum {
+    aspect-ratio: 2.2 / 1;
+    min-height: 128px;
+    padding: clamp(24px, 3vw, 40px) clamp(22px, 3.5vw, 48px);
   }
 
-  .sponsor-card--olympians {
+  .sponsor-card--platinum.sponsor-card--presenting {
+    border-color: var(--ink);
+    background: var(--light);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent);
+  }
+
+  .sponsor-card--gold {
     padding: clamp(20px, 2.6vw, 34px);
   }
 
-  .sponsor-card--argonauts {
+  .sponsor-card--silver {
+    padding: clamp(16px, 2.2vw, 28px);
+  }
+
+  .sponsor-card--bronze {
     padding: clamp(14px, 1.8vw, 22px);
   }
 
@@ -2046,8 +2071,18 @@
   .sponsor-card-content {
     display: grid;
     place-items: center;
+    gap: 10px;
     width: 100%;
     min-width: 0;
+  }
+
+  .sponsor-card-badge {
+    color: var(--ocean);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    line-height: 1;
+    text-transform: uppercase;
   }
 
   .sponsor-card-logo {
@@ -2057,16 +2092,20 @@
     object-fit: contain;
   }
 
-  .sponsor-card--presenting .sponsor-card-logo {
-    max-height: 72px;
+  .sponsor-card--platinum .sponsor-card-logo {
+    max-height: 64px;
   }
 
-  .sponsor-card--olympians .sponsor-card-logo {
+  .sponsor-card--gold .sponsor-card-logo {
     max-height: 48px;
   }
 
-  .sponsor-card--argonauts .sponsor-card-logo {
-    max-height: 36px;
+  .sponsor-card--silver .sponsor-card-logo {
+    max-height: 40px;
+  }
+
+  .sponsor-card--bronze .sponsor-card-logo {
+    max-height: 32px;
   }
 
   .sponsor-card-name {
@@ -2119,7 +2158,7 @@
   .sponsors-cta {
     display: grid;
     justify-items: center;
-    max-width: 640px;
+    max-width: 720px;
     margin-inline: auto;
     text-align: center;
   }
@@ -2140,6 +2179,46 @@
     color: var(--sand);
     font-size: clamp(17px, 1.6vw, 21px);
     line-height: 1.45;
+  }
+
+  .sponsors-cta-perks {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(16px, 2.5vw, 28px);
+    width: min(100%, 620px);
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sponsors-cta-perks li {
+    display: grid;
+    gap: 6px;
+    justify-items: center;
+  }
+
+  .sponsors-cta-perks li::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--clay);
+  }
+
+  .sponsors-cta-perk-label {
+    color: var(--light);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .sponsors-cta-perk-detail {
+    max-width: 16ch;
+    color: var(--sand);
+    font-size: 13px;
+    line-height: 1.35;
   }
 
   .sponsors-cta-link {
@@ -2183,12 +2262,23 @@
   }
 
   @media (max-width: 1000px) {
-    .sponsor-tier--olympians .sponsor-card-grid {
+    .sponsor-tier--platinum .sponsor-card-grid,
+    .sponsor-tier--gold .sponsor-card-grid,
+    .sponsor-tier--silver .sponsor-card-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .sponsor-tier--argonauts .sponsor-card-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    .sponsor-tier--bronze .sponsor-card-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sponsors-cta-perks {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .sponsors-cta-perk-detail {
+      max-width: none;
     }
   }
 
@@ -2240,8 +2330,10 @@
       letter-spacing: .1em;
     }
 
-    .sponsor-tier--olympians .sponsor-card-grid,
-    .sponsor-tier--argonauts .sponsor-card-grid {
+    .sponsor-tier--platinum .sponsor-card-grid,
+    .sponsor-tier--gold .sponsor-card-grid,
+    .sponsor-tier--silver .sponsor-card-grid,
+    .sponsor-tier--bronze .sponsor-card-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -2250,10 +2342,10 @@
       padding: 16px 12px;
     }
 
-    .sponsor-card--presenting {
+    .sponsor-card--platinum {
       min-height: 0;
-      aspect-ratio: 1.75 / 1;
-      padding: 20px 18px;
+      aspect-ratio: 1.65 / 1;
+      padding: 20px 16px;
     }
 
     .sponsor-tier-heading h3 {
@@ -2299,11 +2391,11 @@
       flex-basis: 36px;
     }
 
-    .sponsor-tier--argonauts .sponsor-card-grid {
+    .sponsor-tier--bronze .sponsor-card-grid {
       grid-template-columns: 1fr;
     }
 
-    .sponsor-card--argonauts {
+    .sponsor-card--bronze {
       aspect-ratio: 4 / 1.65;
     }
   }
