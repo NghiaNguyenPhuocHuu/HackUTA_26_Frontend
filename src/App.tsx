@@ -34,7 +34,7 @@ export default function App() {
     document.documentElement.dataset.revealReady = "true";
     const items = Array.from(
       document.querySelectorAll<HTMLElement>(
-        'main > section:not(.odyssey-call-section):not(#top) :is(h2, h3, p, a, li, article, img), footer :is(h2, h3, p, a, li, address, img)',
+        'main > section:not(.odyssey-call-section):not(#top):not(#sponsors) :is(h2, h3, p, a, li, article, img), footer :is(h2, h3, p, a, li, address, img)',
       ),
     ).filter(
       (item) =>
