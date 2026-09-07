@@ -1,4 +1,5 @@
 import { type RefObject, useEffect, useRef, useState } from 'react'
+import { clamp01 } from '../utils/clamp'
 
 const DISCORD_URL = 'https://discord.gg/2bVsYS3SgS'
 const DEVPOST_URL = 'https://hackuta7.devpost.com/'
@@ -85,6 +86,7 @@ export function About() {
     if (!section) return
 
     const observer = new IntersectionObserver(([entry]) => {
+      if (!entry) return
       setRevealed(entry.isIntersecting)
     }, { threshold: 0.18 })
 
@@ -99,7 +101,7 @@ export function About() {
     let frame = 0
     const update = () => {
       const bounds = section.getBoundingClientRect()
-      const progress = Math.max(0, Math.min(1, (innerHeight - bounds.top) / (bounds.height + innerHeight)))
+      const progress = clamp01((innerHeight - bounds.top) / (bounds.height + innerHeight))
       const curve = Math.sin(progress * Math.PI)
       boat.style.setProperty('--boat-left', `${-2 + progress * 14 + curve * 1.5}%`)
       boat.style.setProperty('--boat-top', `${6 + progress * 84}%`)

@@ -4,8 +4,10 @@ import { Logo } from "./art/Logo";
 import { HERO_AMBIENT_STORM } from "../constants/heroWeather";
 import { HeroAtmosphere } from "./HeroAtmosphere";
 import { HeroWaves } from "./HeroWaves";
+import { clamp01 } from "../utils/clamp";
 
 type HeroProps = { motionEnabled: boolean };
+type HeroStyle = CSSProperties & { "--storm": number };
 
 const rain = Array.from({ length: 52 }, (_, index) => ({
   left: `${(index * 37 + 11) % 101}%`,
@@ -28,27 +30,21 @@ function HeroWordmark({
   const [length, setLength] = useState(
     motionEnabled ? 0 : HERO_WORDMARK.length,
   );
-  const [typing, setTyping] = useState(motionEnabled);
-  const completedRef = useRef(false);
-  const onCompleteRef = useRef(onComplete);
-  onCompleteRef.current = onComplete;
+  const completedRef = useRef(!motionEnabled);
 
   useEffect(() => {
     if (!motionEnabled) {
-      setLength(HERO_WORDMARK.length);
-      setTyping(false);
       if (!completedRef.current) {
         completedRef.current = true;
-        onCompleteRef.current();
+        onComplete();
       }
       return;
     }
 
     if (length >= HERO_WORDMARK.length) {
-      setTyping(false);
       if (!completedRef.current) {
         completedRef.current = true;
-        onCompleteRef.current();
+        onComplete();
       }
       return;
     }
@@ -57,7 +53,9 @@ function HeroWordmark({
       length === 0 ? TYPEWRITER_START_DELAY_MS : TYPEWRITER_CHAR_DELAY_MS;
     const timer = window.setTimeout(() => setLength(length + 1), delay);
     return () => window.clearTimeout(timer);
-  }, [length, motionEnabled]);
+  }, [length, motionEnabled, onComplete]);
+
+  const typing = motionEnabled && length < HERO_WORDMARK.length;
 
   return (
     <span className="od-hero-wordmark">
@@ -73,6 +71,7 @@ function HeroWordmark({
 
 export function Hero({ motionEnabled }: HeroProps) {
   const storm = motionEnabled ? HERO_AMBIENT_STORM : 0;
+  const heroStyle: HeroStyle = { "--storm": storm };
   const heroRef = useRef<HTMLElement>(null);
   const [showYear, setShowYear] = useState(!motionEnabled);
 
@@ -83,7 +82,7 @@ export function Hero({ motionEnabled }: HeroProps) {
     let frame = 0;
     const apply = () => {
       const rect = hero.getBoundingClientRect();
-      const exit = Math.max(0, Math.min(1, -rect.top / (rect.height * 0.55)));
+      const exit = clamp01(-rect.top / (rect.height * 0.55));
       hero.style.setProperty("--hero-exit", String(exit));
     };
     const update = () => {
@@ -110,7 +109,7 @@ export function Hero({ motionEnabled }: HeroProps) {
       className="od-hero"
       data-animated={motionEnabled}
       data-motion={motionEnabled}
-      style={{ "--storm": storm } as CSSProperties}
+      style={heroStyle}
       aria-labelledby="hero-title"
     >
       <div className="od-hero-stage">
@@ -147,14 +146,12 @@ export function Hero({ motionEnabled }: HeroProps) {
           {rain.map((drop, index) => (
             <i
               key={index}
-              style={
-                {
-                  left: drop.left,
-                  animationDelay: drop.delay,
-                  animationDuration: drop.duration,
-                  opacity: drop.opacity,
-                } as CSSProperties
-              }
+              style={{
+                left: drop.left,
+                animationDelay: drop.delay,
+                animationDuration: drop.duration,
+                opacity: drop.opacity,
+              }}
             />
           ))}
         </div>

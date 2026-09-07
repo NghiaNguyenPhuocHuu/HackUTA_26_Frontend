@@ -1,4 +1,4 @@
-export type SponsorTier = "platinum" | "gold" | "silver" | "bronze";
+type SponsorTier = "platinum" | "gold" | "silver" | "bronze";
 
 export type Sponsor = {
   /** Used for the logo alt text and as the React key. */
@@ -31,9 +31,4 @@ export const SPONSOR_TIERS: Array<{
  * Add confirmed sponsors here. While this list is empty the section shows
  * "Sponsors announced soon" instead of the roster.
  */
-export const sponsors: Sponsor[] = [
-  { name: "Mouser", image: "/images/hackuta-logo.png", tier: "platinum", link: "https://example.com" },
-  { name: "Gold Three", image: "/images/hackuta-logo.png", tier: "gold", link: "https://example.com" },
-  { name: "Silver Three", image: "/images/hackuta-logo.png", tier: "silver", link: "https://example.com" },
-  { name: "Bronze Four", image: "/images/hackuta-logo.png", tier: "bronze", link: "https://example.com" },
-];
+export const sponsors: Sponsor[] = [];

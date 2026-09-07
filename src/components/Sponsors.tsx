@@ -127,6 +127,7 @@ export function Sponsors() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        if (!entry) return;
         if (entry.isIntersecting) {
           setRevealed(true);
           observer.disconnect();

@@ -34,7 +34,7 @@ const questions = [
   },
 ];
 
-export function FAQ() {
+export function FAQ({ motionEnabled }: { motionEnabled: boolean }) {
   const [openItems, setOpenItems] = useState(() => new Set([0]));
 
   const toggleItem = (index: number) => {
@@ -65,7 +65,7 @@ export function FAQ() {
             Or you can always email us at{" "}
             <a href="mailto:info@hackuta.org">info@hackuta.org</a>
           </p>
-          <OracleEye />
+          <OracleEye motionEnabled={motionEnabled} />
         </div>
         <div className="oracle-questions">
           {questions.map((item, index) => {

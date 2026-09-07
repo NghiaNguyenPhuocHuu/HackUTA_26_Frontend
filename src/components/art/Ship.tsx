@@ -60,11 +60,14 @@ export function Ship({
         stroke={detail}
         strokeWidth="2"
       />
-      {[122, 167, 212, 257, 302, 347].map((x) => (
+      {[122, 167, 212, 257, 302, 347].map((x, index) => (
         <g key={x}>
           <circle cx={x} cy="223" r="8" fill="currentColor" />
           <path d={`M${x - 6} 233l-5 18h23l-6-18Z`} fill="currentColor" />
-          <g className="ship-oar">
+          <g
+            className="ship-oar"
+            style={{ "--oar-delay": `${index * -0.14}s` } as CSSProperties}
+          >
             <path
               d={`M${x} 258l-39 66`}
               stroke="currentColor"

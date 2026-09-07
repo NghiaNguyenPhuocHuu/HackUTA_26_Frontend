@@ -73,7 +73,7 @@ export default function App() {
         <Hero motionEnabled={motionEnabled} />
         <About />
         <Schedule />
-        <FAQ />
+        <FAQ motionEnabled={motionEnabled} />
         <Sponsors />
       </main>
       <Footer motionEnabled={motionEnabled} />

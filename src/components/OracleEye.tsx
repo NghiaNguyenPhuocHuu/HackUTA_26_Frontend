@@ -20,7 +20,7 @@ function clampPupilOffset(dx: number, dy: number) {
   return { x: dx * scale, y: dy * scale };
 }
 
-export function OracleEye() {
+export function OracleEye({ motionEnabled }: { motionEnabled: boolean }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const targetRef = useRef({ x: 0, y: 0 });
   const currentRef = useRef({ x: 0, y: 0 });
@@ -28,15 +28,6 @@ export function OracleEye() {
   const [irisOffset, setIrisOffset] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
-  const [motionEnabled, setMotionEnabled] = useState(true);
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setMotionEnabled(!media.matches);
-    update();
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, []);
 
   useEffect(() => {
     const onMove = (event: PointerEvent) => {

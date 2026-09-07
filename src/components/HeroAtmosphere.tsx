@@ -1,7 +1,7 @@
 import { Dithering, type PaperShaderElement } from '@paper-design/shaders-react'
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
 
-export type HeroAtmosphereHandle = {
+type HeroAtmosphereHandle = {
   update: (progress: number, storm: number) => void
 }
 

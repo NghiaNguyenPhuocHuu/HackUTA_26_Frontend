@@ -1,6 +1,7 @@
 node_modules/
 dist/
 artifacts/
+audit-out/
 test-results/
 playwright-report/
 *.tsbuildinfo

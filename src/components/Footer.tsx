@@ -1,13 +1,11 @@
 import type { ReactNode, MouseEvent } from "react";
 import { Logo } from "./art/Logo";
 import { Ship } from "./art/Ship";
+import { PRIMARY_NAV_LINKS } from "../constants/navigation";
 import { scrollToSection } from "../utils/scrollToSection";
 
 const exploreLinks = [
-  { id: "about", label: "About" },
-  { id: "schedule", label: "Schedule" },
-  { id: "faq", label: "FAQ" },
-  { id: "sponsors", label: "Sponsors" },
+  ...PRIMARY_NAV_LINKS,
   { id: "about", label: "Apply" },
 ];
 
@@ -198,10 +196,27 @@ export function Footer({ motionEnabled = true }: { motionEnabled?: boolean }) {
           fill="none"
           preserveAspectRatio="none"
         >
+          <defs>
+            <linearGradient
+              id="footer-water-depth"
+              x1="0"
+              y1="52"
+              x2="0"
+              y2="90"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0" stopColor="#102f46" stopOpacity=".13" />
+              <stop offset="1" stopColor="#102f46" stopOpacity="0" />
+            </linearGradient>
+          </defs>
           <path
+            className="footer-water-fill"
+            fill="url(#footer-water-depth)"
+            d="M-60 54c180-20 270 24 450 7s290-7 450 2 310-24 650-6V90H-60Z"
+          />
+          <path
+            className="footer-water-line"
             d="M-60 54c180-20 270 24 450 7s290-7 450 2 310-24 650-6"
-            stroke="currentColor"
-            strokeWidth="1"
           />
         </svg>
         <div className="footer-vessel">

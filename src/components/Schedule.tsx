@@ -46,16 +46,27 @@ const dayAnchors = eventDays.map((day) =>
 
 function nearestDayIndex(now: number) {
   return dayAnchors.reduce(
-    (nearest, anchor, index) =>
-      Math.abs(anchor - now) < Math.abs(dayAnchors[nearest] - now)
+    (nearest, anchor, index) => {
+      const nearestAnchor = dayAnchors[nearest];
+      return nearestAnchor === undefined ||
+        Math.abs(anchor - now) < Math.abs(nearestAnchor - now)
         ? index
-        : nearest,
+        : nearest;
+    },
     0,
   );
 }
 
 function formatTime(at: string) {
-  const [hours, minutes] = at.split(":").map(Number);
+  const separator = at.indexOf(":");
+  if (separator === -1) throw new Error(`Invalid schedule time: ${at}`);
+
+  const hours = Number(at.slice(0, separator));
+  const minutes = Number(at.slice(separator + 1));
+  if (!Number.isInteger(hours) || !Number.isInteger(minutes)) {
+    throw new Error(`Invalid schedule time: ${at}`);
+  }
+
   const period = hours < 12 ? "AM" : "PM";
   return `${hours % 12 === 0 ? 12 : hours % 12}:${String(minutes).padStart(2, "0")} ${period}`;
 }

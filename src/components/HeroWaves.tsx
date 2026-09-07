@@ -1,7 +1,7 @@
 import { WaveBackground } from '@redesigner/wave.js'
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 
-export type HeroWavesHandle = {
+type HeroWavesHandle = {
   update: (storm: number) => void
 }
 

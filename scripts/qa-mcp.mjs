@@ -115,7 +115,7 @@ const accessibility = async label => {
 const settle = async () => run(`async (page) => {
   await page.evaluate(async () => {
     await document.fonts.ready;
-    await Promise.all([...document.images].filter(image => image.loading !== 'lazy' || image.complete).map(image => image.decode().catch(() => {})));
+    await Promise.all([...document.images].filter(image => image.loading !== 'lazy' || image.complete).map(image => image.decode()));
   });
   await page.waitForTimeout(650);
   return true;

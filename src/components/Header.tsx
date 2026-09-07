@@ -1,13 +1,8 @@
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { Logo } from "./art/Logo";
+import { PRIMARY_NAV_LINKS } from "../constants/navigation";
 import { scrollToSection } from "../utils/scrollToSection";
-
-const links = [
-  { id: "about", label: "About" },
-  { id: "schedule", label: "Schedule" },
-  { id: "faq", label: "FAQ" },
-  { id: "sponsors", label: "Sponsors" },
-];
+import { clamp01 } from "../utils/clamp";
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -40,7 +35,7 @@ export function Header() {
           (scrollY < headerHeight ? "clay" : "dark"),
       );
       setActive(current?.id ?? "");
-      const fade = Math.max(0, Math.min(1, scrollY / 500));
+      const fade = clamp01(scrollY / 500);
       document.documentElement.style.setProperty(
         "--mlh-badge-fade",
         String(fade),
@@ -75,7 +70,9 @@ export function Header() {
       }
     };
     const outside = (event: PointerEvent) => {
-      if (!header.current?.contains(event.target as Node)) setOpen(false);
+      if (!(event.target instanceof Node) || !header.current?.contains(event.target)) {
+        setOpen(false);
+      }
     };
     const resize = () => {
       if (innerWidth >= 768) setOpen(false);
@@ -131,7 +128,7 @@ export function Header() {
             aria-label="Main navigation"
             className="header-pill-nav items-center uppercase"
           >
-            {links.map((link) => (
+            {PRIMARY_NAV_LINKS.map((link) => (
               <a
                 key={link.id}
                 href={`#${link.id}`}
@@ -163,7 +160,7 @@ export function Header() {
           className="mobile-navigation"
           hidden={!open}
         >
-          {links.map((link, index) => (
+          {PRIMARY_NAV_LINKS.map((link, index) => (
             <a
               key={link.id}
               href={`#${link.id}`}
