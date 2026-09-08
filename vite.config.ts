@@ -13,7 +13,9 @@ export default defineConfig({
     beasties({
       options: {
         preload: 'swap',
-        pruneSource: true,
+        // pruneSource reads CSS from disk during the HTML transform, which
+        // races the Vite bundle on some platforms and logs ENOENT noise.
+        pruneSource: false,
       },
     }),
     inlineCriticalShell(),
