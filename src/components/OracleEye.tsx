@@ -3,17 +3,43 @@ import { useEffect, useRef, useState } from "react";
 const EYE_CENTER = { x: 110, y: 58 };
 const MAX_PUPIL_OFFSET = 14;
 const EYE_MESSAGE = "Odysseus had eyes like Athena's";
+const CENTERED_OFFSET = { x: 0, y: 0 };
+
+function isFinitePoint(point: { x: number; y: number }) {
+  return Number.isFinite(point.x) && Number.isFinite(point.y);
+}
 
 function clientToSvg(svg: SVGSVGElement, clientX: number, clientY: number) {
   const rect = svg.getBoundingClientRect();
   const { x, y, width, height } = svg.viewBox.baseVal;
-  return {
+  if (
+    !Number.isFinite(clientX) ||
+    !Number.isFinite(clientY) ||
+    !Number.isFinite(rect.left) ||
+    !Number.isFinite(rect.top) ||
+    !Number.isFinite(rect.width) ||
+    !Number.isFinite(rect.height) ||
+    !Number.isFinite(x) ||
+    !Number.isFinite(y) ||
+    !Number.isFinite(width) ||
+    !Number.isFinite(height) ||
+    rect.width <= 0 ||
+    rect.height <= 0 ||
+    width <= 0 ||
+    height <= 0
+  ) {
+    return null;
+  }
+
+  const point = {
     x: x + ((clientX - rect.left) / rect.width) * width,
     y: y + ((clientY - rect.top) / rect.height) * height,
   };
+  return isFinitePoint(point) ? point : null;
 }
 
 function clampPupilOffset(dx: number, dy: number) {
+  if (!Number.isFinite(dx) || !Number.isFinite(dy)) return CENTERED_OFFSET;
   const dist = Math.hypot(dx, dy);
   if (dist <= MAX_PUPIL_OFFSET || dist === 0) return { x: dx, y: dy };
   const scale = MAX_PUPIL_OFFSET / dist;
@@ -35,6 +61,7 @@ export function OracleEye({ motionEnabled }: { motionEnabled: boolean }) {
       if (!svg) return;
 
       const point = clientToSvg(svg, event.clientX, event.clientY);
+      if (!point) return;
       targetRef.current = clampPupilOffset(
         point.x - EYE_CENTER.x,
         point.y - EYE_CENTER.y,
@@ -47,9 +74,18 @@ export function OracleEye({ motionEnabled }: { motionEnabled: boolean }) {
 
   useEffect(() => {
     const tick = () => {
-      const target = isHovered ? { x: 0, y: 0 } : targetRef.current;
+      const trackedTarget = targetRef.current;
+      const target =
+        isHovered || !isFinitePoint(trackedTarget)
+          ? CENTERED_OFFSET
+          : trackedTarget;
       const current = currentRef.current;
       const ease = motionEnabled ? 0.14 : 1;
+
+      if (!isFinitePoint(current)) {
+        current.x = 0;
+        current.y = 0;
+      }
 
       current.x += (target.x - current.x) * ease;
       current.y += (target.y - current.y) * ease;
