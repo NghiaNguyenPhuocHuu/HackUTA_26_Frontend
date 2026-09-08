@@ -10,7 +10,7 @@ const questions = [
   {
     question: "Do I need to be a UTA student or live in Texas?",
     answer:
-      "Nope! We love hosting students from across the state and beyond. HackUTA 2026 is fully in person at UTA's Social Work & Smart Hospital (SWSH) building, so just make it to Arlington for check-in.",
+      "Nope! We love hosting students from across the state and beyond. HackUTA 2026 is fully in person at UTA, so just make it to Arlington for check-in.",
   },
   {
     question: "How much does it cost to attend?",
