@@ -108,8 +108,12 @@ export function Header() {
         hidden={open}
       >
         <img
-          src="https://logged-assets.s3.amazonaws.com/trust-badge/2027/mlh-trust-badge-2027-gray.svg"
+          src="/images/mlh-trust-badge-2027-gray.svg"
           alt="Major League Hacking 2026 Hackathon Season"
+          width={393}
+          height={688}
+          decoding="async"
+          loading="lazy"
         />
       </a>
       <header
@@ -125,7 +129,12 @@ export function Header() {
             aria-label="HackUTA home"
             onClick={navigate("top")}
           >
-            <Logo className="site-logo" variant="adaptive" />
+            <Logo
+              className="site-logo"
+              variant={theme === "dark" ? "dark" : "light"}
+              layout="header"
+              decorative
+            />
           </a>
           <nav
             aria-label="Main navigation"

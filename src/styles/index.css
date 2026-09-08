@@ -1,33 +1,5 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: "Barlow Semi Condensed";
-  src: url('/fonts/BarlowSemiCondensed-Regular.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Barlow Semi Condensed";
-  src: url('/fonts/BarlowSemiCondensed-SemiBold.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Barlow Semi Condensed";
-  src: url('/fonts/BarlowSemiCondensed-Bold.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-}
-@font-face {
-  font-family: "CS Gelios";
-  src: url('/fonts/CSGelios-Regular.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
 @theme {
   --font-sans: "Barlow Semi Condensed", "Arial Narrow", Arial, sans-serif;
   --font-display: "CS Gelios", Georgia, "Times New Roman", serif;
@@ -218,13 +190,14 @@
 
 @utility footer-section {
   --footer-legal-height:56px;
+  --footer-muted:#506575;
   background:var(--clay);
   color:var(--ink);
   & .footer-brand-lockup {
     color:var(--ink);
   }
   & .footer-column-title {
-    color:var(--mist);
+    color:var(--footer-muted);
   }
   & .footer-link-list a,
   & .footer-event {
@@ -234,7 +207,7 @@
     color:var(--night);
   }
   & .footer-tagline {
-    color:#5a6b78;
+    color:var(--footer-muted);
   }
   & .footer-bottom {
     position:relative;
@@ -243,7 +216,7 @@
     margin-top:0;
     height:var(--footer-legal-height,56px);
     padding:0;
-    color:#5a6b78;
+    color:var(--footer-muted);
     & a {
       color:var(--ink);
     }
@@ -263,7 +236,7 @@
 }
 
 @utility footer-ship {
-  width:100%;
+    width:100%;
   height:auto;
   display:block;
 }
@@ -395,7 +368,7 @@
   gap:clamp(18px,4vw,42px);
   margin-top:clamp(48px,8vh,88px);
   font-size:13px;
-  font-weight:600;
+    font-weight:600;
   letter-spacing:.08em;
   text-transform:uppercase;
   color:#b8aea0;
@@ -501,7 +474,7 @@
   width:100%;
   height:100%;
   overflow:visible;
-  color:var(--clay);
+    color:var(--clay);
   filter:drop-shadow(0 10px 7px #00000070) drop-shadow(0 2px 2px #00000055);
   & .odyssey-boat-hull { fill:currentColor; }
   & .odyssey-boat-hull-edge { fill:none; stroke:color-mix(in srgb,currentColor 65%,var(--night)); stroke-width:2; }
@@ -605,7 +578,7 @@
 }
 
 @utility footer-column-title {
-  font-size:12px;
+    font-size:12px;
   line-height:1.4;
   letter-spacing:.14em;
   color:var(--mist);
@@ -1619,8 +1592,8 @@
     place-items:center;
     width:clamp(28px,2.4vw,34px);
     height:clamp(28px,2.4vw,34px);
-    border:1px solid currentColor;
-    border-radius:50%;
+  border:1px solid currentColor;
+  border-radius:50%;
     font-family:var(--font-display);
     font-size:clamp(13px,1.2vw,16px);
     line-height:1;
@@ -1693,11 +1666,11 @@
     font-size:clamp(20px,2.3vw,29px);
     font-weight:400;
     letter-spacing:.03em;
-    text-transform:uppercase;
+  text-transform:uppercase;
   }
   & p {
     font-size:clamp(11px,1.05vw,13px);
-    font-weight:600;
+  font-weight:600;
     letter-spacing:.12em;
     text-transform:uppercase;
     color:var(--ocean);
@@ -1766,8 +1739,8 @@
   font-size:clamp(16px,1.7vw,20px);
   font-weight:600;
   letter-spacing:.04em;
-  color:#315873;
-}
+    color:#315873;
+  }
 
 @media(min-width:900px){.weekend-timeline{columns:2}}
 
@@ -2286,9 +2259,9 @@
     .sponsor-slot--bronze {
       --sponsor-badge-min: 100%;
     }
-  }
+}
 
-  @media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
     .sponsors-header,
     .sponsors-temple,
     .sponsors-cta {

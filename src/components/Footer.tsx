@@ -127,7 +127,12 @@ export function Footer({ motionEnabled = true }: { motionEnabled?: boolean }) {
               aria-label="HackUTA home"
               onClick={navigate("top")}
             >
-              <Logo className="site-logo site-logo--footer" variant="light" />
+              <Logo
+                className="site-logo site-logo--footer"
+                variant="light"
+                layout="footer"
+                decorative
+              />
               <span className="footer-brand-name font-semibold">HackUTA</span>
             </a>
             <p className="footer-tagline">
