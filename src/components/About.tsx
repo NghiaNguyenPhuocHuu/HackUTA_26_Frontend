@@ -226,7 +226,7 @@ export function About() {
 
         <div className="odyssey-call-actions flex flex-col sm:flex-row items-stretch sm:items-center justify-center">
           <OdysseyButton href={DISCORD_URL}>Join Discord</OdysseyButton>
-          <OdysseyButton inactive>Devpost</OdysseyButton>
+          <OdysseyButton inactive>Devpost (Coming Soon)</OdysseyButton>
         </div>
 
         <ul
