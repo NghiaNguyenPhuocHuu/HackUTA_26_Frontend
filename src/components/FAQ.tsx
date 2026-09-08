@@ -44,8 +44,7 @@ const questions = [
   },
   {
     question: "How do I contact organizers or request accomodations?",
-    answer:
-      "Join the HackUTA Discord from the About section!",
+    answer: "Join the HackUTA Discord from the About section!",
   },
 ];
 

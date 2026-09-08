@@ -1,24 +1,28 @@
 import { useRef, useState, type KeyboardEvent } from "react";
 import { OliveBranch } from "./art/OliveBranch";
 
-const eventDays = [
-  {
+type ScheduleEvent = {
+  at: string;
+  title: string;
+};
+
+type ScheduleDay = {
+  numeral: string;
+  chapter: string;
+  weekday: string;
+  date: string;
+  isoDate: string;
+  events: ScheduleEvent[];
+};
+
+const eventDays: ScheduleDay[] = [  {
     numeral: "I",
     chapter: "Day One",
     weekday: "Saturday",
     date: "November 14",
     isoDate: "2026-11-14",
     events: [
-      { at: "08:00", title: "Check-in & breakfast" },
-      { at: "10:00", title: "Opening ceremony" },
-      { at: "11:00", title: "Team formation" },
-      { at: "11:30", title: "Hacking begins" },
-      { at: "12:30", title: "Lunch" },
-      { at: "14:00", title: "Workshop: Git & GitHub" },
-      { at: "16:00", title: "Sponsor tech talks" },
-      { at: "18:30", title: "Dinner" },
-      { at: "21:00", title: "Mini-event: trivia night" },
-      { at: "23:00", title: "Late-night snacks" },
+      // { at: "00:00", title: "Event name" },
     ],
   },
   {
@@ -28,14 +32,7 @@ const eventDays = [
     date: "November 15",
     isoDate: "2026-11-15",
     events: [
-      { at: "00:30", title: "Midnight mini-event" },
-      { at: "02:00", title: "Quiet hours begin" },
-      { at: "08:00", title: "Breakfast" },
-      { at: "10:00", title: "Hacking ends · submissions due" },
-      { at: "10:30", title: "Project expo" },
-      { at: "12:00", title: "Judging & lunch" },
-      { at: "13:30", title: "Closing ceremony & awards" },
-      { at: "15:00", title: "Departure" },
+      // { at: "00:00", title: "Event name" },
     ],
   },
 ];
@@ -45,16 +42,13 @@ const dayAnchors = eventDays.map((day) =>
 );
 
 function nearestDayIndex(now: number) {
-  return dayAnchors.reduce(
-    (nearest, anchor, index) => {
-      const nearestAnchor = dayAnchors[nearest];
-      return nearestAnchor === undefined ||
-        Math.abs(anchor - now) < Math.abs(nearestAnchor - now)
-        ? index
-        : nearest;
-    },
-    0,
-  );
+  return dayAnchors.reduce((nearest, anchor, index) => {
+    const nearestAnchor = dayAnchors[nearest];
+    return nearestAnchor === undefined ||
+      Math.abs(anchor - now) < Math.abs(nearestAnchor - now)
+      ? index
+      : nearest;
+  }, 0);
 }
 
 function formatTime(at: string) {
@@ -161,17 +155,20 @@ export function Schedule() {
               <h3>{day.chapter}</h3>
               <p>{`${day.weekday}, ${day.date}, 2026`}</p>
             </div>
-            <ol className="weekend-timeline">
-              {day.events.map((item) => (
-                <li className="weekend-slot" key={item.at}>
-                  <time dateTime={`${day.isoDate}T${item.at}`}>
-                    {formatTime(item.at)}
-                  </time>
-                  <span>{item.title}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
+            {day.events.length === 0 ? (
+              <p className="weekend-coming-soon">Schedule coming soon!</p>
+            ) : (
+              <ol className="weekend-timeline">
+                {day.events.map((item) => (
+                  <li className="weekend-slot" key={item.at}>
+                    <time dateTime={`${day.isoDate}T${item.at}`}>
+                      {formatTime(item.at)}
+                    </time>
+                    <span>{item.title}</span>
+                  </li>
+                ))}
+              </ol>
+            )}          </div>
         ))}
 
         <p className="weekend-note">

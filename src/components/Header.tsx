@@ -169,7 +169,17 @@ export function Header() {
             >
               <span>0{index + 1}</span>
               {link.label}
-              <span aria-hidden="true">↗</span>
+              <span className="mobile-nav-arrow" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M3 13L13 3M13 3H6M13 3V10"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
             </a>
           ))}
         </nav>
