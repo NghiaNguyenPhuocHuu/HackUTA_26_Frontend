@@ -51,7 +51,7 @@ const questions = [
 function FAQContact({ className }: { className: string }) {
   return (
     <p className={`oracle-description ${className}`}>
-      Or you can always email us at{" "}
+      Still have some questions? You can always email us at{" "}
       <a href="mailto:hello@hackuta.org" className="underline">
         hello@hackuta.org
       </a>
