@@ -5,9 +5,24 @@ export function HeroCountdown() {
 
   if (done) {
     return (
-      <div className="od-hero-countdown" role="status">
-        <span>We've set sail</span>
-      </div>
+    <div>
+        <div className="od-hero-countdown" role="status">
+            {[
+                { label: "days", value: 0 },
+                { label: "hrs", value: 0 },
+                { label: "min", value: 0 },
+                { label: "sec", value: 0 },
+            ].map((unit) => (
+                <div className="od-hero-countdown-unit" key={unit.label}>
+                <span className="od-hero-countdown-value">
+                    {String(unit.value).padStart(2, "0")}
+                </span>
+                <span className="od-hero-countdown-label">{unit.label}</span>
+                </div>
+            ))}
+        </div>
+        <span className="od-hero-countdown-label">We've set sail</span>
+    </div>
     );
   }
 

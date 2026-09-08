@@ -2278,6 +2278,9 @@
   gap: clamp(0.75rem, 2vw, 1.5rem);
   margin-top: 0.85rem;
   opacity: calc(1 - var(--hero-exit, 0));
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  isolation: isolate;
 }
 
 .od-hero-countdown-unit {
@@ -2286,21 +2289,22 @@
   align-items: center;
   min-width: 2.75rem;
   padding: 0.4rem 0.5rem;
-  border: 1px solid color-mix(in srgb, var(--clay) 35%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
   border-radius: 0.5rem;
-  background: color-mix(in srgb, var(--clay) 6%, transparent);
-  backdrop-filter: blur(2px);
+  background: color-mix(in srgb, var(--clay) 12%, transparent);
+  backdrop-filter: none;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .od-hero-countdown-value {
-  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  font-size: clamp(1.25rem, 3.2vw, 2rem);
   font-weight: 600;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  color: var(--ocean);
-  /* subtle flicker on change, tied to storm intensity */
-  text-shadow: 0 0 calc(var(--storm, 0) * 6px)
-    color-mix(in srgb, var(--clay) 60%, transparent);
+  color: var(--ink);
+  text-shadow: 0 0 0 color-mix(in srgb, var(--clay) 0%, transparent);
 }
 
 .od-hero-countdown-label {
@@ -2311,7 +2315,6 @@
   opacity: 0.65;
 }
 
-/* compact mode for small screens: show days only, larger */
 @media (max-width: 480px) {
   .od-hero-countdown {
     gap: 0.5rem;
@@ -2327,11 +2330,10 @@
   }
 
   .od-hero-countdown-unit:first-child .od-hero-countdown-value {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
   }
 }
 
-/* respect reduced motion: no flicker/glow animation */
 @media (prefers-reduced-motion: reduce) {
   .od-hero-countdown-value {
     text-shadow: none;
