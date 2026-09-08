@@ -25,15 +25,25 @@ const SPARKS = Array.from({ length: 10 }, (_, i) => {
   };
 });
 
+type CursorTheme = "clay" | "dark";
+
+const THEME_PALETTE: Record<CursorTheme, { bow: string; trim: string }> = {
+  clay: { bow: "var(--ink)", trim: "var(--night)" },
+  dark: { bow: "var(--clay)", trim: "var(--sand)" },
+};
+
 function BowSVG({
   hovering,
+  theme,
   gradientId,
 }: {
   hovering: boolean;
+  theme: CursorTheme;
   gradientId: string;
 }) {
-  const bowColor = hovering ? "#64d2ff" : "#c8a84b";
-  const trim = hovering ? "#a0e8ff" : "#e8c97a";
+  const palette = THEME_PALETTE[theme] ?? THEME_PALETTE.clay;
+  const bowColor = hovering ? "#64d2ff" : palette.bow;
+  const trim = hovering ? "#a0e8ff" : palette.trim;
 
   return (
     <svg
@@ -140,6 +150,9 @@ export default function CustomCursor() {
   const [hovering, setHovering] = useState(false);
   const hoveringRef = useRef(false);
 
+  const [theme, setTheme] = useState<CursorTheme>("clay");
+  const themeRef = useRef<CursorTheme>("clay");
+
   useEffect(() => {
     if (!enabled) return;
 
@@ -164,6 +177,18 @@ export default function CustomCursor() {
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
       }
+
+      const under = document.elementFromPoint(mouseX, mouseY);
+      const nextTheme: CursorTheme =
+        under?.closest<HTMLElement>("[data-theme]")?.dataset.theme === "dark"
+          ? "dark"
+          : "clay";
+
+      if (nextTheme !== themeRef.current) {
+        themeRef.current = nextTheme;
+        setTheme(nextTheme);
+      }
+
       frame = null;
     };
 
@@ -261,7 +286,7 @@ export default function CustomCursor() {
         ref={visualRef}
         className={`cursor-bow-visual${hovering ? " is-hovering" : ""}`}
       >
-        <BowSVG hovering={hovering} gradientId={gradientId} />
+        <BowSVG hovering={hovering} theme={theme} gradientId={gradientId} />
       </div>
 
       <div className="cursor-impact">
