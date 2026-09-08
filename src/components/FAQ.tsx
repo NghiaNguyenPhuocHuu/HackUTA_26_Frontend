@@ -52,8 +52,8 @@ function FAQContact({ className }: { className: string }) {
   return (
     <p className={`oracle-description ${className}`}>
       Or you can always email us at{" "}
-      <a href="mailto:info@hackuta.org" className="underline">
-        info@hackuta.org
+      <a href="mailto:hello@hackuta.org" className="underline">
+        hello@hackuta.org
       </a>
     </p>
   );
