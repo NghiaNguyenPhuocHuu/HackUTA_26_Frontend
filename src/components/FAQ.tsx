@@ -48,6 +48,17 @@ const questions = [
   },
 ];
 
+function FAQContact({ className }: { className: string }) {
+  return (
+    <p className={`oracle-description ${className}`}>
+      Or you can always email us at{" "}
+      <a href="mailto:info@hackuta.org" className="underline">
+        info@hackuta.org
+      </a>
+    </p>
+  );
+}
+
 export function FAQ({ motionEnabled }: { motionEnabled: boolean }) {
   const [openItems, setOpenItems] = useState(() => new Set([0]));
 
@@ -75,12 +86,7 @@ export function FAQ({ motionEnabled }: { motionEnabled: boolean }) {
             <br />
             have some questions.
           </h2>
-          <p className="oracle-description">
-            Or you can always email us at{" "}
-            <a href="mailto:info@hackuta.org" className="underline">
-              info@hackuta.org
-            </a>
-          </p>
+          <FAQContact className="hidden md:block" />
           <OracleEye motionEnabled={motionEnabled} />
         </div>
         <div className="oracle-questions">
@@ -123,6 +129,7 @@ export function FAQ({ motionEnabled }: { motionEnabled: boolean }) {
               </article>
             );
           })}
+          <FAQContact className="md:hidden" />
         </div>
       </div>
     </section>
