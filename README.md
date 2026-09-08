@@ -67,7 +67,7 @@ The MCP audit requires the site to be running and uses an isolated Microsoft Edg
 
 ## Before launch
 
-This is a complete design-focused frontend, not an application portal. Applications are intentionally announced as opening soon; schedule times are tentative and supporters are unannounced. Replace those states only when real information and a registration destination are available.
+This is a complete design-focused frontend, not an application portal. Applications are intentionally announced as opening soon. Replace those states only when real information and a registration destination are available.
 
 Before going live:
 

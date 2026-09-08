@@ -103,6 +103,9 @@ export function Header() {
         href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2026-season&utm_content=gray"
         target="_blank"
         rel="noopener noreferrer"
+        aria-hidden={open}
+        tabIndex={open ? -1 : undefined}
+        hidden={open}
       >
         <img
           src="https://logged-assets.s3.amazonaws.com/trust-badge/2027/mlh-trust-badge-2027-gray.svg"

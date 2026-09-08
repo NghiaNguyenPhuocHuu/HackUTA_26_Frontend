@@ -15,7 +15,8 @@ type ScheduleDay = {
   events: ScheduleEvent[];
 };
 
-const eventDays: ScheduleDay[] = [  {
+const eventDays: ScheduleDay[] = [
+  {
     numeral: "I",
     chapter: "Day One",
     weekday: "Saturday",
@@ -168,12 +169,9 @@ export function Schedule() {
                   </li>
                 ))}
               </ol>
-            )}          </div>
+            )}{" "}
+          </div>
         ))}
-
-        <p className="weekend-note">
-          Times are tentative and may shift as the event draws closer.
-        </p>
       </div>
 
       <OliveBranch className="weekend-olive weekend-olive-top" />
