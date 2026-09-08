@@ -195,7 +195,9 @@ export function Hero({ motionEnabled }: HeroProps) {
           </div>
         </div>
         <div className="od-hero-boat" aria-hidden="true">
-          <Ship className="od-hero-ship" rowing={motionEnabled} tone="ink" />
+          <div className="od-hero-boat-bob">
+            <Ship className="od-hero-ship" rowing={motionEnabled} tone="ink" />
+          </div>
         </div>
         {motionEnabled ? (
           <Suspense fallback={null}>

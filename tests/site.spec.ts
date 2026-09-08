@@ -82,7 +82,7 @@ test('the opening ship drifts across the center of the viewport', async ({ page 
   await expect(hero).toHaveAttribute('data-water-renderer', 'webgl2')
   await expect(hero.locator('.od-weather-shader canvas')).toHaveCount(1)
   await expect(hero.locator('.od-webgl-water canvas')).toHaveCount(1)
-  await expect(hero.locator('.od-rain i')).toHaveCount(52)
+  await expect(hero.locator('.od-rain i')).toHaveCount(34)
   await expect(hero.locator('.od-lightning')).toHaveCount(2)
   await expect(hero.locator('.od-wave-surface')).toHaveCount(1)
 

@@ -25,9 +25,11 @@
   50% { transform: scaleX(.985); }
 }
 
-@keyframes hero-drift{0%,100%{left:40%}50%{left:60%}}
+/* Drift and bob live on separate elements so both stay transform-only and
+   composite off the main thread. */
+@keyframes hero-drift{0%,100%{transform:translate3d(calc(-50% - 10vw),0,0)}50%{transform:translate3d(calc(-50% + 10vw),0,0)}}
 
-@keyframes hero-bob{0%,100%{transform:translateX(-50%) translateY(3px) rotate(-.6deg)}50%{transform:translateX(-50%) translateY(-14px) rotate(.7deg)}}
+@keyframes hero-bob{0%,100%{transform:translate3d(0,3px,0) rotate(-.6deg)}50%{transform:translate3d(0,-14px,0) rotate(.7deg)}}
 
 @keyframes hero-float{0%,100%{transform:translateY(2px) rotate(-.3deg)}50%{transform:translateY(-5px) rotate(.35deg)}}
 
@@ -35,7 +37,11 @@
 
 @keyframes hero-typewriter-cursor{0%,100%{opacity:1}50%{opacity:0}}
 
-@keyframes hero-status-pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 3px #1a3a5221}50%{transform:scale(1.45);box-shadow:0 0 0 5px #1a3a5200}}
+@keyframes hero-status-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.45)}}
+
+/* The halo is a pseudo-element ring rather than an animated box-shadow, which
+   the compositor cannot handle. */
+@keyframes hero-status-ring{0%,100%{transform:scale(1);opacity:.13}50%{transform:scale(1.6);opacity:0}}
 
 @keyframes odyssey-paddle-stroke-left{0%,100%{transform:rotate(4deg)}50%{transform:rotate(-8deg)}}
 @keyframes odyssey-paddle-stroke-right{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(8deg)}}
@@ -412,6 +418,9 @@
   & .section-inner { position:relative; z-index:2; }
   & .odyssey-boat-track { opacity:0; transition:opacity .8s var(--ease-out); }
   &[data-revealed=true] .odyssey-boat-track { opacity:1; }
+  /* stroke-dashoffset can never composite, so only pay for it while the
+     section is on screen and the wake is actually visible. */
+  &[data-revealed=true] .odyssey-boat-wake { animation:odyssey-wake-flow 2.8s linear infinite; }
   & .odyssey-call-lede,
   & .odyssey-call-actions,
   & .odyssey-call-perks {
@@ -506,7 +515,6 @@
   stroke-width:1.8;
   stroke-linecap:round;
   stroke-dasharray:8 7;
-  animation:odyssey-wake-flow 2.8s linear infinite;
 }
 
 @utility odyssey-call-title {
@@ -849,7 +857,10 @@
     --sky-haze:0;
   }
   &[data-motion=true] .od-hero-boat {
-    animation:hero-drift 28s ease-in-out infinite,hero-bob 5.5s ease-in-out infinite;
+    animation:hero-drift 28s ease-in-out infinite;
+  }
+  &[data-motion=true] .od-hero-boat-bob {
+    animation:hero-bob 5.5s ease-in-out infinite;
   }
   &[data-motion=true] .od-hero-ship {
     animation:hero-float 4.8s ease-in-out infinite;
@@ -890,11 +901,15 @@
 @utility od-hero-boat {
   position:absolute;
   z-index:4;
-  left:40%;
+  left:50%;
   bottom:115px;
   width:clamp(235px,22vw,315px);
   transform:translateX(-50%);
-  will-change:left,transform;
+  will-change:transform;
+}
+
+@utility od-hero-boat-bob {
+  will-change:transform;
 }
 
 @utility od-hero-coast {
@@ -993,12 +1008,21 @@
 }
 
 @utility od-hero-coming-soon-mark {
+  position:relative;
   width:6px;
   height:6px;
   border-radius:50%;
   background:var(--ink);
-  box-shadow:0 0 0 3px color-mix(in srgb,var(--ink) 13%,transparent);
   animation:hero-status-pulse 1.8s ease-in-out infinite;
+  &::after {
+    content:"";
+    position:absolute;
+    inset:-3px;
+    border-radius:50%;
+    background:var(--ink);
+    opacity:.13;
+    animation:hero-status-ring 1.8s ease-in-out infinite;
+  }
 }
 
 @utility od-hero-wordmark {
