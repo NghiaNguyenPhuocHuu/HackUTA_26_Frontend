@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { OracleEye } from "./OracleEye";
+import { ThemeArt } from "./art/ThemeArt";
 
 const questions = [
   {
@@ -78,6 +79,7 @@ export function FAQ({ motionEnabled }: { motionEnabled: boolean }) {
       data-theme="clay"
       aria-labelledby="oracle-title"
     >
+      <ThemeArt name="temple" className="oracle-art-temple theme-art--on-light" />
       <div className="oracle-orbit" aria-hidden="true" />
       <div className="section-inner oracle-layout grid">
         <div className="oracle-intro">

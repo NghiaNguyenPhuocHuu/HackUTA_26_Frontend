@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { OliveBranch } from "./art/OliveBranch";
+import { ThemeArt } from "./art/ThemeArt";
 import {
   SPONSOR_EMAIL,
   SPONSOR_MAILTO,
@@ -158,9 +158,7 @@ export function Sponsors() {
         </svg>
       </div>
 
-      <div className="sponsors-olive" aria-hidden="true">
-        <OliveBranch className="sponsors-olive-branch" />
-      </div>
+      <ThemeArt name="horse" className="sponsors-art-horse theme-art--on-dark" />
 
       <div className="section-inner sponsors-inner relative">
         <header className="sponsors-header">

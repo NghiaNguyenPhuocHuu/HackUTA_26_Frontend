@@ -6,6 +6,7 @@ import { Schedule } from "./components/Schedule";
 import { FAQ } from "./components/FAQ";
 import { Sponsors } from "./components/Sponsors";
 import { Footer } from "./components/Footer";
+import { HeatWaveDefs } from "./components/art/HeatWave";
 import { useMotionPreference } from "./hooks/useMotionPreference";
 import { useEffect } from "react";
 import { scrollToSection } from "./utils/scrollToSection";
@@ -66,6 +67,7 @@ export default function App() {
 
   return (
     <>
+      <HeatWaveDefs />
       <CustomCursor />
       <a className="skip-link" href="#main-content">
         Skip to content

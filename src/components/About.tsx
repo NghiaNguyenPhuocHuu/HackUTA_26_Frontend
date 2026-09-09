@@ -1,4 +1,5 @@
 import { type RefObject, useEffect, useRef, useState } from "react";
+import { ThemeArt } from "./art/ThemeArt";
 import { clamp01 } from "../utils/clamp";
 
 const DISCORD_URL = "https://discord.gg/2bVsYS3SgS";
@@ -219,10 +220,11 @@ export function About() {
       <div className="section-inner odyssey-call-inner relative flex flex-col items-center text-center">
         <h2
           id="odyssey-call-title"
-          className="odyssey-call-title font-semibold uppercase"
+          className="odyssey-call-title heat-wave-text font-semibold uppercase"
         >
           Are you ready to begin your odyssey?
         </h2>
+        <ThemeArt name="feast" className="odyssey-art-feast theme-art--plain" />
 
         <div className="odyssey-call-actions flex flex-col sm:flex-row items-stretch sm:items-center justify-center">
           <OdysseyButton href={DISCORD_URL}>Join Discord</OdysseyButton>

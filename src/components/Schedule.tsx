@@ -1,5 +1,6 @@
 import { useRef, useState, type KeyboardEvent } from "react";
 import { OliveBranch } from "./art/OliveBranch";
+import { ThemeArt } from "./art/ThemeArt";
 
 type ScheduleEvent = {
   at: string;
@@ -174,6 +175,7 @@ export function Schedule() {
         ))}
       </div>
 
+      <ThemeArt name="pillars" className="weekend-art-pillars theme-art--on-light" />
       <OliveBranch className="weekend-olive weekend-olive-top" />
       <OliveBranch className="weekend-olive" />
       <span className="weekend-meander" data-edge="bottom" aria-hidden="true" />
