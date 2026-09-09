@@ -1,5 +1,6 @@
 import { useRef, useState, type KeyboardEvent } from "react";
 import { OliveBranch } from "./art/OliveBranch";
+import { ThemeArt } from "./art/ThemeArt";
 
 const eventDays = [
   {
@@ -177,8 +178,10 @@ export function Schedule() {
         <p className="weekend-note">
           Times are tentative and may shift as the event draws closer.
         </p>
+        <ThemeArt name="cave" className="weekend-art-cave theme-art--on-light" />
       </div>
 
+      <ThemeArt name="pillars" className="weekend-art-pillars theme-art--on-light" />
       <OliveBranch className="weekend-olive weekend-olive-top" />
       <OliveBranch className="weekend-olive" />
       <span className="weekend-meander" data-edge="bottom" aria-hidden="true" />

@@ -2272,3 +2272,162 @@
     }
   }
 }
+
+@layer components {
+  .theme-art {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .theme-art img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: none;
+  }
+
+  .theme-art-horse {
+    aspect-ratio: 1085 / 1800;
+    width: auto;
+  }
+
+  .theme-art-pillars {
+    aspect-ratio: 1053 / 1800;
+    width: auto;
+  }
+
+  .theme-art-horse img,
+  .theme-art-pillars img {
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .theme-art--on-dark {
+    mix-blend-mode: screen;
+  }
+
+  .theme-art--on-light {
+    mix-blend-mode: multiply;
+  }
+
+  .theme-art--plain {
+    mix-blend-mode: normal;
+  }
+
+  .weekend-section .section-inner,
+  .oracle-section .section-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .odyssey-art-feast {
+    position: relative;
+    z-index: 1;
+    width: clamp(280px, 46vw, 620px);
+    margin: clamp(10px, 1.8vh, 20px) auto clamp(4px, 1vh, 12px);
+    mix-blend-mode: normal;
+  }
+
+  .weekend-art-cave {
+    position: relative;
+    z-index: 1;
+    width: min(52vw, 560px);
+    margin: clamp(18px, 3vh, 32px) auto 0 0;
+    opacity: .72;
+  }
+
+  .weekend-art-pillars {
+    left: auto;
+    top: 54%;
+    right: 0;
+    height: min(82%, 760px);
+    translate: 8% -50%;
+    opacity: .42;
+  }
+
+  .oracle-art-temple {
+    left: 50%;
+    bottom: -6%;
+    width: min(72vw, 780px);
+    translate: -50% 0;
+    opacity: .28;
+  }
+
+  .sponsors-art-horse {
+    left: auto;
+    top: 6%;
+    right: 0;
+    height: min(88%, 780px);
+    translate: 0;
+    opacity: .58;
+  }
+
+  .sponsors-section .sponsors-art-horse {
+    opacity: 0;
+    transition: opacity .9s var(--ease-out);
+  }
+
+  .sponsors-section[data-revealed="true"] .sponsors-art-horse {
+    opacity: .58;
+  }
+
+  @media (max-width: 1099px) {
+    .weekend-art-pillars,
+    .sponsors-art-horse {
+      display: none;
+    }
+
+    .weekend-art-cave,
+    .oracle-art-temple {
+      width: min(70vw, 420px);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .oracle-art-temple {
+      display: none;
+    }
+
+    .weekend-art-cave {
+      width: min(88%, 360px);
+    }
+
+    .odyssey-art-feast {
+      width: min(88%, 340px);
+      margin-top: 12px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sponsors-section .sponsors-art-horse {
+      opacity: .58;
+      transition: none;
+    }
+  }
+}
+
+@layer components {
+  .heat-wave-defs {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .heat-wave-text {
+    filter: url(#heat-wave);
+  }
+
+  html[data-motion=off] .heat-wave-text {
+    filter: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .heat-wave-text {
+      filter: none;
+    }
+  }
+}
