@@ -61,49 +61,51 @@ function BowSVG({
         </linearGradient>
       </defs>
 
-      <path
-        d="M 50 0 C 20 0 0 20 0 50"
-        stroke={`url(#${gradientId})`}
-        strokeWidth="3"
-        strokeLinecap="round"
-        fill="none"
-        className="bow-limb"
-      />
+      <g className="bow-group">
+        <path
+          d="M 50 0 C 20 0 0 20 0 50"
+          stroke={`url(#${gradientId})`}
+          strokeWidth="3"
+          strokeLinecap="round"
+          fill="none"
+          className="bow-limb"
+        />
 
-      <path
-        d="M 48 2 C 22 2 0 18 0 48"
-        stroke="rgba(255,255,255,0.06)"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        fill="none"
-        opacity="0.9"
-        className="bow-limb-back"
-      />
+        <path
+          d="M 48 2 C 22 2 0 18 0 48"
+          stroke="rgba(255,255,255,0.06)"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0.9"
+          className="bow-limb-back"
+        />
 
-      <line
-        x1="0"
-        y1="50"
-        x2="25"
-        y2="25"
-        stroke="#fff"
-        strokeWidth="0.9"
-        strokeLinecap="round"
-        opacity="0.85"
-        className={`bow-string-left ${hovering ? "is-hover" : ""}`}
-        style={{ transformBox: "fill-box", transformOrigin: "10px 6px" }}
-      />
-      <line
-        x1="25"
-        y1="25"
-        x2="50"
-        y2="0"
-        stroke="#fff"
-        strokeWidth="0.9"
-        strokeLinecap="round"
-        opacity="0.85"
-        className={`bow-string-right ${hovering ? "is-hover" : ""}`}
-        style={{ transformBox: "fill-box", transformOrigin: "10px 6px" }}
-      />
+        <line
+          x1="0"
+          y1="50"
+          x2="25"
+          y2="25"
+          stroke="#fff"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+          opacity="0.85"
+          className={`bow-string-left ${hovering ? "is-hover" : ""}`}
+          style={{ transformBox: "fill-box", transformOrigin: "10px 6px" }}
+        />
+        <line
+          x1="25"
+          y1="25"
+          x2="50"
+          y2="0"
+          stroke="#fff"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+          opacity="0.85"
+          className={`bow-string-right ${hovering ? "is-hover" : ""}`}
+          style={{ transformBox: "fill-box", transformOrigin: "10px 6px" }}
+        />
+      </g>
 
       <g className="bow-arrow">
         <line
