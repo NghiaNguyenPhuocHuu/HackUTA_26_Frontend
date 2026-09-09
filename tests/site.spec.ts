@@ -103,11 +103,21 @@ test('the opening ship drifts across the center of the viewport', async ({ page 
   expect(centerAfterDrift).toBeLessThan(1440 * 0.64)
 })
 
-test('mobile menu remains in the viewport and navigates', async ({ page }) => {
+test('mobile menu stays below the logo and navigates', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 740 })
   await page.goto('/')
+  const brand = page.getByRole('banner').getByRole('link', { name: 'HackUTA home' })
   const menu = page.getByRole('button', { name: 'Open navigation', exact: true })
+  await expect(brand).toBeInViewport()
   await expect(menu).toBeInViewport()
+  const brandBox = await brand.boundingBox()
+  const menuBox = await menu.boundingBox()
+  expect(brandBox).not.toBeNull()
+  expect(menuBox).not.toBeNull()
+  if (brandBox && menuBox) {
+    expect(menuBox.y).toBeGreaterThanOrEqual(brandBox.y + brandBox.height - 2)
+    expect(menuBox.x).toBeLessThanOrEqual(brandBox.x + 4)
+  }
   await menu.click()
   await expect(page.locator('#mobile-navigation')).toBeVisible()
   await page.keyboard.press('Escape')

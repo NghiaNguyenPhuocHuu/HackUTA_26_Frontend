@@ -40,6 +40,16 @@
   pointer-events: none;
 }
 
+/* Unlayered so this beats the ink default when the header sits over dark sections. */
+.site-header[data-theme="dark"] {
+  color: var(--sand, #ded0bc);
+}
+
+.site-header[data-theme="dark"] .header-pill-nav {
+  background: color-mix(in srgb, var(--night, #102f46) 52%, transparent);
+  border-color: color-mix(in srgb, var(--sand, #ded0bc) 72%, transparent);
+}
+
 .site-header .header-inner,
 .site-header .mobile-navigation {
   pointer-events: auto;
@@ -47,12 +57,17 @@
 
 .header-inner {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: block;
   min-height: auto;
-  padding: 18px var(--margin, clamp(24px, 6vw, 104px)) 14px;
-  gap: 16px;
+  padding: 12px var(--margin, clamp(24px, 6vw, 104px)) 10px;
+}
+
+.header-mobile-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: fit-content;
 }
 
 .header-brand {
@@ -60,6 +75,12 @@
   align-items: center;
   flex-shrink: 0;
   min-height: 44px;
+}
+
+.menu-toggle {
+  display: block;
+  width: 100%;
+  padding: 0;
 }
 
 .header-mlh-badge {
@@ -210,16 +231,51 @@
   .site-logo {
     height: 38px;
   }
+
+  .menu-toggle span {
+    left: 0;
+    right: 0;
+  }
+
+  .header-pill-nav,
+  .mobile-navigation {
+    display: none;
+  }
+
+  .site-header[data-open="true"] .mobile-navigation {
+    display: block;
+  }
 }
 
 @media (min-width: 768px) {
   .header-inner {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: auto;
     align-items: center;
+    padding: 18px var(--margin, clamp(24px, 6vw, 104px)) 14px;
+    gap: 16px;
+  }
+
+  .header-mobile-stack {
+    display: contents;
   }
 
   .header-brand {
+    grid-column: 1;
+    grid-row: 1;
     justify-self: start;
+  }
+
+  .header-pill-nav {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    justify-self: center;
+  }
+
+  .menu-toggle,
+  .mobile-navigation {
+    display: none;
   }
 }

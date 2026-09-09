@@ -244,16 +244,21 @@ try {
       }
       if (width === 375) {
         const mobileMenu = await run(`async (page) => {
-          await page.getByRole('button', { name: 'Open navigation', exact: true }).click();
+          const brand = page.getByRole('link', { name: 'HackUTA home' });
+          const menu = page.getByRole('button', { name: 'Open navigation', exact: true });
+          const brandBox = await brand.boundingBox();
+          const menuBox = await menu.boundingBox();
+          const belowLogo = brandBox && menuBox ? menuBox.y >= brandBox.y + brandBox.height - 2 : false;
+          await menu.click();
           const opened = await page.locator('#mobile-navigation').isVisible();
           await page.keyboard.press('Escape');
           const escaped = await page.getByRole('button', { name: 'Open navigation', exact: true }).evaluate(element => document.activeElement === element);
           await page.getByRole('button', { name: 'Open navigation', exact: true }).click();
           await page.locator('#mobile-navigation').getByRole('link', { name: 'Schedule' }).click();
           await page.waitForTimeout(900);
-          return { opened, escaped, closedAfterLink: !(await page.locator('#mobile-navigation').isVisible()), hash: await page.evaluate(() => location.hash) };
+          return { belowLogo, opened, escaped, closedAfterLink: !(await page.locator('#mobile-navigation').isVisible()), hash: await page.evaluate(() => location.hash) };
         }`);
-        check('Mobile menu opens, Escape restores focus, and navigation closes it', mobileMenu.opened && mobileMenu.escaped && mobileMenu.closedAfterLink && mobileMenu.hash === '#schedule', mobileMenu);
+        check('Mobile menu sits below the logo and navigates', mobileMenu.belowLogo && mobileMenu.opened && mobileMenu.escaped && mobileMenu.closedAfterLink && mobileMenu.hash === '#schedule', mobileMenu);
         await accessibility('375px WCAG 2.1 AA');
         for (const section of state.sections.filter(section => section.id && section.top > 100)) {
           await run(`async (page) => {
