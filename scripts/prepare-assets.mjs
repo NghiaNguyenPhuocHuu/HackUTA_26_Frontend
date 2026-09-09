@@ -76,6 +76,8 @@ for (const [baseName, fileName] of [
 const whiteLogo = await firstExisting([
   path.join(DESIGN, "hackuta-logo-white.png"),
   path.join("public/images", "hackuta-logo-white.png"),
+  path.join("public/images/logos", "hackuta-logo-white-400.webp"),
+  path.join("public/images/logos", "hackuta-logo-white-120.webp"),
 ]);
 
 if (whiteLogo) {
@@ -84,13 +86,25 @@ if (whiteLogo) {
     background: { r: 0, g: 0, b: 0, alpha: 0 },
   };
 
-  await sharp(whiteLogo).resize(32, 32, iconOptions).png().toFile(
-    "public/images/favicon-32.png",
-  );
-  await sharp(whiteLogo).resize(180, 180, iconOptions).png().toFile(
-    "public/images/apple-touch-icon.png",
-  );
-  console.log("  favicon-32.png, apple-touch-icon.png");
+  const favicon32 = await sharp(whiteLogo)
+    .resize(32, 32, iconOptions)
+    .png()
+    .toBuffer();
+  await writeFile("public/images/favicon-32.png", favicon32);
+
+  await sharp(whiteLogo)
+    .resize(180, 180, iconOptions)
+    .png()
+    .toFile("public/images/apple-touch-icon.png");
+
+  const faviconSvgSource = await sharp(whiteLogo)
+    .resize(64, 64, iconOptions)
+    .png()
+    .toBuffer();
+  const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64"><image width="64" height="64" xlink:href="data:image/png;base64,${faviconSvgSource.toString("base64")}"/></svg>`;
+  await writeFile("public/favicon.svg", faviconSvg);
+
+  console.log("  favicon.svg, favicon-32.png, apple-touch-icon.png");
 }
 
 const coastSource = await firstExisting([

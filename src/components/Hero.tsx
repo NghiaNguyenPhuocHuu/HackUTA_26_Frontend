@@ -191,7 +191,7 @@ export function Hero({ motionEnabled }: HeroProps) {
               <span className="od-hero-coming-soon-mark" aria-hidden="true" />
               <span>Coming soon</span>
             </div>
-            <HeroCountdown/>
+            <HeroCountdown />
           </div>
         </div>
         <div className="od-hero-boat" aria-hidden="true">
