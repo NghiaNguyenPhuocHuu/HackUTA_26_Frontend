@@ -4,36 +4,61 @@ import { ThemeArt } from "./art/ThemeArt";
 
 const questions = [
   {
-    question: "What happens at a hackathon?",
+    question: "Who can apply to HackUTA 2026?",
     answer:
-      "You spend the weekend turning an idea into a project with other students. It is a chance to try new tools, meet fellow builders, and share what you made.",
+      "HackUTA is open to all college, university, and trade-school students who will be 18 or older by November 14, 2026. Recent graduates from December 2025 or later and high school seniors who are 18+ are welcome as well. Bring a government-issued ID or student ID for check-in.",
   },
   {
-    question: "Is HackUTA beginner-friendly?",
+    question: "Do I need to be a UTA student or live in Texas?",
     answer:
-      "Yes. You do not need hackathon experience or a polished idea. Curiosity and a willingness to make something are enough to begin.",
+      "Nope! We love hosting students from across the state and beyond. HackUTA 2026 is fully in person at UTA, so just make it to Arlington for check-in.",
   },
   {
-    question: "Do I need a team or project idea?",
+    question: "How much does it cost to attend?",
     answer:
-      "No. You can start without either. Begin with a problem you care about, meet other students, and find a direction together.",
+      "HackUTA is completely free thanks to our sponsors. We cover four meals, snacks, caffeine, workspace, and swag throughout the weekend, while you handle your own travel.",
   },
   {
-    question: "Who can attend?",
+    question: "What if I've never been to a hackathon?",
     answer:
-      "HackUTA 2026 is planned for college students age 18 and older, at every experience level. Final eligibility details will be confirmed when applications open.",
+      "No experience required. We run onboarding sessions, beginner-friendly workshops, and have mentors and MLH coaches on site to help you scope ideas, learn new tools, and ship something you're proud of.",
   },
   {
-    question: "When and where is it?",
+    question: "How do teams work?",
     answer:
-      "November 14–15, 2026 at the University of Texas at Arlington. The exact venue and check-in times will be shared closer to the event.",
+      "Teams can have up to four hackers. You can list your teammates on the application or arrive solo. We host a team formation mixer and share a Discord channel to help you find collaborators before hacking starts.",
   },
   {
-    question: "When can I apply?",
+    question: "What should I bring?",
     answer:
-      "Applications are not open yet. Keep this page close. The application link and full participant details will appear here as soon as they are ready.",
+      "Pack your laptop, chargers, and any hardware you plan to hack on. A valid student ID, government ID, toiletries, medications, and something comfy to nap with, like a hoodie, pillow, or sleeping bag and a deodorant, will make the 24 hours much easier.",
+  },
+  {
+    question: "Can I start on my project early?",
+    answer:
+      "You can brainstorm and explore public resources ahead of time, but all code, design assets, and build work must be created during the official hacking window from noon Oct 4 to noon Oct 5. Using open source libraries or templates is fine as long as you start fresh and give credit.",
+  },
+  {
+    question: "How does judging and prizes work?",
+    answer:
+      "We host an expo-style demo fair where judges visit each team. Expect a short pitch of three to four minutes and Q&A covering your problem, solution, and tech. Projects are evaluated on creativity, impact, technical execution, and presentation, with overall winners plus sponsor challenges announced at closing.",
+  },
+  {
+    question: "How do I contact organizers or request accomodations?",
+    answer: "Join the HackUTA Discord from the About section!",
   },
 ];
+
+function FAQContact({ className }: { className: string }) {
+  return (
+    <p className={`oracle-description ${className}`}>
+      Still have some questions? You can always email us at{" "}
+      <a href="mailto:hello@hackuta.org" className="oracle-email-link">
+        hello@hackuta.org
+      </a>
+    </p>
+  );
+}
 
 export function FAQ({ motionEnabled }: { motionEnabled: boolean }) {
   const [openItems, setOpenItems] = useState(() => new Set([0]));
@@ -63,10 +88,7 @@ export function FAQ({ motionEnabled }: { motionEnabled: boolean }) {
             <br />
             have some questions.
           </h2>
-          <p className="oracle-description">
-            Or you can always email us at{" "}
-            <a href="mailto:info@hackuta.org">info@hackuta.org</a>
-          </p>
+          <FAQContact className="hidden md:block" />
           <OracleEye motionEnabled={motionEnabled} />
         </div>
         <div className="oracle-questions">
@@ -109,6 +131,7 @@ export function FAQ({ motionEnabled }: { motionEnabled: boolean }) {
               </article>
             );
           })}
+          <FAQContact className="md:hidden" />
         </div>
       </div>
     </section>

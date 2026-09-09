@@ -103,10 +103,17 @@ export function Header() {
         href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2026-season&utm_content=gray"
         target="_blank"
         rel="noopener noreferrer"
+        aria-hidden={open}
+        tabIndex={open ? -1 : undefined}
+        hidden={open}
       >
         <img
-          src="https://logged-assets.s3.amazonaws.com/trust-badge/2027/mlh-trust-badge-2027-gray.svg"
+          src="/images/mlh-trust-badge-2027-gray.svg"
           alt="Major League Hacking 2026 Hackathon Season"
+          width={393}
+          height={688}
+          decoding="async"
+          loading="lazy"
         />
       </a>
       <header
@@ -115,15 +122,34 @@ export function Header() {
         data-theme={theme}
         data-open={open}
       >
-        <div className="header-inner flex items-center justify-between md:grid">
-          <a
-            href="#top"
-            className="header-brand"
-            aria-label="HackUTA home"
-            onClick={navigate("top")}
-          >
-            <Logo className="site-logo" variant="adaptive" />
-          </a>
+        <div className="header-inner">
+          <div className="header-mobile-stack">
+            <a
+              href="#top"
+              className="header-brand"
+              aria-label="HackUTA home"
+              onClick={navigate("top")}
+            >
+              <Logo
+                className="site-logo"
+                variant={theme === "dark" ? "dark" : "light"}
+                layout="header"
+                decorative
+              />
+            </a>
+            <button
+              ref={menuButton}
+              className="menu-toggle"
+              aria-label={open ? "Close navigation" : "Open navigation"}
+              aria-expanded={open}
+              aria-controls="mobile-navigation"
+              onClick={() => setOpen(!open)}
+              type="button"
+            >
+              <span />
+              <span />
+            </button>
+          </div>
           <nav
             aria-label="Main navigation"
             className="header-pill-nav items-center uppercase"
@@ -139,20 +165,6 @@ export function Header() {
               </a>
             ))}
           </nav>
-          <div className="header-actions flex items-center justify-end">
-            <button
-              ref={menuButton}
-              className="menu-toggle md:hidden"
-              aria-label={open ? "Close navigation" : "Open navigation"}
-              aria-expanded={open}
-              aria-controls="mobile-navigation"
-              onClick={() => setOpen(!open)}
-              type="button"
-            >
-              <span />
-              <span />
-            </button>
-          </div>
         </div>
         <nav
           id="mobile-navigation"
@@ -169,7 +181,17 @@ export function Header() {
             >
               <span>0{index + 1}</span>
               {link.label}
-              <span aria-hidden="true">↗</span>
+              <span className="mobile-nav-arrow" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M3 13L13 3M13 3H6M13 3V10"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
             </a>
           ))}
         </nav>

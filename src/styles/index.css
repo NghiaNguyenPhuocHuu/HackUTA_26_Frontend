@@ -1,33 +1,5 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: "Barlow Semi Condensed";
-  src: url('/fonts/BarlowSemiCondensed-Regular.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Barlow Semi Condensed";
-  src: url('/fonts/BarlowSemiCondensed-SemiBold.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Barlow Semi Condensed";
-  src: url('/fonts/BarlowSemiCondensed-Bold.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-}
-@font-face {
-  font-family: "CS Gelios";
-  src: url('/fonts/CSGelios-Regular.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
 @theme {
   --font-sans: "Barlow Semi Condensed", "Arial Narrow", Arial, sans-serif;
   --font-display: "CS Gelios", Georgia, "Times New Roman", serif;
@@ -53,9 +25,11 @@
   50% { transform: scaleX(.985); }
 }
 
-@keyframes hero-drift{0%,100%{left:40%}50%{left:60%}}
+/* Drift and bob live on separate elements so both stay transform-only and
+   composite off the main thread. */
+@keyframes hero-drift{0%,100%{transform:translate3d(calc(-50% - 10vw),0,0)}50%{transform:translate3d(calc(-50% + 10vw),0,0)}}
 
-@keyframes hero-bob{0%,100%{transform:translateX(-50%) translateY(3px) rotate(-.6deg)}50%{transform:translateX(-50%) translateY(-14px) rotate(.7deg)}}
+@keyframes hero-bob{0%,100%{transform:translate3d(0,3px,0) rotate(-.6deg)}50%{transform:translate3d(0,-14px,0) rotate(.7deg)}}
 
 @keyframes hero-float{0%,100%{transform:translateY(2px) rotate(-.3deg)}50%{transform:translateY(-5px) rotate(.35deg)}}
 
@@ -63,7 +37,11 @@
 
 @keyframes hero-typewriter-cursor{0%,100%{opacity:1}50%{opacity:0}}
 
-@keyframes hero-status-pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 3px #1a3a5221}50%{transform:scale(1.45);box-shadow:0 0 0 5px #1a3a5200}}
+@keyframes hero-status-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.45)}}
+
+/* The halo is a pseudo-element ring rather than an animated box-shadow, which
+   the compositor cannot handle. */
+@keyframes hero-status-ring{0%,100%{transform:scale(1);opacity:.13}50%{transform:scale(1.6);opacity:0}}
 
 @keyframes odyssey-paddle-stroke-left{0%,100%{transform:rotate(4deg)}50%{transform:rotate(-8deg)}}
 @keyframes odyssey-paddle-stroke-right{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(8deg)}}
@@ -137,7 +115,7 @@
   p { text-wrap: pretty; }
 
   @media (max-width: 767px) {
-    :root { --header-height: 70px; --spacing-header: 70px; }
+    :root { --header-height: 92px; --spacing-header: 92px; }
     body { font-size: 17px; }
   }
 
@@ -156,6 +134,15 @@
 }
 
 @layer components {
+  .site-header[data-theme="dark"] {
+    color: var(--sand);
+  }
+
+  .site-header[data-theme="dark"] .header-pill-nav {
+    background: color-mix(in srgb, var(--night) 52%, transparent);
+    border-color: color-mix(in srgb, var(--sand) 72%, transparent);
+  }
+
   .skip-link {
     position: fixed;
     top: 14px;
@@ -218,13 +205,14 @@
 
 @utility footer-section {
   --footer-legal-height:56px;
+  --footer-muted:#506575;
   background:var(--clay);
   color:var(--ink);
   & .footer-brand-lockup {
     color:var(--ink);
   }
   & .footer-column-title {
-    color:var(--mist);
+    color:var(--footer-muted);
   }
   & .footer-link-list a,
   & .footer-event {
@@ -234,7 +222,7 @@
     color:var(--night);
   }
   & .footer-tagline {
-    color:#5a6b78;
+    color:var(--footer-muted);
   }
   & .footer-bottom {
     position:relative;
@@ -243,7 +231,7 @@
     margin-top:0;
     height:var(--footer-legal-height,56px);
     padding:0;
-    color:#5a6b78;
+    color:var(--footer-muted);
     & a {
       color:var(--ink);
     }
@@ -263,7 +251,7 @@
 }
 
 @utility footer-ship {
-  width:100%;
+    width:100%;
   height:auto;
   display:block;
 }
@@ -395,7 +383,7 @@
   gap:clamp(18px,4vw,42px);
   margin-top:clamp(48px,8vh,88px);
   font-size:13px;
-  font-weight:600;
+    font-weight:600;
   letter-spacing:.08em;
   text-transform:uppercase;
   color:#b8aea0;
@@ -439,6 +427,9 @@
   & .section-inner { position:relative; z-index:2; }
   & .odyssey-boat-track { opacity:0; transition:opacity .8s var(--ease-out); }
   &[data-revealed=true] .odyssey-boat-track { opacity:1; }
+  /* stroke-dashoffset can never composite, so only pay for it while the
+     section is on screen and the wake is actually visible. */
+  &[data-revealed=true] .odyssey-boat-wake { animation:odyssey-wake-flow 2.8s linear infinite; }
   & .odyssey-call-lede,
   & .odyssey-call-actions,
   & .odyssey-call-perks {
@@ -501,7 +492,7 @@
   width:100%;
   height:100%;
   overflow:visible;
-  color:var(--clay);
+    color:var(--clay);
   filter:drop-shadow(0 10px 7px #00000070) drop-shadow(0 2px 2px #00000055);
   & .odyssey-boat-hull { fill:currentColor; }
   & .odyssey-boat-hull-edge { fill:none; stroke:color-mix(in srgb,currentColor 65%,var(--night)); stroke-width:2; }
@@ -533,7 +524,6 @@
   stroke-width:1.8;
   stroke-linecap:round;
   stroke-dasharray:8 7;
-  animation:odyssey-wake-flow 2.8s linear infinite;
 }
 
 @utility odyssey-call-title {
@@ -605,7 +595,7 @@
 }
 
 @utility footer-column-title {
-  font-size:12px;
+    font-size:12px;
   line-height:1.4;
   letter-spacing:.14em;
   color:var(--mist);
@@ -784,17 +774,18 @@
   width:44px;
   height:44px;
   position:relative;
+  padding:0;
   & span {
-    height:1px;
+    height:2px;
     background:currentColor;
     position:absolute;
     left:10px;
     right:8px;
-    top:18px;
+    top:17px;
     transition:transform .2s;
   }
   & span+span {
-    top:26px;
+    top:25px;
   }
 }
 
@@ -821,8 +812,18 @@
     min-width:18px;
     font-weight:400;
   }
-  & a>span:last-child {
+  & a .mobile-nav-arrow {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    width:20px;
+    height:20px;
     margin-left:auto;
+    & svg {
+      width:100%;
+      height:100%;
+    }
   }
   & a[aria-current] {
     text-decoration:underline;
@@ -866,7 +867,10 @@
     --sky-haze:0;
   }
   &[data-motion=true] .od-hero-boat {
-    animation:hero-drift 28s ease-in-out infinite,hero-bob 5.5s ease-in-out infinite;
+    animation:hero-drift 28s ease-in-out infinite;
+  }
+  &[data-motion=true] .od-hero-boat-bob {
+    animation:hero-bob 5.5s ease-in-out infinite;
   }
   &[data-motion=true] .od-hero-ship {
     animation:hero-float 4.8s ease-in-out infinite;
@@ -907,11 +911,15 @@
 @utility od-hero-boat {
   position:absolute;
   z-index:4;
-  left:40%;
+  left:50%;
   bottom:115px;
   width:clamp(235px,22vw,315px);
   transform:translateX(-50%);
-  will-change:left,transform;
+  will-change:transform;
+}
+
+@utility od-hero-boat-bob {
+  will-change:transform;
 }
 
 @utility od-hero-coast {
@@ -1010,12 +1018,21 @@
 }
 
 @utility od-hero-coming-soon-mark {
+  position:relative;
   width:6px;
   height:6px;
   border-radius:50%;
   background:var(--ink);
-  box-shadow:0 0 0 3px color-mix(in srgb,var(--ink) 13%,transparent);
   animation:hero-status-pulse 1.8s ease-in-out infinite;
+  &::after {
+    content:"";
+    position:absolute;
+    inset:-3px;
+    border-radius:50%;
+    background:var(--ink);
+    opacity:.13;
+    animation:hero-status-ring 1.8s ease-in-out infinite;
+  }
 }
 
 @utility od-hero-wordmark {
@@ -1246,6 +1263,39 @@
   color:#315873;
 }
 
+@utility oracle-email-link {
+  position:relative;
+  display:inline-block;
+  color:var(--ink);
+  text-decoration:none;
+  transition:color .2s var(--ease-out),transform .2s var(--ease-out);
+  &::after {
+    content:"";
+    position:absolute;
+    right:0;
+    bottom:.05em;
+    left:0;
+    height:1px;
+    background:currentColor;
+    opacity:.58;
+    transition:opacity .2s var(--ease-out);
+  }
+  &:hover,&:focus-visible {
+    color:var(--ocean);
+    transform:translateY(-1px);
+  }
+  &:hover::after,&:focus-visible::after {
+    opacity:1;
+  }
+  &:focus-visible {
+    outline:2px solid currentColor;
+    outline-offset:4px;
+    border-radius:2px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){.oracle-email-link,.oracle-email-link::after{transition:none}.oracle-email-link:hover,.oracle-email-link:focus-visible{transform:none}}
+
 @utility oracle-eye-wrap {
   position:relative;
   display:grid;
@@ -1375,14 +1425,14 @@
     gap:18px;
     width:100%;
     min-height:92px;
-    padding:22px 0;
+    padding:16px 0;
     border:0;
     background:none;
     list-style:none;
     font:inherit;
     color:inherit;
     text-align:left;
-    font-size:clamp(22px,2.1vw,30px);
+    font-size:clamp(18px,1.9vw,26px);
     font-weight:600;
     line-height:1.15;
     cursor:pointer;
@@ -1510,13 +1560,6 @@
   & .header-inner,& .mobile-navigation {
     pointer-events:auto;
   }
-  &[data-theme=dark] {
-    color:var(--sand);
-    & .header-pill-nav {
-      background:color-mix(in srgb,var(--night) 52%,transparent);
-      border-color:color-mix(in srgb,var(--sand) 72%,transparent);
-    }
-  }
   &[data-open=true] .menu-toggle span {
     transform:translateY(4px) rotate(45deg);
   }
@@ -1609,8 +1652,8 @@
     place-items:center;
     width:clamp(28px,2.4vw,34px);
     height:clamp(28px,2.4vw,34px);
-    border:1px solid currentColor;
-    border-radius:50%;
+  border:1px solid currentColor;
+  border-radius:50%;
     font-family:var(--font-display);
     font-size:clamp(13px,1.2vw,16px);
     line-height:1;
@@ -1683,11 +1726,11 @@
     font-size:clamp(20px,2.3vw,29px);
     font-weight:400;
     letter-spacing:.03em;
-    text-transform:uppercase;
+  text-transform:uppercase;
   }
   & p {
     font-size:clamp(11px,1.05vw,13px);
-    font-weight:600;
+  font-weight:600;
     letter-spacing:.12em;
     text-transform:uppercase;
     color:var(--ocean);
@@ -1700,6 +1743,22 @@
   margin:0;
   padding:0;
   column-gap:clamp(30px,4.5vw,72px);
+}
+
+@utility weekend-coming-soon {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:clamp(120px,18vh,200px);
+  margin:0;
+  font-family:var(--font-display);
+  font-size:clamp(22px,2.8vw,34px);
+  font-weight:400;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  text-align:center;
+  text-wrap:balance;
+  color:var(--ocean);
 }
 
 @utility weekend-slot {
@@ -1740,8 +1799,8 @@
   font-size:clamp(16px,1.7vw,20px);
   font-weight:600;
   letter-spacing:.04em;
-  color:#315873;
-}
+    color:#315873;
+  }
 
 @media(min-width:900px){.weekend-timeline{columns:2}}
 
@@ -1751,7 +1810,7 @@
 
 @media(max-width:959px){.od-hero-stage{height:870px;min-height:0}.od-hero-copy{grid-template-columns:1fr;gap:24px;padding-top:140px;text-align:center}.od-hero-copy-text{align-items:center;text-align:center}.od-hero-coast{width:360px;bottom:-110px}.od-hero-coast-right{width:320px}.od-hero-boat{width:265px}}
 
-@media(max-width:599px){.od-hero-stage{height:850px;min-height:0}.od-hero-copy{padding-top:128px;gap:18px}.od-hero-date{font-size:14px;letter-spacing:.1em;margin-bottom:12px}.od-hero-logo{height:clamp(200px,48vw,270px)}.od-hero-wordmark{font-size:clamp(48px,13vw,70px)}.od-hero-year{font-size:36px}.od-hero-coast{width:260px;bottom:-90px;left:-36px}.od-hero-coast-right{width:220px;left:auto;right:-40px}.od-hero-boat{width:225px;bottom:132px}.od-webgl-water{height:175px}.od-departure-water{bottom:-20px;height:120px}.od-lightning{top:80px;width:55px;height:240px}.od-lightning-left{left:3vw}.od-lightning-right{right:3vw}.od-rain{bottom:75px}.od-hero-foot{font-size:11px;padding-bottom:18px}}
+@media(max-width:599px){.od-hero-stage{height:850px;min-height:0}.od-hero-copy{padding-top:128px;gap:18px}.od-hero-date{font-size:14px;letter-spacing:.1em;margin-bottom:12px}.od-hero-logo{height:clamp(200px,48vw,270px)}.od-hero-wordmark{font-size:clamp(48px,13vw,70px)}.od-hero-year{font-size:36px}.od-hero-coast{width:260px;bottom:-90px;left:-36px}.od-hero-coast-right{width:220px;left:auto;right:-40px}.od-hero-boat{width:225px;bottom:65px}.od-webgl-water{height:175px}.od-departure-water{bottom:-20px;height:120px}.od-lightning{top:80px;width:55px;height:240px}.od-lightning-left{left:3vw}.od-lightning-right{right:3vw}.od-rain{bottom:75px}.od-hero-foot{font-size:11px;padding-bottom:18px}}
 
 /* Phones pay for every promoted rain layer composited under the multiply
    blend, so thin the field by half where the drops are least legible. */
@@ -1769,9 +1828,9 @@
 
 @media(prefers-reduced-motion:reduce){.footer-motion .footer-vessel,.footer-motion .footer-water{animation:none}.odyssey-btn{transition:none}.oracle-toggle::before,.oracle-toggle::after,.oracle-answer,.oracle-answer-inner>p{transition:none}.oracle-answer-inner>p{opacity:1;transform:none}.oracle-eye,.oracle-eye-lid,.oracle-eye-lid path,.oracle-eye-iris,.oracle-eye-lashes--top,.oracle-eye-message,.oracle-eye-button{transition:none}}
 
-@media(min-width:768px){:root{--header-height:76px;--spacing-header:76px}.header-inner{grid-template-columns:1fr auto 1fr;align-items:center}.header-brand{justify-self:start}.header-pill-nav{display:flex;justify-self:center}.header-actions{justify-self:end}.mobile-navigation,.menu-toggle{display:none}}
+@media(min-width:768px){:root{--header-height:76px;--spacing-header:76px}.header-inner{display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:auto;align-items:center}.header-mobile-stack{display:contents}.header-brand{grid-column:1;grid-row:1;justify-self:start}.header-pill-nav{grid-column:2;grid-row:1;display:flex;justify-self:center}.menu-toggle,.mobile-navigation{display:none}}
 
-@media(max-width:767px){.header-inner{gap:12px;padding-block:16px}.site-logo{height:38px}.mobile-navigation{background:var(--clay);border-top:1px solid #1a3a5228}.site-header[data-theme=dark] .mobile-navigation{background:var(--night)}}
+@media(max-width:767px){.header-inner{display:block}.header-mobile-stack{display:flex;flex-direction:column;align-items:flex-start;gap:10px;width:fit-content}.menu-toggle{display:block;width:100%;padding:0}.menu-toggle span{left:0;right:0}.header-pill-nav{display:none}.site-header[data-open=true]{top:0;right:0;left:0;bottom:auto;z-index:80;display:flex;flex-direction:column;height:auto;background:var(--clay);pointer-events:auto;overflow:visible;padding-top:env(safe-area-inset-top,0px);box-shadow:0 20px 30px #071b2926}.site-header[data-theme=dark][data-open=true]{background:var(--night)}.site-header[data-open=true] .header-inner{flex-shrink:0;background:inherit}.site-header[data-open=true] .mobile-navigation{display:block;border-top:1px solid #1a3a5228;background:inherit}.mobile-navigation{display:none;background:var(--clay);border-top:1px solid #1a3a5228}.site-header[data-theme=dark] .mobile-navigation{background:var(--night)}}
 
 @media(prefers-reduced-motion:reduce){.site-header{transition:none}}
 
@@ -2260,9 +2319,9 @@
     .sponsor-slot--bronze {
       --sponsor-badge-min: 100%;
     }
-  }
+}
 
-  @media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
     .sponsors-header,
     .sponsors-temple,
     .sponsors-cta {
@@ -2429,5 +2488,76 @@
     .heat-wave-text {
       filter: none;
     }
+.od-hero-countdown {
+  display: flex;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  margin-top: 0.85rem;
+  opacity: calc(1 - var(--hero-exit, 0));
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  isolation: isolate;
+}
+
+.od-hero-countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 2.75rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--clay) 12%, transparent);
+  backdrop-filter: none;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.od-hero-countdown-value {
+  font-size: clamp(1.25rem, 3.2vw, 2rem);
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  text-shadow: 0 0 0 color-mix(in srgb, var(--clay) 0%, transparent);
+}
+
+.od-hero-countdown-label {
+  margin-top: 0.15rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+@media (max-width: 599px) {
+  .od-hero-countdown {
+    gap: clamp(0.25rem, 1.5vw, 0.5rem);
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 0.65rem;
+  }
+
+  .od-hero-countdown-unit {
+    min-width: 0;
+    flex: 1 1 0;
+    padding: 0.3rem 0.2rem;
+    border-radius: 0.375rem;
+  }
+
+  .od-hero-countdown-value {
+    font-size: clamp(0.85rem, 4.2vw, 1.1rem);
+  }
+
+  .od-hero-countdown-label {
+    font-size: 0.5rem;
+    letter-spacing: 0.08em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-hero-countdown-value {
+    text-shadow: none;
   }
 }

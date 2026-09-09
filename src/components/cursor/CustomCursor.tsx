@@ -25,15 +25,25 @@ const SPARKS = Array.from({ length: 10 }, (_, i) => {
   };
 });
 
+type CursorTheme = "clay" | "dark";
+
+const THEME_PALETTE: Record<CursorTheme, { bow: string; trim: string }> = {
+  clay: { bow: "var(--ink)", trim: "var(--night)" },
+  dark: { bow: "var(--clay)", trim: "var(--sand)" },
+};
+
 function BowSVG({
   hovering,
+  theme,
   gradientId,
 }: {
   hovering: boolean;
+  theme: CursorTheme;
   gradientId: string;
 }) {
-  const bowColor = hovering ? "#64d2ff" : "#c8a84b";
-  const trim = hovering ? "#a0e8ff" : "#e8c97a";
+  const palette = THEME_PALETTE[theme] ?? THEME_PALETTE.clay;
+  const bowColor = hovering ? "#64d2ff" : palette.bow;
+  const trim = hovering ? "#a0e8ff" : palette.trim;
 
   return (
     <svg
@@ -51,49 +61,51 @@ function BowSVG({
         </linearGradient>
       </defs>
 
-      <path
-        d="M 50 0 C 20 0 0 20 0 50"
-        stroke={`url(#${gradientId})`}
-        strokeWidth="3"
-        strokeLinecap="round"
-        fill="none"
-        className="bow-limb"
-      />
+      <g className="bow-group">
+        <path
+          d="M 50 0 C 20 0 0 20 0 50"
+          stroke={`url(#${gradientId})`}
+          strokeWidth="3"
+          strokeLinecap="round"
+          fill="none"
+          className="bow-limb"
+        />
 
-      <path
-        d="M 48 2 C 22 2 0 18 0 48"
-        stroke="rgba(255,255,255,0.06)"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        fill="none"
-        opacity="0.9"
-        className="bow-limb-back"
-      />
+        <path
+          d="M 48 2 C 22 2 0 18 0 48"
+          stroke="rgba(255,255,255,0.06)"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0.9"
+          className="bow-limb-back"
+        />
 
-      <line
-        x1="0"
-        y1="50"
-        x2="25"
-        y2="25"
-        stroke="#fff"
-        strokeWidth="0.9"
-        strokeLinecap="round"
-        opacity="0.85"
-        className={`bow-string-left ${hovering ? "is-hover" : ""}`}
-        style={{ transformBox: "fill-box", transformOrigin: "10px 6px" }}
-      />
-      <line
-        x1="25"
-        y1="25"
-        x2="50"
-        y2="0"
-        stroke="#fff"
-        strokeWidth="0.9"
-        strokeLinecap="round"
-        opacity="0.85"
-        className={`bow-string-right ${hovering ? "is-hover" : ""}`}
-        style={{ transformBox: "fill-box", transformOrigin: "10px 6px" }}
-      />
+        <line
+          x1="0"
+          y1="50"
+          x2="25"
+          y2="25"
+          stroke="#fff"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+          opacity="0.85"
+          className={`bow-string-left ${hovering ? "is-hover" : ""}`}
+          style={{ transformBox: "fill-box", transformOrigin: "10px 6px" }}
+        />
+        <line
+          x1="25"
+          y1="25"
+          x2="50"
+          y2="0"
+          stroke="#fff"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+          opacity="0.85"
+          className={`bow-string-right ${hovering ? "is-hover" : ""}`}
+          style={{ transformBox: "fill-box", transformOrigin: "10px 6px" }}
+        />
+      </g>
 
       <g className="bow-arrow">
         <line
@@ -140,6 +152,9 @@ export default function CustomCursor() {
   const [hovering, setHovering] = useState(false);
   const hoveringRef = useRef(false);
 
+  const [theme, setTheme] = useState<CursorTheme>("clay");
+  const themeRef = useRef<CursorTheme>("clay");
+
   useEffect(() => {
     if (!enabled) return;
 
@@ -164,6 +179,18 @@ export default function CustomCursor() {
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
       }
+
+      const under = document.elementFromPoint(mouseX, mouseY);
+      const nextTheme: CursorTheme =
+        under?.closest<HTMLElement>("[data-theme]")?.dataset.theme === "dark"
+          ? "dark"
+          : "clay";
+
+      if (nextTheme !== themeRef.current) {
+        themeRef.current = nextTheme;
+        setTheme(nextTheme);
+      }
+
       frame = null;
     };
 
@@ -261,7 +288,7 @@ export default function CustomCursor() {
         ref={visualRef}
         className={`cursor-bow-visual${hovering ? " is-hovering" : ""}`}
       >
-        <BowSVG hovering={hovering} gradientId={gradientId} />
+        <BowSVG hovering={hovering} theme={theme} gradientId={gradientId} />
       </div>
 
       <div className="cursor-impact">

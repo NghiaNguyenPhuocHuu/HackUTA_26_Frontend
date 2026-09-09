@@ -1,15 +1,34 @@
-import { type CSSProperties, useEffect, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  lazy,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Ship } from "./art/Ship";
+import { CoastCliff } from "./art/CoastCliff";
 import { Logo } from "./art/Logo";
 import { HERO_AMBIENT_STORM } from "../constants/heroWeather";
-import { HeroAtmosphere } from "./HeroAtmosphere";
-import { HeroWaves } from "./HeroWaves";
+import { HeroCountdown } from "./Countdown";
 import { clamp01 } from "../utils/clamp";
+
+/* The WebGL storm and water are decorative: the CSS sky haze and SVG
+   departure water stand in until these chunks arrive. */
+const HeroAtmosphere = lazy(() =>
+  import("./HeroAtmosphere").then((module) => ({
+    default: module.HeroAtmosphere,
+  })),
+);
+
+const HeroWaves = lazy(() =>
+  import("./HeroWaves").then((module) => ({ default: module.HeroWaves })),
+);
 
 type HeroProps = { motionEnabled: boolean };
 type HeroStyle = CSSProperties & { "--storm": number };
 
-const rain = Array.from({ length: 52 }, (_, index) => ({
+const rain = Array.from({ length: 34 }, (_, index) => ({
   left: `${(index * 37 + 11) % 101}%`,
   delay: `${-((index * 0.37) % 3.8)}s`,
   duration: `${1.05 + (index % 7) * 0.08}s`,
@@ -113,7 +132,9 @@ export function Hero({ motionEnabled }: HeroProps) {
       aria-labelledby="hero-title"
     >
       <div className="od-hero-stage">
-        <HeroAtmosphere motionEnabled={motionEnabled} storm={storm} />
+        <Suspense fallback={null}>
+          <HeroAtmosphere motionEnabled={motionEnabled} storm={storm} />
+        </Suspense>
         <div className="od-lightning od-lightning-left" aria-hidden="true">
           <svg viewBox="0 0 120 330">
             <path d="m75 4-43 118 38-9-34 90 33-13-25 132 69-173-39 13 34-77-37 9Z" />
@@ -126,38 +147,29 @@ export function Hero({ motionEnabled }: HeroProps) {
         </div>
         <div className="od-lightning-wash" aria-hidden="true" />
         <div className="od-hero-coast od-hero-coast-left" aria-hidden="true">
-          <img
-            src="/images/coast-cliff-v7.webp"
-            width="1024"
-            height="1536"
-            alt=""
-            fetchPriority="high"
-          />
+          <CoastCliff priority />
         </div>
         <div className="od-hero-coast od-hero-coast-right" aria-hidden="true">
-          <img
-            src="/images/coast-cliff-v7.webp"
-            width="1024"
-            height="1536"
-            alt=""
-          />
+          <CoastCliff />
         </div>
-        <div className="od-rain" aria-hidden="true">
-          {rain.map((drop, index) => (
-            <i
-              key={index}
-              style={{
-                left: drop.left,
-                animationDelay: drop.delay,
-                animationDuration: drop.duration,
-                opacity: drop.opacity,
-              }}
-            />
-          ))}
-        </div>
+        {motionEnabled ? (
+          <div className="od-rain" aria-hidden="true">
+            {rain.map((drop, index) => (
+              <i
+                key={index}
+                style={{
+                  left: drop.left,
+                  animationDelay: drop.delay,
+                  animationDuration: drop.duration,
+                  opacity: drop.opacity,
+                }}
+              />
+            ))}
+          </div>
+        ) : null}
         <div className="od-hero-copy relative z-10 mx-auto">
           <div className="od-hero-copy-logo">
-            <Logo className="od-hero-logo" />
+            <Logo className="od-hero-logo" layout="hero" priority decorative />
           </div>
           <div className="od-hero-copy-text">
             <p className="od-hero-date uppercase">
@@ -179,12 +191,19 @@ export function Hero({ motionEnabled }: HeroProps) {
               <span className="od-hero-coming-soon-mark" aria-hidden="true" />
               <span>Coming soon</span>
             </div>
+            <HeroCountdown />
           </div>
         </div>
         <div className="od-hero-boat" aria-hidden="true">
-          <Ship className="od-hero-ship" rowing={motionEnabled} tone="ink" />
+          <div className="od-hero-boat-bob">
+            <Ship className="od-hero-ship" rowing={motionEnabled} tone="ink" />
+          </div>
         </div>
-        <HeroWaves motionEnabled={motionEnabled} storm={storm} />
+        {motionEnabled ? (
+          <Suspense fallback={null}>
+            <HeroWaves motionEnabled={motionEnabled} storm={storm} />
+          </Suspense>
+        ) : null}
         <div className="od-departure-water" aria-hidden="true">
           <svg viewBox="0 0 3200 120" preserveAspectRatio="none">
             <g className="od-wave-surface">
