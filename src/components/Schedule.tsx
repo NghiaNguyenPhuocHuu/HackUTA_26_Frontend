@@ -177,7 +177,6 @@ export function Schedule() {
 
       <ThemeArt name="pillars" className="weekend-art-pillars theme-art--on-light" />
       <OliveBranch className="weekend-olive weekend-olive-top" />
-      <OliveBranch className="weekend-olive" />
       <span className="weekend-meander" data-edge="bottom" aria-hidden="true" />
     </section>
   );

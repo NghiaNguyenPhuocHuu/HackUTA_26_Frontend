@@ -2488,6 +2488,9 @@
     .heat-wave-text {
       filter: none;
     }
+  }
+}
+
 .od-hero-countdown {
   display: flex;
   gap: clamp(0.75rem, 2vw, 1.5rem);

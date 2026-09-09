@@ -8,6 +8,17 @@ const LOGO_WIDTHS = [120, 240, 400, 640];
 const COAST_WIDTHS = [400, 560, 800, 1120];
 const DESIGN = "design/assets/";
 
+const ILLUSTRATIONS = [
+  { name: "cyclops-cave", maxEdge: 1800 },
+  { name: "cyclops-cave-clear", maxEdge: 1800 },
+  { name: "trojan-horse", maxEdge: 1800, format: "png" },
+  { name: "trojan-horse-clear", maxEdge: 1800, format: "png" },
+  { name: "feast", maxEdge: 1400 },
+  { name: "feast-clear", maxEdge: 1400 },
+  { name: "temple-clear", maxEdge: 1800 },
+  { name: "pillars-clear", maxEdge: 1800 },
+];
+
 async function fileExists(filePath) {
   try {
     await access(filePath, constants.F_OK);
@@ -46,63 +57,33 @@ async function generateResponsiveWebp({
   console.log(`  ${baseName}: ${widths.join(", ")}w from ${source}`);
 }
 
-await Promise.all([
-  sharp(source + 'coast-cliff-v7.png').webp({ quality: 95, alphaQuality: 100 }).toFile('public/images/coast-cliff-v7.webp'),
-  copyFile(source + 'fonts/BarlowSemiCondensed-OFL.txt', 'public/fonts/OFL.txt'),
-])
-// The encoder shares WASM memory: parallel compression can corrupt its output.
-async function compressFont(name, extension) {
-  const font = await readFile(`${source}fonts/${name}.${extension}`)
-  const compressed = Buffer.from(await wawoff2.compress(font))
-  await writeFile(`public/fonts/${name}.woff2`, compressed)
-}
-
-for (const weight of ['Regular', 'SemiBold', 'Bold']) {
-  await compressFont(`BarlowSemiCondensed-${weight}`, 'ttf')
-}
-await compressFont('CSGelios-Regular', 'otf')
-const wordmark = (await readFile(source + 'hackuta-wordmark-v6.svg', 'utf8'))
-  .replace('<svg ', '<svg x="90" y="170" width="1020" height="148" ')
-  .replace('#211912', '#1a3a52')
-const social = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630"><rect width="1200" height="630" fill="#eee3d2"/><circle cx="600" cy="480" r="235" fill="#dfd1bd"/>${wordmark}<g fill="#1a3a52" font-family="sans-serif" text-anchor="middle"><text x="600" y="120" font-size="24" letter-spacing="7">THE ODYSSEY · 2026</text><text x="600" y="390" font-size="28">NOVEMBER 14–15 · UT ARLINGTON</text><text x="600" y="530" font-size="22">Bring an idea. Find your crew.</text></g></svg>`
-await sharp(Buffer.from(social)).png().toFile('public/images/social-card.png')
-
-async function optimizeIllustration(name, maxEdge, format = 'webp') {
-  const src = `${source}illustrations/${name}.png`
-  const trimmed = await sharp(src).ensureAlpha().trim({ threshold: 0 }).png().toBuffer()
-  const meta = await sharp(trimmed).metadata()
-  const scale = Math.min(1, maxEdge / Math.max(meta.width, meta.height))
+async function optimizeIllustration({ name, maxEdge, format = "webp" }) {
+  const source = path.join(DESIGN, "illustrations", `${name}.png`);
+  const trimmed = await sharp(source)
+    .ensureAlpha()
+    .trim({ threshold: 0 })
+    .png()
+    .toBuffer();
+  const meta = await sharp(trimmed).metadata();
+  const scale = Math.min(1, maxEdge / Math.max(meta.width, meta.height));
   const resized = sharp(trimmed).resize(
     Math.round(meta.width * scale),
     Math.round(meta.height * scale),
-  )
-  if (format === 'png') {
-    await resized.png({ compressionLevel: 9, adaptiveFiltering: true }).toFile(`public/images/${name}.png`)
+  );
+
+  if (format === "png") {
+    await resized
+      .png({ compressionLevel: 9, adaptiveFiltering: true })
+      .toFile(`public/images/${name}.png`);
   } else {
-    await resized.webp({ quality: 88, alphaQuality: 92, effort: 5 }).toFile(`public/images/${name}.webp`)
+    await resized
+      .webp({ quality: 88, alphaQuality: 92, effort: 5 })
+      .toFile(`public/images/${name}.webp`);
   }
 }
 
-try {
-  await Promise.all([
-    optimizeIllustration('cyclops-cave', 1800),
-    optimizeIllustration('cyclops-cave-clear', 1800),
-    optimizeIllustration('trojan-horse', 1800, 'png'),
-    optimizeIllustration('trojan-horse-clear', 1800, 'png'),
-    optimizeIllustration('feast', 1400),
-    optimizeIllustration('feast-clear', 1400),
-    optimizeIllustration('temple-clear', 1800),
-    optimizeIllustration('pillars-clear', 1800),
-  ])
-} catch (error) {
-  if (error && error.code === 'ENOENT') {
-    console.log('Illustration sources missing; keeping existing public/images WebP files.')
-  } else {
-    throw error
-  }
-}
-
-console.log('Production artwork, compressed fonts and social preview prepared.')
+await Promise.all([
+  mkdir("public/images", { recursive: true }),
   mkdir("public/images/logos", { recursive: true }),
   mkdir("public/images/coast", { recursive: true }),
   mkdir("public/fonts", { recursive: true }),
@@ -161,10 +142,23 @@ if (whiteLogo) {
   await writeFile("public/favicon.svg", faviconSvg);
 
   console.log("  favicon.svg, favicon-32.png, apple-touch-icon.png");
+} else {
+  console.warn("Skipping icons: hackuta-logo-white source not found");
+}
+
+const coastDesign = path.join(DESIGN, "coast-cliff-v7.png");
+
+// Keeps a full-size master in public/ so later runs can rebuild the responsive
+// set even when design/assets is not checked out.
+if (await fileExists(coastDesign)) {
+  await sharp(coastDesign)
+    .webp({ quality: 95, alphaQuality: 100 })
+    .toFile("public/images/coast-cliff-v7.webp");
+  console.log("  coast-cliff-v7.webp");
 }
 
 const coastSource = await firstExisting([
-  path.join(DESIGN, "coast-cliff-v7.png"),
+  coastDesign,
   path.join("public/images", "coast-cliff-v7.webp"),
 ]);
 
@@ -182,12 +176,22 @@ if (coastSource) {
   );
 }
 
+if (await fileExists(path.join(DESIGN, "illustrations"))) {
+  await Promise.all(ILLUSTRATIONS.map(optimizeIllustration));
+  console.log(`  ${ILLUSTRATIONS.length} illustrations`);
+} else {
+  console.warn(
+    "Skipping illustrations: keeping existing public/images artwork",
+  );
+}
+
 if (await fileExists(path.join(DESIGN, "fonts/BarlowSemiCondensed-Regular.ttf"))) {
   await copyFile(
     path.join(DESIGN, "fonts/BarlowSemiCondensed-OFL.txt"),
     "public/fonts/OFL.txt",
   );
 
+  // The encoder shares WASM memory: parallel compression can corrupt its output.
   async function compressFont(name, extension) {
     const font = await readFile(path.join(DESIGN, "fonts", `${name}.${extension}`));
     const compressed = Buffer.from(await wawoff2.compress(font));
@@ -210,6 +214,8 @@ if (await fileExists(path.join(DESIGN, "hackuta-wordmark-v6.svg"))) {
   const social = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630"><rect width="1200" height="630" fill="#eee3d2"/><circle cx="600" cy="480" r="235" fill="#dfd1bd"/>${wordmark}<g fill="#1a3a52" font-family="sans-serif" text-anchor="middle"><text x="600" y="120" font-size="24" letter-spacing="7">THE ODYSSEY · 2026</text><text x="600" y="390" font-size="28">NOVEMBER 14–15 · UT ARLINGTON</text><text x="600" y="530" font-size="22">Bring an idea. Find your crew.</text></g></svg>`;
   await sharp(Buffer.from(social)).png().toFile("public/images/social-card.png");
   console.log("  social-card.png");
+} else {
+  console.warn("Skipping social card: design/assets/hackuta-wordmark-v6.svg not found");
 }
 
 console.log("Asset preparation complete.");
