@@ -2330,7 +2330,7 @@
   }
 
   .theme-art-horse {
-    aspect-ratio: 1085 / 1800;
+    aspect-ratio: 2792 / 5249;
     width: auto;
   }
 
@@ -2343,6 +2343,10 @@
   .theme-art-pillars img {
     height: 100%;
     object-fit: contain;
+  }
+
+  .sponsors-art-horse img {
+    object-position: right center;
   }
 
   .theme-art--on-dark {
@@ -2397,9 +2401,9 @@
 
   .sponsors-art-horse {
     left: auto;
-    top: -8%;
-    right: -5%;
-    height: min(120%, 1280px);
+    top: 0;
+    right: calc(50% - 50vw);
+    height: min(92%, 900px);
     translate: 0;
     opacity: .58;
   }
@@ -2426,8 +2430,8 @@
     .sponsors-art-horse {
       top: 0;
       bottom: auto;
-      right: -3%;
-      height: min(72%, 560px);
+      right: calc(50% - 50vw);
+      height: min(58%, 430px);
     }
 
     .sponsors-section[data-revealed="true"] .sponsors-art-horse {
@@ -2462,10 +2466,10 @@
     }
 
     .sponsors-art-horse {
-      top: 6%;
+      top: 18%;
       bottom: auto;
-      right: -4%;
-      height: min(68%, 360px);
+      right: calc(50% - 50vw);
+      height: min(52%, 275px);
     }
 
     .sponsors-section[data-revealed="true"] .sponsors-art-horse {
