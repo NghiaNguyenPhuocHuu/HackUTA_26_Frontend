@@ -1263,6 +1263,39 @@
   color:#315873;
 }
 
+@utility oracle-email-link {
+  position:relative;
+  display:inline-block;
+  color:var(--ink);
+  text-decoration:none;
+  transition:color .2s var(--ease-out),transform .2s var(--ease-out);
+  &::after {
+    content:"";
+    position:absolute;
+    right:0;
+    bottom:.05em;
+    left:0;
+    height:1px;
+    background:currentColor;
+    opacity:.58;
+    transition:opacity .2s var(--ease-out);
+  }
+  &:hover,&:focus-visible {
+    color:var(--ocean);
+    transform:translateY(-1px);
+  }
+  &:hover::after,&:focus-visible::after {
+    opacity:1;
+  }
+  &:focus-visible {
+    outline:2px solid currentColor;
+    outline-offset:4px;
+    border-radius:2px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){.oracle-email-link,.oracle-email-link::after{transition:none}.oracle-email-link:hover,.oracle-email-link:focus-visible{transform:none}}
+
 @utility oracle-eye-wrap {
   position:relative;
   display:grid;
