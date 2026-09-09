@@ -11,7 +11,7 @@ const DESIGN = "design/assets/";
 const ILLUSTRATIONS = [
   { name: "cyclops-cave", maxEdge: 1800 },
   { name: "cyclops-cave-clear", maxEdge: 1800 },
-  { name: "trojan-horse", maxEdge: 1800, format: "png" },
+  { name: "trojan-horse", maxEdge: 1800, format: "webp" },
   { name: "trojan-horse-clear", maxEdge: 1800, format: "png" },
   { name: "feast", maxEdge: 1400 },
   { name: "feast-clear", maxEdge: 1400 },

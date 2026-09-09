@@ -80,7 +80,6 @@ export function FAQ({ motionEnabled }: { motionEnabled: boolean }) {
       aria-labelledby="oracle-title"
     >
       <ThemeArt name="temple" className="oracle-art-temple theme-art--on-light" />
-      <div className="oracle-orbit" aria-hidden="true" />
       <div className="section-inner oracle-layout grid">
         <div className="oracle-intro">
           <h2 id="oracle-title" className="font-semibold uppercase">

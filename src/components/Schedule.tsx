@@ -175,6 +175,7 @@ export function Schedule() {
         ))}
       </div>
 
+      <ThemeArt name="cave" className="weekend-art-cave theme-art--on-light" />
       <ThemeArt name="pillars" className="weekend-art-pillars theme-art--on-light" />
       <OliveBranch className="weekend-olive weekend-olive-top" />
       <span className="weekend-meander" data-edge="bottom" aria-hidden="true" />
